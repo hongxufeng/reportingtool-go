@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<tables>
+  <table id="企业问卷维护" 
+           name="(select name,ptype,OBJ_ID,creator,creationdate from t_imspaper where t_imspaper.ptype='企业问卷')AS t_imsFeedback">
+    <name text="问卷名称"  formatter-s=""  search-type="true"></name>
+    <OBJ_ID text="参与人数" formatter="FeedbackGetNumber"></OBJ_ID>
+    <ptype text="问卷类型" formatter-r="&lt;b>问卷类型&lt;/b>：$$::$$"></ptype>
+    <creator text="创建人"  formatter-r="&lt;b>创建人&lt;/b>：$$::$$"></creator>
+    <creationdate text="创建日期" formatter-r="&lt;b>创建日期&lt;/b>：$$::$$"></creationdate>
+    <buttons>
+      <span class="glyphicon glyphicon-folder-open" title="浏览" onclick="view(this,'OBJ_ID')"></span>
+      <span class="glyphicon glyphicon-edit" title="编辑" onclick="edit(this,'OBJ_ID')"></span>
+      <span class="glyphicon glyphicon-trash" title="删除" onclick="deleteThis(this,'OBJ_ID')"></span>
+    </buttons>
+    <pagerbuttons>
+      <span class="rt-pager-btn" onclick="create()">
+        <span class="glyphicon glyphicon-plus" title="新增问卷"></span>添加
+      </span>
+    </pagerbuttons>
+  </table>
+</tables>
