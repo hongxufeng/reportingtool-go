@@ -1,0 +1,5 @@
+﻿.rt-childtree{border-left:1px dotted #999;}
+.rt-childtree .rt-node-line,.rt-childtree .rt-node-extline{border-bottom:1px dotted #999;position:absolute;z-index:0;}
+.rt-childtree .rt-node-line{width:7px;left:-10px;top:10px;}
+.rt-childtree .rt-node-extline{width:13px;left:-2px;top:10px;}
+.rt-childtree>.rt-node:last-child:before{content:'';border-left:1px solid #FFF;height:100%;position:absolute;left:-12px;top:10px;z-index:1;}
