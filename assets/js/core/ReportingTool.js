@@ -1,18 +1,19 @@
 ﻿(function () {
-    var js = $('head>[src*="ReportingTool/js/ReportingTool.js"]');
-    js.before("<script src='/headers/js/jquery.history.js' type='text/javascript'></script>");
-    js.before("<script src='/headers/js/bootstrap-datepicker.min.js' type='text/javascript'></script>");
-    js.before("<script src='/headers/js/bootstrap-datepicker.zh-CN.min.js' type='text/javascript'></script>");
-    js.before("<script src='/ims_system/js/TableInModal.js' type='text/javascript'></script>");
-    var css = $('head>[href*="ReportingTool/css/ReportingTool.css"]');
-    css.before("<link href='/headers/css/bootstrap-datepicker.min.css' rel='stylesheet' type='text/css' />");
-    css.before("<link href='/ims_system/css/TableInModal.css' rel='stylesheet' type='text/css' />");
+    var js = $('head>[src*="/assets/js/core/ReportingTool.js"]');
+    js.before("<script src='/assets/js/core/jquery.history.js' type='text/javascript'></script>");
+    js.before("<script src='/assets/js/core/bootstrap-datepicker/bootstrap-datepicker.min.js' type='text/javascript'></script>");
+    js.before("<script src='/assets/js/core/bootstrap-datepicker/bootstrap-datepicker.zh-CN.min.js' type='text/javascript'></script>");
+    // js.before("<script src='/ims_system/js/TableInModal.js' type='text/javascript'></script>");
+    var css = $('head>[href*="/assets/css/reportingtool/ReportingTool.css"]');
+    css.before("<link href='/assets/js/core/bootstrap-datepicker/bootstrap-datepicker.min.css' rel='stylesheet' type='text/css' />");
+    // css.before("<link href='/ims_system/css/TableInModal.css' rel='stylesheet' type='text/css' />");
     if ($.support.opacity) {
-        css.after("<link href='/ReportingTool/css/CheckBox.css' rel='stylesheet' type='text/css' />");
+        css.after("<link href='/assets/css/reportingtool/CheckBox.css' rel='stylesheet' type='text/css' />");
     }
 })();
 
 (function ($) {
+    var serverURL="http://localhost:8080/ReportingTool"
 
     var cachedRows = {};
     var nullRows = {};
@@ -63,9 +64,9 @@
                                        <span class=\"glyphicon glyphicon-search rt-treeSearcher-btn\"></span>\
                                    </div>";
 
-        var css = $('head>[href*="ReportingTool/css/ReportingTool.css"]');
+        var css = $('head>[href*="/assets/css/reportingtool/ReportingTool.css"]');
         if (settings.nodeLinker) {
-            css.after("<link href='/ReportingTool/css/NodeLinker.css' rel='stylesheet' type='text/css' />");
+            css.after("<link href='/assets/css/reportingtool/NodeLinker.css' rel='stylesheet' type='text/css' />");
         }
 
         var getSettingsQueryVar = function (variable) {
@@ -162,7 +163,7 @@
             var postOpts = {
                 async: settings.asyncLoad,
                 method: "POST",
-                url: "/ReportingTool/Handler.ashx" + getQuery(),
+                url: serverURL + getQuery(),
                 data: { cmd: "GetTable", configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, rowList: settings.rowList.toString() },
                 success: function (data, textStatus, jqXHR) {
                     var jsonObject = JSON.parse(data);
@@ -282,7 +283,7 @@
             else {
                 History.replaceState(null, globalVars.pageTitle, url);
             }
-            $.post("/ReportingTool/Handler.ashx" + getQuery(), {
+            $.post(serverURL+ getQuery(), {
                 cmd: "GetTable", configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, rowList: settings.rowList.toString()
             }, function (data, status) {
                 var jsonObject = JSON.parse(data);
@@ -330,7 +331,7 @@
             else {
                 History.replaceState(null, globalVars.pageTitle, buildQueryStr());
             }
-            $.post("/ReportingTool/Handler.ashx" + getQuery(), {
+            $.post(serverURL + getQuery(), {
                 cmd: "GetTable", configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, rowList: settings.rowList.toString()
             }, function (data, status) {
                 var jsonObject = JSON.parse(data);
@@ -389,7 +390,7 @@
                 for (var t in trees) {
                     $.ajax({
                         async: false,
-                        url: "/ReportingTool/Handler.ashx?table=" + encodeURI(t) + "&" + trees[t],
+                        url: serverURL+"?table=" + encodeURI(t) + "&" + trees[t],
                         method: "POST",
                         data: {
                             cmd: "GetTable", configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style
@@ -412,7 +413,7 @@
             if (!cd) {
                 return;
             }
-            $.post("/ReportingTool/Handler.ashx?table=" + globalVars.queryObj.table, {
+            $.post(serverURL+"?table=" + globalVars.queryObj.table, {
                 cmd: "SearchTree", configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, condition: cd
             }, function (data, status) {
                 var jsonObject = JSON.parse(data);
@@ -421,7 +422,7 @@
         }
         var locateNode = function () {
             var table = encodeURI($(this).attr("data-tableid"));
-            $.post("/ReportingTool/Handler.ashx?table=" + table, {
+            $.post(serverURL+"?table=" + table, {
                 cmd: "LocateNode", configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, condition: $(this).attr("data-parentnode")
             }, function (data, status) {
                 var jsonObject = JSON.parse(data);
@@ -866,7 +867,7 @@
             $(this).trigger(event);
         }
         var exportExcel = function () {
-            window.open("/ReportingTool/GenerateExcel.aspx" + getQuery() + "&ConfigFile=" + settings.configFile);
+            window.open(serverURL+"/GenerateExcel.aspx" + getQuery() + "&ConfigFile=" + settings.configFile);
         }
         var nodeOnClick = function () {
             var elem = $(".rt-body").children(".rt-search-result");
