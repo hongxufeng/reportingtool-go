@@ -7,3 +7,7 @@ go语言版reportingtool
 
 增加第三方路由器  依赖
 在终端 运行命令go get -u github.com/naoina/denco
+
+
+第三方XML解析  go package
+go get github.com/beevik/etree
