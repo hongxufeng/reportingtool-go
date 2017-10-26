@@ -11,3 +11,7 @@ go语言版reportingtool
 
 第三方XML解析  go package
 go get github.com/beevik/etree
+
+
+修改服务器请求地址 在assets/js/core/ReportingTool.js的16行
+var serverURL="http://localhost:8080/ReportingTool"
