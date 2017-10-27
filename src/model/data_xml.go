@@ -1,5 +1,39 @@
 package model
 
-type NodeAttr struct {
-
+type ColumnConfig struct {
+	HasBtn bool
+	HasDateformat bool
+	HasDefaultValue bool
+	HasFormatter bool
+	HasFormatterR bool
+	HasLinkTo bool
+	HasNavname bool
+	HasPrecision bool
+	HasRegex bool
+	HasSearchType bool
+	HasSelectorMulti bool
+	HasTimetransfer bool
+	IsInPercentageform bool
+	IsInselector bool
+	Search4Admin bool
+	BtnIcon string
+	BtnFunc string
+	ColumnName string
+	Dateformat string
+	DefaultValue string
+	Formatter string
+	FormatterR string
+	LinkTo string
+	Navname string
+	Timetransfer string
+	Precision string
+	RegexPattern string
+	RegexReplacement string
+	SearchType string
+	Selector string
+	SelectorFunc string
+	SelectorText string
+	Text string
+	Visibility string
+	Passedcol []string
 }

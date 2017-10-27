@@ -1,15 +1,16 @@
 package model
 
 type Settings struct {
-	CMD string`json:"cmd"`
-	Style string`json:"style"`
-	TableID string`json:"table"`
-	ConfigFile string`json:"configFile"`
-	HasCheckbox string `json:"hasCheckbox"`
-	RowList string`json:"rowList"`
-	Condition string`json:"condition"`
-	Page int `json:"page"`
-	Rows int`json:"rows"`
-	ColPage int`json:"colpage"`
-	HR bool `json:"hr"`
+	Uid uint32//通过cookie验证用户  得到的用户标识UID
+	Cmd string
+	Style string
+	TableID string
+	ConfigFile string
+	HasCheckbox string
+	RowList string
+	Condition string
+	Page int
+	Rows int
+	ColPage int
+	HR bool
 }
