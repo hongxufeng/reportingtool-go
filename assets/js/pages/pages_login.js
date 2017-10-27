@@ -17,7 +17,7 @@ var BasePagesLogin = function() {
                 jQuery(e).closest('.form-group').removeClass('has-error');
                 jQuery(e).closest('.help-block').remove();
             },
-            rules:
+            rules: {
                 'login-username': {
                     required: true,
                     minlength: 3
