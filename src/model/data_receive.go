@@ -8,8 +8,8 @@ type Settings struct {
 	HasCheckbox string `json:"hasCheckbox"`
 	RowList string`json:"rowList"`
 	Condition string`json:"condition"`
-	QueryString QueryString`json:"queryString"`
-}
-type QueryString struct {
-
+	Page int `json:"page"`
+	Rows int`json:"rows"`
+	ColPage int`json:"colpage"`
+	HR bool `json:"hr"`
 }
