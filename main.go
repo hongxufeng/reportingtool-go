@@ -20,6 +20,7 @@ func main() {
 }
 
 func Index(w http.ResponseWriter, r *http.Request, params denco.Params) {
+
 	fmt.Fprintf(w, "Welcome to /ReportingTool!\n")
 }
 
