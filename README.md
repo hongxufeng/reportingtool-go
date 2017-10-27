@@ -15,3 +15,13 @@ go get github.com/beevik/etree
 
 修改服务器请求地址 在assets/js/core/ReportingTool.js的16行
 var serverURL="http://localhost:8080/ReportingTool"
+
+
+## Note
+由于涉及前后端交互，如果不涉及账号密码，会造成后端参数解析问题等等
+思前向后  决定加入用户登录功能   以求go后端框架  完整  不需要再次改动
+并决定用cookie保存信息，实现自动登录
+
+涉及用户名密码  数据库结构问题  建表语句等会之后在代码中贴出
+
+登录页面在https://hongxufeng.github.io/reportingtool-go/pages_login.html
