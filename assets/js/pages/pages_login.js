@@ -50,3 +50,21 @@ var BasePagesLogin = function() {
 
 // Initialize when page loads
 jQuery(function(){ BasePagesLogin.init(); });
+
+$.validator.setDefaults({
+    submitHandler: function() {
+        FailureAnimation();
+        return false
+    }
+});
+
+function FailureAnimation() {
+    var failureBlock=$(".alert-dismissable")
+    $(".login-title").css("display","none")
+    failureBlock.css("display","block")
+    if (failureBlock.hasClass("shake")){
+        failureBlock.removeClass("shake").addClass("wobble")
+    }else {
+        failureBlock.removeClass("wobble").addClass("shake")
+    }
+}
