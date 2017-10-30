@@ -5,13 +5,12 @@ import (
 	"log"
 	"net/http"
 	"fmt"
-	"github.com/beevik/etree"
 )
 
 func main() {
 	mux := denco.NewMux()
 	handler, err := mux.Build([]denco.Handler{
-		mux.GET("/ReportingTool", Index),
+		mux.POST("/Login",UserLogin),
 		mux.GET("/ReportingTool/:style", Style),
 	})
 	if err != nil {
@@ -20,8 +19,8 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8080", handler))
 }
 
-func Index(w http.ResponseWriter, r *http.Request, params denco.Params) {
-	fmt.Fprintf(w, "Welcome to /ReportingTool!\n")
+func UserLogin(w http.ResponseWriter, r *http.Request, params denco.Params) {
+
 }
 
 func Style(w http.ResponseWriter, r *http.Request, params denco.Params) {

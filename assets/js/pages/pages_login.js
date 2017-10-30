@@ -53,8 +53,27 @@ jQuery(function(){ BasePagesLogin.init(); });
 
 $.validator.setDefaults({
     submitHandler: function() {
-        FailureAnimation();
-        return false
+        var username = $("#login-username").val();
+        var password = md5($("#login-password").val());
+        var postData={
+            method: "POST",
+            url:"/Login",
+            data:{
+                username:username,
+                password:password
+            },
+            success:function (data, textStatus, jqXHR) {
+                var jsonObject = JSON.parse(data);
+                //记得判断时间戳
+                if(jsonObject.status==="ok"){
+                    //写cookie
+                    window.location.href="/reportingtool";
+                }else {
+                    FailureAnimation();
+                    return false
+                }
+            }
+        }
     }
 });
 
