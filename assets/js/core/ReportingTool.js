@@ -13,7 +13,7 @@
 })();
 
 (function ($) {
-    var serverURL="http://localhost:8080/ReportingTool"
+    var serverURL="/ReportingTool"
 
     var cachedRows = {};
     var nullRows = {};
