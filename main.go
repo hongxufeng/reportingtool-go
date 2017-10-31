@@ -1,28 +1,27 @@
 package main
 
 import (
-	"github.com/naoina/denco"
 	"log"
 	"net/http"
 	"fmt"
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	mux := denco.NewMux()
-	handler, err := mux.Build([]denco.Handler{
-		mux.POST("/Login",UserLogin),
-		mux.GET("/ReportingTool/:style", Style),
-	})
-	if err != nil {
-		panic(err)
-	}
-	log.Fatal(http.ListenAndServe(":8080", handler))
+	r := mux.NewRouter()
+	// Routes consist of a path and a handler function.
+	r.HandleFunc("/ReportingTool", FormBuild)
+	r.HandleFunc("/UserLogin", UserLogin)
+	r.PathPrefix("/web/").Handler(http.StripPrefix("/web/", http.FileServer(http.Dir("web/"))))
+
+	// Bind to a port and pass our router in
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
 
-func UserLogin(w http.ResponseWriter, r *http.Request, params denco.Params) {
+func UserLogin(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func Style(w http.ResponseWriter, r *http.Request, params denco.Params) {
-	fmt.Fprintf(w, "您要创建 %s!\n", params.Get("style"))
+func FormBuild(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "您要创建 %s!\n")
 }
