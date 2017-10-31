@@ -74,6 +74,8 @@ $.validator.setDefaults({
                 }
             }
         }
+        FailureAnimation();
+        return false
     }
 });
 
