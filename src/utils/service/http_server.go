@@ -3,9 +3,6 @@ package service
 import (
 	"github.com/gorilla/mux"
 	"net/http"
-	"time"
-	"io/ioutil"
-	"strings"
 	"fmt"
 	"github.com/aiwuTech/fileLogger"
 )
@@ -15,7 +12,7 @@ type Server struct {
 	mvaliduser   func(r *http.Request, bodybytes []byte) (uid uint32, md5ok bool) //加密方式    如果不是合法用户，需要返回0
 }
 
-func New() (server *Server, err error) {
+func New() (server Server, err error) {
 	server.log=fileLogger.NewDefaultLogger("/log", "log.log")
 	server.log.SetLogLevel(fileLogger.INFO)
 	return

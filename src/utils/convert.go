@@ -10,9 +10,6 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
-	"time"
-	"yf_pkg/format"
-	"yf_pkg/utils/mapstruct"
 )
 
 //要求to必须已经分配好空间
@@ -97,26 +94,6 @@ func Uint32ToString(from uint32) (to string) {
 //把interface类型转换成string类型
 func ToString(v interface{}) string {
 	return fmt.Sprintf("%v", v)
-}
-
-//可以把字符串、时间、数字（当成秒）转换成时间类型
-func ToTime(v interface{}, layout ...string) (t time.Time, e error) {
-	switch value := v.(type) {
-	case string:
-		l := format.TIME_LAYOUT_1
-		if len(layout) > 0 {
-			l = layout[0]
-		}
-		return time.ParseInLocation(l, value, Local)
-	case time.Time:
-		return value, nil
-	default:
-		sec, e := ToInt64(value)
-		if e != nil {
-			return t, errors.New(fmt.Sprintf("cannot change %v(%v) to time.Time", v, reflect.TypeOf(v)))
-		}
-		return time.Unix(sec, 0), nil
-	}
 }
 
 func ToBool(v interface{}) (bool, error) {
@@ -297,16 +274,6 @@ func ToUint32Slice(v interface{}) ([]uint32, error) {
 	}
 }
 
-func BirthdayToAge(birthday time.Time) int {
-	if birthday.After(Now) {
-		return 0
-	}
-	return int(Now.Year() - birthday.Year())
-}
-
-func AgeToBirthday(Age int) time.Time {
-	return Now.AddDate(-Age, 0, 0)
-}
 
 func Join(v interface{}, sep string) (string, error) {
 	switch slice := v.(type) {
@@ -382,11 +349,6 @@ func Struct2Map2(obj interface{}) map[string]interface{} {
 		data[t.Field(i).Tag.Get("json")] = v.Field(i).Interface()
 	}
 	return data
-}
-
-// //MAP->结构
-func MapToStruct(data map[string]interface{}, obj interface{}) error {
-	return mapstruct.Decode(data, obj)
 }
 
 func ImgUrl(url string) (result string) {
