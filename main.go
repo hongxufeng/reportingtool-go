@@ -1,27 +1,49 @@
 package main
 
 import (
-	"log"
 	"net/http"
+	"strings"
+	"utils"
 	"fmt"
-	"github.com/gorilla/mux"
+	"datahelper"
+	"utils/service"
 )
+func mValidUser(r *http.Request, bodybytes []byte) (uid uint32, md5ok bool) {
+	md5ok = true
+	c, e := r.Cookie("auth")
+	if e != nil {
+		return 0, md5ok
+	}
+	auth := c.Value
+	var hashcode string
+	var ks []string
+	if strings.Contains(auth, "%09") {
+		ks = strings.Split(auth, "%09")
+	} else {
+		ks = strings.Split(auth, "_")
+	}
 
+	if len(ks) == 2 {
+		uid, e = utils.ToUint32(ks[0])
+		if e != nil {
+			fmt.Println(e.Error())
+		}
+		hashcode = ks[1]
+	}
+	valid, e := datahelper.UserValid(uid, hashcode)
+	if e != nil || !valid {
+		return 0, md5ok
+	}
+	return uid, md5ok
+}
 func main() {
-	r := mux.NewRouter()
-	// Routes consist of a path and a handler function.
-	r.HandleFunc("/ReportingTool", FormBuild)
-	r.HandleFunc("/UserLogin", UserLogin)
-	r.PathPrefix("/web/").Handler(http.StripPrefix("/web/", http.FileServer(http.Dir("web/"))))
+	server, err := service.New()
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	server.SetmValid(mValidUser)
 
-	// Bind to a port and pass our router in
-	log.Fatal(http.ListenAndServe(":8080", r))
+	fmt.Println(server.StartService())
 }
 
-func UserLogin(w http.ResponseWriter, r *http.Request) {
-
-}
-
-func FormBuild(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "您要创建 %s!\n")
-}
