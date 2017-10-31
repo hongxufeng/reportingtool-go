@@ -6,7 +6,7 @@ reportingtool go语言版 貌似做得有点多啊 前端js，html，css后端 g
 
 
 增加第三方路由器  依赖
-在终端 运行命令go get -u github.com/naoina/denco
+在终端 运行命令go get -u github.com/gorilla/mux   //以前的路由功能太少，不用了
 
 
 第三方XML解析  go package
