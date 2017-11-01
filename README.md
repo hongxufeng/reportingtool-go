@@ -2,16 +2,19 @@
 reportingtool go语言版 貌似做得有点多啊 前端js，html，css后端 golang，sql ，xml，json 白菜价！
 ## 使用须知
 因项目使用 mysql 数据库 需增加依赖  go-sql-driver/mysql
-在终端 运行命令go get -u github.com/go-sql-driver/mysql
+在终端 运行命令go get github.com/go-sql-driver/mysql
 
 
 增加第三方路由器  依赖
-在终端 运行命令go get -u github.com/gorilla/mux   //以前的路由功能太少，不用了
+在终端 运行命令go get github.com/gorilla/mux   //以前的路由功能太少，不用了
 
 
 第三方XML解析  go package
 go get github.com/beevik/etree
 
+
+log 打印包
+go get github.com/aiwuTech/fileLogger
 
 修改服务器请求地址 在assets/js/core/ReportingTool.js的16行
 var serverURL="http://localhost:8080/ReportingTool"

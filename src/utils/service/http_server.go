@@ -8,13 +8,16 @@ import (
 )
 
 type Server struct {
-	log *fileLogger.FileLogger
+	Info *fileLogger.FileLogger
+	Error *fileLogger.FileLogger
 	mvaliduser   func(r *http.Request, bodybytes []byte) (uid uint32, md5ok bool) //加密方式    如果不是合法用户，需要返回0
 }
 
 func New() (server Server, err error) {
-	server.log=fileLogger.NewDefaultLogger("/log", "log.log")
-	server.log.SetLogLevel(fileLogger.INFO)
+	server.Info=fileLogger.NewDefaultLogger("/log", "info.log")
+	server.Info.SetPrefix("[INFO] ")
+	server.Error=fileLogger.NewDefaultLogger("/log", "error.log")
+	server.Error.SetPrefix("[ERROR] ")
 	return
 }
 func (server Server) StartService() error {
@@ -27,9 +30,9 @@ func (server Server) StartService() error {
 	// Bind to a port and pass our router in
 	err :=http.ListenAndServe(":8080", r)
 	if err!=nil {
-		server.log.Error("服务启动错误：%s",err)
+		server.Error.Error("服务启动错误：%s",err)
 	}else {
-		server.log.Println("http服务启动！")
+		server.Error.Info("http服务启动！")
 	}
 	return err
 }
