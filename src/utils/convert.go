@@ -351,62 +351,12 @@ func Struct2Map2(obj interface{}) map[string]interface{} {
 	return data
 }
 
-func ImgUrl(url string) (result string) {
-	const (
-		imgHttpHead    = "http://yanyuan01.oss-cn-beijing.aliyuncs.com/uploads/"
-		imgHttpHeadOos = "http://image1.yuanfenba.net/uploads/"
-		imgHttpHeadGo  = "http://120.131.81.247:1801/image/GetPhoto/"
-	)
-	if url == "" {
-		return url
-	}
-	if strings.HasPrefix(url, "http") {
-		return url
-	} else {
-		if strings.HasPrefix(url, "oss") {
-			return imgHttpHeadOos + url
-		} else if strings.HasPrefix(url, "go") {
-			return imgHttpHeadGo + url
-		} else {
-			return imgHttpHead + url
-		}
-	}
-}
 
 func Bool2Int(b bool) int {
 	if b {
 		return 1
 	}
 	return 0
-}
-
-// 0为未审核，1为通过，2为拒绝,3未上传
-// if url == "" {
-// 	if gender == 2 {
-// 		result = "http://image1.yuanfenba.net/uploads/oss/avatar/201606/08/15513855762.png"
-// 	} else {
-// 		result = "http://image1.yuanfenba.net/uploads/oss/avatar/201606/08/15512053735.png"
-// 	}
-// }
-func GetAvater(status int, gender int, url string) (result string) {
-	result = ImgUrl(url)
-	switch status {
-	// 0为未审核，1为通过，2为拒绝,3未上传
-	case 0, 2, 3:
-		result = "http://image1.yuanfenba.net/uploads/oss/avatar/201606/08/15512053735.png"
-	}
-	if result == "" {
-		result = "http://image1.yuanfenba.net/uploads/oss/avatar/201606/08/15512053735.png"
-	}
-	return
-}
-
-func GetAvaterMe(status int, gender int, url string) (result string) {
-	result = ImgUrl(url)
-	if url == "" {
-		result = "http://image1.yuanfenba.net/uploads/oss/avatar/201606/08/15512053735.png"
-	}
-	return
 }
 
 func MakeKey(keys ...interface{}) string {
