@@ -15,7 +15,7 @@ import (
 type Server struct {
 	Info *fileLogger.FileLogger
 	Error *fileLogger.FileLogger
-	mvaliduser   func(r *http.Request) (uid uint32, md5ok bool) //加密方式    如果不是合法用户，需要返回0
+	mvaliduser   func(r *http.Request) (uid uint32) //加密方式    如果不是合法用户，需要返回0
 }
 
 func New() (server Server, err error) {
@@ -27,11 +27,10 @@ func New() (server Server, err error) {
 	return
 }
 
-func mValidUser(r *http.Request) (uid uint32, md5ok bool) {
-	md5ok = true
+func mValidUser(r *http.Request) (uid uint32) {
 	c, e := r.Cookie("auth")
 	if e != nil {
-		return 0, md5ok
+		return 0
 	}
 	auth := c.Value
 	var hashcode string
@@ -51,9 +50,9 @@ func mValidUser(r *http.Request) (uid uint32, md5ok bool) {
 	}
 	valid, e := datahelper.UserValid(uid, hashcode)
 	if e != nil || !valid {
-		return 0, md5ok
+		return 0
 	}
-	return uid, md5ok
+	return uid
 }
 
 func (server Server) StartService() error {
@@ -73,17 +72,17 @@ func (server Server) StartService() error {
 	return err
 }
 
-func (server *Server) BaseHandler(w http.ResponseWriter, r *http.Request) {
+func (server *Server) UserHandler(w http.ResponseWriter, r *http.Request) {
 	start := time.Now().UnixNano()
 	var result map[string]interface{} = make(map[string]interface{})
 	var err error
 	var body []byte
 	var uid uint32
-	uid, _ = server.mvaliduser(r)
+	uid= server.mvaliduser(r)
 	if uid > 0 {
 		fields := strings.Split(r.URL.Path[1:], "/")
 		if len(fields) >= 3 {
-			body, err = server.RequestHandler(fields[1], "Base_"+fields[2], uid, r, result)
+			body, err = server.RequestHandler(fields[1], "User_"+fields[2], uid, r, result)
 		} else {
 			err = NewError(ERR_INVALID_PARAM, "invalid url format : "+r.URL.Path)
 		}
@@ -94,9 +93,21 @@ func (server *Server) BaseHandler(w http.ResponseWriter, r *http.Request) {
 	server.Respose(w, r, err, body, result, end-start)
 }
 
-
-func (server *Server) UserHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "您要创建 %s!\n")
+func (server *Server) BaseHandler(w http.ResponseWriter, r *http.Request) {
+	start := time.Now().UnixNano()
+	var result map[string]interface{} = make(map[string]interface{})
+	var err error
+	var body []byte
+	var uid uint32
+	uid = server.mvaliduser(r)
+	fields := strings.Split(r.URL.Path[1:], "/")
+	if len(fields) >= 3 {
+		body, err = server.RequestHandler(fields[1], "Base_"+fields[2], uid, r, result)
+	} else {
+		err = NewError(ERR_INVALID_PARAM, "invalid url format : "+r.URL.Path)
+	}
+	end := time.Now().UnixNano()
+	server.Respose(w, r, err, body, result, end-start)
 }
 
 func (server *Server) RequestHandler(moduleName string, methodName string, uid uint32, r *http.Request, result map[string]interface{}) (byte []byte,e error) {
