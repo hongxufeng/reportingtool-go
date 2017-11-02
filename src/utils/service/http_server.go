@@ -9,12 +9,13 @@ import (
 	"utils"
 	"datahelper"
 	"time"
+	"encoding/json"
 )
 
 type Server struct {
 	Info *fileLogger.FileLogger
 	Error *fileLogger.FileLogger
-	mvaliduser   func(r *http.Request, bodybytes []byte) (uid uint32, md5ok bool) //加密方式    如果不是合法用户，需要返回0
+	mvaliduser   func(r *http.Request) (uid uint32, md5ok bool) //加密方式    如果不是合法用户，需要返回0
 }
 
 func New() (server Server, err error) {
@@ -26,7 +27,7 @@ func New() (server Server, err error) {
 	return
 }
 
-func mValidUser(r *http.Request, bodybytes []byte) (uid uint32, md5ok bool) {
+func mValidUser(r *http.Request) (uid uint32, md5ok bool) {
 	md5ok = true
 	c, e := r.Cookie("auth")
 	if e != nil {
@@ -65,9 +66,9 @@ func (server Server) StartService() error {
 	// Bind to a port and pass our router in
 	err :=http.ListenAndServe(":8080", r)
 	if err!=nil {
-		server.Error.Println("服务启动错误：%s",err)
+		server.Error.Print("服务启动错误：%s",err)
 	}else {
-		server.Error.Println("http服务启动！")
+		server.Info.Print("http服务启动！")
 	}
 	return err
 }
@@ -76,23 +77,88 @@ func (server *Server) BaseHandler(w http.ResponseWriter, r *http.Request) {
 	start := time.Now().UnixNano()
 	var result map[string]interface{} = make(map[string]interface{})
 	var err error
-	//bodyBytes, e := ioutil.ReadAll(r.Body)
-	//if e != nil {
-	//	err = NewError(ERR_INTERNAL, "read http data error : "+e.Error())
-	//}
-	//var body []byte
-	//
-	//fields := strings.Split(r.URL.Path[1:], "/")
-	//if len(fields) >= 3 {
-	//	body, err = handleRequest(fields[1], "X_"+fields[2], uid, r, result, bts)
-	//} else {
-	//	err = NewError(ERR_INVALID_PARAM, "invalid url format : "+r.URL.Path)
-	//}
-	//end := time.Now().UnixNano()
-	//server.processErrorX(w, r, err, body, result, end-start)
+	var body []byte
+	var uid uint32
+	uid, _ = server.mvaliduser(r)
+	if uid > 0 {
+		fields := strings.Split(r.URL.Path[1:], "/")
+		if len(fields) >= 3 {
+			body, err = server.RequestHandler(fields[1], "Base_"+fields[2], uid, r, result)
+		} else {
+			err = NewError(ERR_INVALID_PARAM, "invalid url format : "+r.URL.Path)
+		}
+	} else {
+		err = NewError(ERR_INVALID_USER, "invalid user")
+	}
+	end := time.Now().UnixNano()
+	server.Respose(w, r, err, body, result, end-start)
 }
 
 
 func (server *Server) UserHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "您要创建 %s!\n")
+}
+
+func (server *Server) RequestHandler(moduleName string, methodName string, uid uint32, r *http.Request, result map[string]interface{}) (byte []byte,e error) {
+	return
+}
+
+func (server *Server) Respose(w http.ResponseWriter, r *http.Request, err error, reqBody []byte, result map[string]interface{}, duration int64) {
+	var re Error
+	switch e := err.(type) {
+	case nil:
+	case Error:
+		re = e
+	default:
+		re = NewError(ERR_INTERNAL, e.Error(), "未知错误")
+	}
+
+	w.Header().Set("Content-Type", "application/json;charset=utf-8")
+	if re.Code == ERR_NOERR {
+		result["status"] = "ok"
+		result["tm"] = time.Now().UnixNano()
+		res, e := json.Marshal(result)
+		if e == nil {
+			server.Log(r, w, reqBody, []byte(res), true, duration)
+		} else {
+			server.ResposeErr(r, w, reqBody, NewError(ERR_INTERNAL, fmt.Sprintf("Marshal result error : %v", e.Error())), duration)
+		}
+	} else {
+		server.ResposeErr(r, w, reqBody, re, duration)
+	}
+}
+func (server *Server) ResposeErr(r *http.Request, w http.ResponseWriter, reqBody []byte, err Error, duration int64) {
+	var result map[string]interface{} = make(map[string]interface{})
+	result["status"] = "fail"
+	result["code"] = err.Code
+	result["msg"] = err.Show
+	result["detail"] = err.Desc
+	res, _ := json.Marshal(result)
+	server.Log(r, w, reqBody, res, false, duration)
+}
+func (server *Server) Log(r *http.Request, w http.ResponseWriter, reqBody []byte, result []byte, success bool, duration int64) {
+	w.Write(result)
+	var l string
+	var uid, response string
+	uidCookie, e := r.Cookie("auth")
+	if e != nil {
+		uid = "无"
+	} else {
+		uid = uidCookie.Value
+	}
+	if reqBody != nil {
+		response = string(reqBody)
+	}
+	format := " duration: %.2fms |"
+	format += "uid: %s  %s|"
+	format += "uri: %s |"
+	format += "param: %s |"
+	format += "response: %s |"
+	addr := strings.Split(r.RemoteAddr, ":")
+	l = fmt.Sprintf(format, float64(duration)/1000000, uid, addr[0], r.URL.String(), response, string(result))
+	if success {
+		server.Info.Print(l)
+	}else {
+		server.Error.Print(l)
+	}
 }

@@ -28,7 +28,6 @@ type Error struct {
 }
 
 func NewError(ecode uint, desc string, show ...string) (err Error) {
-
 	if len(show) > 0 {
 		err = Error{ecode, desc, show[0]}
 	} else {
