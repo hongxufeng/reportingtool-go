@@ -57,14 +57,13 @@ $.validator.setDefaults({
         var password = md5($("#login-password").val());
         var postData={
             method: "POST",
-            url:"/Login",
+            url:"/base/user/userLogin",
             data:{
                 username:username,
                 password:password
             },
             success:function (data, textStatus, jqXHR) {
                 var jsonObject = JSON.parse(data);
-                //记得判断时间戳
                 if(jsonObject.status==="ok"){
                     //写cookie
                     window.location.href="/reportingtool";
