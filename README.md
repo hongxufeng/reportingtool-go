@@ -34,3 +34,6 @@ var serverURL="http://localhost:8080/ReportingTool"
 3.准备写个彩蛋   用户auth  密码W  可永久登录系统
 
 4.为避免繁杂的路由配置，决定路由配置分为验证用户登录和不验证用户两种，再根据反射，找寻相应的接口函数
+
+5.要在请求数据时，增加loading panel  还有刷新数据时的  loading panel  以及表格内容放大
+
