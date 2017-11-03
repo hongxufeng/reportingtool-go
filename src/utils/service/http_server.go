@@ -10,20 +10,24 @@ import (
 	"datahelper"
 	"time"
 	"encoding/json"
+	"reflect"
 )
 
 type Server struct {
+	modules      map[string]Module
 	Info *fileLogger.FileLogger
 	Error *fileLogger.FileLogger
 	mvaliduser   func(r *http.Request) (uid uint32) //加密方式    如果不是合法用户，需要返回0
 }
 
 func New() (server Server, err error) {
+	server.modules=make(map[string]Module)
 	server.Info=fileLogger.NewDefaultLogger("/log", "info.log")
 	server.Info.SetPrefix("[INFO] ")
 	server.Error=fileLogger.NewDefaultLogger("/log", "error.log")
 	server.Error.SetPrefix("[ERROR] ")
 	server.mvaliduser=mValidUser
+	server.AddModule("default", &DefaultModule{})
 	return
 }
 
@@ -53,6 +57,18 @@ func mValidUser(r *http.Request) (uid uint32) {
 		return 0
 	}
 	return uid
+}
+
+func (server *Server) AddModule(name string, module Module) (err error) {
+	fmt.Printf("add module %s... ", name)
+	err = module.Init()
+	if err != nil {
+		return
+	}
+	fmt.Println("ok")
+	server.Info.Print("add module %s success",name)
+	server.modules[name] = module
+	return
 }
 
 func (server Server) StartService() error {
@@ -111,6 +127,23 @@ func (server *Server) BaseHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (server *Server) RequestHandler(moduleName string, methodName string, uid uint32, r *http.Request, result map[string]interface{}) (byte []byte,e error) {
+	var values []reflect.Value
+		method := reflect.ValueOf(module).MethodByName(methodName)
+		if method.IsValid() {
+			values = method.Call([]reflect.Value{reflect.ValueOf(&HttpRequest{body, bodyBytes, r, uid}), reflect.ValueOf(result)})
+		} else {
+			method = reflect.ValueOf(server.modules["default"]).MethodByName("ErrorMethod")
+			values = method.Call([]reflect.Value{reflect.ValueOf(&HttpRequest{body, bodyBytes, r, uid}), reflect.ValueOf(result)})
+		}
+	if len(values) != 1 {
+		return bodyBytes, NewError(ERR_INTERNAL, fmt.Sprintf("method %s.%s return value is not 2.", moduleName, methodName))
+	}
+	switch x := values[0].Interface().(type) {
+	case nil:
+		return bodyBytes, nil
+	default:
+		return bodyBytes, x.(error)
+	}
 	return
 }
 
