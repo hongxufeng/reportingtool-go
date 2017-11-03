@@ -72,19 +72,19 @@ $.validator.setDefaults({
                     return false
                 }
             }
-        }
-        FailureAnimation();
+        };
+        var failureAnimation=function () {
+            var failureBlock=$(".alert-dismissable")
+            $(".login-title").css("display","none")
+            failureBlock.css("display","block")
+            if (failureBlock.hasClass("shake")){
+                failureBlock.removeClass("shake").addClass("wobble")
+            }else {
+                failureBlock.removeClass("wobble").addClass("shake")
+            }
+        };
+        failureAnimation();
         return false
     }
 });
 
-function FailureAnimation() {
-    var failureBlock=$(".alert-dismissable")
-    $(".login-title").css("display","none")
-    failureBlock.css("display","block")
-    if (failureBlock.hasClass("shake")){
-        failureBlock.removeClass("shake").addClass("wobble")
-    }else {
-        failureBlock.removeClass("wobble").addClass("shake")
-    }
-}
