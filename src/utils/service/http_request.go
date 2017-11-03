@@ -15,6 +15,7 @@ const MAX_PS = 1000
 
 type HttpRequest struct {
 	Body    map[string]interface{}
+	BodyRaw []byte
 	request *http.Request
 	Uid     uint32
 }

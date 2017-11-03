@@ -11,6 +11,7 @@ import (
 	"time"
 	"encoding/json"
 	"reflect"
+	"io/ioutil"
 )
 
 type Server struct {
@@ -18,16 +19,28 @@ type Server struct {
 	Info *fileLogger.FileLogger
 	Error *fileLogger.FileLogger
 	mvaliduser   func(r *http.Request) (uid uint32) //加密方式    如果不是合法用户，需要返回0
+	parseBody    bool                               //是否把POST的内容解析为json对象
+	customResult bool                               //返回结果中是否包含result和tm项
+	multipart    bool                               //是否multipart post 上传文件
 }
 
-func New() (server Server, err error) {
+func New(args ...bool) (server Server, err error) {
 	server.modules=make(map[string]Module)
 	server.Info=fileLogger.NewDefaultLogger("/log", "info.log")
 	server.Info.SetPrefix("[INFO] ")
 	server.Error=fileLogger.NewDefaultLogger("/log", "error.log")
 	server.Error.SetPrefix("[ERROR] ")
 	server.mvaliduser=mValidUser
-	server.AddModule("default", &DefaultModule{})
+	if len(args) >= 1 {
+		server.parseBody = args[0]
+	}
+	if len(args) >= 2 {
+		server.customResult = args[1]
+	}
+	if len(args) >= 3 {
+		server.multipart = args[2]
+	}
+	err=server.AddModule("default", &DefaultModule{})
 	return
 }
 
@@ -98,7 +111,7 @@ func (server *Server) UserHandler(w http.ResponseWriter, r *http.Request) {
 	if uid > 0 {
 		fields := strings.Split(r.URL.Path[1:], "/")
 		if len(fields) >= 3 {
-			body, err = server.RequestHandler(fields[1], "User_"+fields[2], uid, r, result)
+			body, err = server.RequestHandler(fields[1], "User_"+fields[2], uid, r, result,nil)
 		} else {
 			err = NewError(ERR_INVALID_PARAM, "invalid url format : "+r.URL.Path)
 		}
@@ -118,7 +131,7 @@ func (server *Server) BaseHandler(w http.ResponseWriter, r *http.Request) {
 	uid = server.mvaliduser(r)
 	fields := strings.Split(r.URL.Path[1:], "/")
 	if len(fields) >= 3 {
-		body, err = server.RequestHandler(fields[1], "Base_"+fields[2], uid, r, result)
+		body, err = server.RequestHandler(fields[1], "Base_"+fields[2], uid, r, result,nil)
 	} else {
 		err = NewError(ERR_INVALID_PARAM, "invalid url format : "+r.URL.Path)
 	}
@@ -126,8 +139,35 @@ func (server *Server) BaseHandler(w http.ResponseWriter, r *http.Request) {
 	server.Respose(w, r, err, body, result, end-start)
 }
 
-func (server *Server) RequestHandler(moduleName string, methodName string, uid uint32, r *http.Request, result map[string]interface{}) (byte []byte,e error) {
+//如果参数bodyBytes不是空，则可代表解密后的Request.body的内容
+func (server *Server) RequestHandler(moduleName string, methodName string, uid uint32, r *http.Request, result map[string]interface{},bodyBytes []byte) (byte []byte,e error) {
+	if server.multipart == false {
+		if bodyBytes == nil {
+			var e error
+			bodyBytes, e = ioutil.ReadAll(r.Body)
+			if e != nil {
+				return nil, NewError(ERR_INTERNAL, "read http data error : "+e.Error())
+			}
+		}
+	} else {
+		bodyBytes = nil
+	}
+	var body map[string]interface{}
+	 //rr, e := r.MultipartReader()
+	 //fmt.Println(fmt.Sprintf("r.MultipartReader rr %v| e %v|bodyBytes %v|r.MultipartForm %v  ", rr, e, bodyBytes, r.MultipartForm))
+	 //rr.ReadForm(maxMemory)
+	if len(bodyBytes) == 0 {
+		//get请求
+		body = make(map[string]interface{})
+	} else if server.parseBody {
+		e := json.Unmarshal(bodyBytes, &body)
+		if e != nil {
+			return bodyBytes, NewError(ERR_INVALID_PARAM, "read body error : "+e.Error())
+		}
+	}
 	var values []reflect.Value
+	module, ok := server.modules[moduleName]
+	if ok {
 		method := reflect.ValueOf(module).MethodByName(methodName)
 		if method.IsValid() {
 			values = method.Call([]reflect.Value{reflect.ValueOf(&HttpRequest{body, bodyBytes, r, uid}), reflect.ValueOf(result)})
@@ -135,8 +175,12 @@ func (server *Server) RequestHandler(moduleName string, methodName string, uid u
 			method = reflect.ValueOf(server.modules["default"]).MethodByName("ErrorMethod")
 			values = method.Call([]reflect.Value{reflect.ValueOf(&HttpRequest{body, bodyBytes, r, uid}), reflect.ValueOf(result)})
 		}
+	} else {
+		method := reflect.ValueOf(server.modules["default"]).MethodByName("ErrorModule")
+		values = method.Call([]reflect.Value{reflect.ValueOf(&HttpRequest{body, bodyBytes, r, uid}), reflect.ValueOf(result)})
+	}
 	if len(values) != 1 {
-		return bodyBytes, NewError(ERR_INTERNAL, fmt.Sprintf("method %s.%s return value is not 2.", moduleName, methodName))
+		return bodyBytes, NewError(ERR_INTERNAL, fmt.Sprintf("method %s.%s return value is not right.", moduleName, methodName))
 	}
 	switch x := values[0].Interface().(type) {
 	case nil:
@@ -159,8 +203,10 @@ func (server *Server) Respose(w http.ResponseWriter, r *http.Request, err error,
 
 	w.Header().Set("Content-Type", "application/json;charset=utf-8")
 	if re.Code == ERR_NOERR {
-		result["status"] = "ok"
-		result["tm"] = time.Now().UnixNano()
+		if !server.customResult {
+			result["status"] = "ok"
+			result["tm"] = time.Now().UnixNano()
+		}
 		res, e := json.Marshal(result)
 		if e == nil {
 			server.Log(r, w, reqBody, []byte(res), true, duration)
