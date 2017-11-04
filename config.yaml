@@ -3,6 +3,6 @@ address:
   port: 8081
 log: C:\mygo\reportingtool
 mysql:
-  master: root:
+  master: root:213213
   slave:
-  - root:
+  - root:3123
