@@ -19,6 +19,7 @@ func main() {
 		fmt.Println("Load Config error :", err.Error())
 		return
 	}
+	fmt.Printf("--- t:\n%v\n\n", conf)
 	server, err := service.New(&conf)
 	if err != nil {
 		fmt.Println(err.Error())

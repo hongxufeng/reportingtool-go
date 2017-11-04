@@ -44,6 +44,6 @@ func Load(c interface{}, path string) error {
 		return errors.New(fmt.Sprintf("cannot read %v bytes from %v", info.Size(), path))
 	}
 
-	e = yaml.Unmarshal([]byte(data), &c)
+	e = yaml.Unmarshal([]byte(data),c)
 	return e
 }
