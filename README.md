@@ -37,3 +37,5 @@ var serverURL="http://localhost:8080/ReportingTool"
 
 5.要在请求数据时，增加loading panel  还有刷新数据时的  loading panel  以及表格内容放大
 
+6.傻瓜式配置，决定把一些需要的参数，放在配置文件里
+
