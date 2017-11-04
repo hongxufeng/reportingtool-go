@@ -1,9 +1,16 @@
 package service
 
+import (
+	"github.com/aiwuTech/fileLogger"
+	"utils/config"
+)
+
 type DefaultModule struct {
+	log *fileLogger.FileLogger
 }
 
-func (module *DefaultModule) Init() error {
+func (module *DefaultModule) Init(conf *config.Config) error {
+	module.log=fileLogger.NewDefaultLogger(conf.LogDir, "DefaultModule.log")
 	return nil
 }
 func (module *DefaultModule) ErrorModule(req *HttpRequest, res map[string]interface{}) (e Error) {

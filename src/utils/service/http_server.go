@@ -12,25 +12,24 @@ import (
 	"encoding/json"
 	"reflect"
 	"io/ioutil"
+	"utils/config"
 )
 
 type Server struct {
 	modules      map[string]Module
 	Info *fileLogger.FileLogger
 	Error *fileLogger.FileLogger
+	conf         *config.Config
 	mvaliduser   func(r *http.Request) (uid uint32) //加密方式    如果不是合法用户，需要返回0
 	parseBody    bool                               //是否把POST的内容解析为json对象
 	customResult bool                               //返回结果中是否包含result和tm项
 	multipart    bool                               //是否multipart post 上传文件
 }
 
-func New(args ...bool) (server Server, err error) {
-	server.modules=make(map[string]Module)
-	server.Info=fileLogger.NewDefaultLogger("/log", "info.log")
+func New(conf *config.Config,args ...bool) (server *Server, err error) {
+	server = &Server{make(map[string]Module), fileLogger.NewDefaultLogger(conf.LogDir, "Info.log"),fileLogger.NewDefaultLogger(conf.LogDir, "Error.log"), conf, mValidUser, true, false, false}
 	server.Info.SetPrefix("[INFO] ")
-	server.Error=fileLogger.NewDefaultLogger("/log", "error.log")
 	server.Error.SetPrefix("[ERROR] ")
-	server.mvaliduser=mValidUser
 	if len(args) >= 1 {
 		server.parseBody = args[0]
 	}
@@ -74,7 +73,7 @@ func mValidUser(r *http.Request) (uid uint32) {
 
 func (server *Server) AddModule(name string, module Module) (err error) {
 	fmt.Printf("add module %s... ", name)
-	err = module.Init()
+	err = module.Init(server.conf)
 	if err != nil {
 		return
 	}
@@ -92,7 +91,7 @@ func (server Server) StartService() error {
 	r.PathPrefix("/web/").Handler(http.StripPrefix("/web/", http.FileServer(http.Dir("web/"))))
 
 	// Bind to a port and pass our router in
-	err :=http.ListenAndServe(":8080", r)
+	err :=http.ListenAndServe(server.conf.Address.Port, r)
 	if err!=nil {
 		server.Error.Printf("服务启动错误：%s",err)
 	}else {

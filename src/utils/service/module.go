@@ -1,5 +1,7 @@
 package service
 
+import "utils/config"
+
 type Module interface {
-	Init() (err error)
+	Init(config *config.Config) (err error)
 }
