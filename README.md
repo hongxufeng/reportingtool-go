@@ -1,6 +1,8 @@
 # reportingtool-go
 reportingtool go语言版 貌似做得有点多啊 前端js，html，css后端 golang，sql ，xml，json 白菜价！
 ## 使用须知
+使用项目需先运行go build   然后在生成exe的地方运行reportingtool config.yaml
+
 因项目使用 mysql 数据库 需增加依赖  go-sql-driver/mysql
 在终端 运行命令go get github.com/go-sql-driver/mysql
 
