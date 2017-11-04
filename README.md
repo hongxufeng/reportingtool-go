@@ -16,6 +16,8 @@ go get github.com/beevik/etree
 log 打印包
 go get github.com/aiwuTech/fileLogger
 
+yaml解析  go get gopkg.in/yaml.v2
+
 修改服务器请求地址 在assets/js/core/ReportingTool.js的16行
 var serverURL="http://localhost:8080/ReportingTool"
 

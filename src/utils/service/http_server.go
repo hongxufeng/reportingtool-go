@@ -79,7 +79,7 @@ func (server *Server) AddModule(name string, module Module) (err error) {
 		return
 	}
 	fmt.Println("ok")
-	server.Info.Print("add module %s success",name)
+	server.Info.Printf("add module %s success",name)
 	server.modules[name] = module
 	return
 }
@@ -94,9 +94,9 @@ func (server Server) StartService() error {
 	// Bind to a port and pass our router in
 	err :=http.ListenAndServe(":8080", r)
 	if err!=nil {
-		server.Error.Print("服务启动错误：%s",err)
+		server.Error.Printf("服务启动错误：%s",err)
 	}else {
-		server.Info.Print("http服务启动！")
+		server.Info.Printf("http服务启动！")
 	}
 	return err
 }
@@ -247,8 +247,8 @@ func (server *Server) Log(r *http.Request, w http.ResponseWriter, reqBody []byte
 	addr := strings.Split(r.RemoteAddr, ":")
 	l = fmt.Sprintf(format, float64(duration)/1000000, uid, addr[0], r.URL.String(), response, string(result))
 	if success {
-		server.Info.Print(l)
+		server.Info.Printf(l)
 	}else {
-		server.Error.Print(l)
+		server.Error.Printf(l)
 	}
 }

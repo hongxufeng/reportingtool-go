@@ -5,6 +5,7 @@ import (
 	"utils/service"
 )
 func main() {
+
 	server, err := service.New()
 	if err != nil {
 		fmt.Println(err.Error())
