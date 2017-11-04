@@ -7,19 +7,19 @@ import (
 	"gopkg.in/yaml.v2"
 )
 type MysqlType struct {
-	Master string   "master"
-	Slave  []string "slave"
+	Master string   `yaml:"master"`
+	Slave  []string `yaml:"slave"`
 }
 
 type Address struct {
-	Ip   string "ip"
-	Port string "port"
+	Ip   string `yaml:"ip"`
+	Port string `yaml:"port"`
 }
 
 type Config struct {
-	Address Address "address"
-	LogDir  string  "log"
-	Mysql  MysqlType "mysql"
+	Address Address `yaml:"address"`
+	LogDir  string  `yaml:"log"`
+	Mysql  MysqlType `yaml:"mysql"`
 }
 
 func (c *Config) LoadPath(path string) error {
@@ -44,6 +44,6 @@ func Load(c interface{}, path string) error {
 		return errors.New(fmt.Sprintf("cannot read %v bytes from %v", info.Size(), path))
 	}
 
-	e = yaml.Unmarshal([]byte(data), c)
+	e = yaml.Unmarshal([]byte(data), &c)
 	return e
 }

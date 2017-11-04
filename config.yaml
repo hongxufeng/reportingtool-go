@@ -1,7 +1,7 @@
 address:
   ip: 0.0.0.0
   port: 8081
-log: C:\mygo\reportingtool
+log: C:\mygo\reportingtool\log
 mysql:
   master: root:213213
   slave:

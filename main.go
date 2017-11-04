@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-var conf *config.Config
+var conf config.Config
 
 func main() {
 	if len(os.Args) < 2 {
@@ -19,7 +19,7 @@ func main() {
 		fmt.Println("Load Config error :", err.Error())
 		return
 	}
-	server, err := service.New(conf)
+	server, err := service.New(&conf)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
