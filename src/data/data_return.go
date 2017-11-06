@@ -1,4 +1,4 @@
-package model
+package data
 
 type TableModel struct {
 	Search string`json:"search"`

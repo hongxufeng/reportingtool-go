@@ -1,4 +1,4 @@
-package model
+package data
 
 type Param struct {
 	XmlTable interface{}//XML获得的数据结构
