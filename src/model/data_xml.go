@@ -1,4 +1,4 @@
-package data
+package model
 
 type ColumnConfig struct {
 	HasBtn bool

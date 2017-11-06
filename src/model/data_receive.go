@@ -1,4 +1,4 @@
-package data
+package model
 
 type Settings struct {
 	Cmd string

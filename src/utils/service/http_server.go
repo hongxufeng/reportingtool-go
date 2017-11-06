@@ -83,21 +83,16 @@ func (server *Server) AddModule(name string, module Module) (err error) {
 	return
 }
 
-func (server Server) StartService() error {
+func (server *Server) StartService() error {
 	r := mux.NewRouter()
 	// Routes consist of a path and a handler function.
-	r.HandleFunc("/user", server.UserHandler)
-	r.HandleFunc("/base", server.BaseHandler)
+	r.HandleFunc("/user/{module}/{method}", server.UserHandler)
+	r.HandleFunc("/base/{module}/{method}", server.BaseHandler)
 	r.PathPrefix("/web/").Handler(http.StripPrefix("/web/", http.FileServer(http.Dir("web/"))))
-
+	fmt.Print("服务已经启动！")
+	server.Info.Print("服务已经启动！")
 	// Bind to a port and pass our router in
-	err :=http.ListenAndServe(server.conf.Address.Port, r)
-	if err!=nil {
-		server.Error.Printf("服务启动错误：%s",err)
-	}else {
-		server.Info.Printf("http服务启动！")
-	}
-	return err
+	return http.ListenAndServe(server.conf.Address.Port, r)
 }
 
 func (server *Server) UserHandler(w http.ResponseWriter, r *http.Request) {
@@ -106,14 +101,10 @@ func (server *Server) UserHandler(w http.ResponseWriter, r *http.Request) {
 	var err error
 	var body []byte
 	var uid uint32
+	vars := mux.Vars(r)
 	uid= server.mvaliduser(r)
 	if uid > 0 {
-		fields := strings.Split(r.URL.Path[1:], "/")
-		if len(fields) >= 3 {
-			body, err = server.RequestHandler(fields[1], "User_"+fields[2], uid, r, result,nil)
-		} else {
-			err = NewError(ERR_INVALID_PARAM, "invalid url format : "+r.URL.Path)
-		}
+		body, err = server.RequestHandler(vars["module"], "User_"+vars["method"], uid, r, result,nil)
 	} else {
 		err = NewError(ERR_INVALID_USER, "invalid user")
 	}
@@ -123,17 +114,13 @@ func (server *Server) UserHandler(w http.ResponseWriter, r *http.Request) {
 
 func (server *Server) BaseHandler(w http.ResponseWriter, r *http.Request) {
 	start := time.Now().UnixNano()
+	vars := mux.Vars(r)
 	var result map[string]interface{} = make(map[string]interface{})
 	var err error
 	var body []byte
 	var uid uint32
 	uid = server.mvaliduser(r)
-	fields := strings.Split(r.URL.Path[1:], "/")
-	if len(fields) >= 3 {
-		body, err = server.RequestHandler(fields[1], "Base_"+fields[2], uid, r, result,nil)
-	} else {
-		err = NewError(ERR_INVALID_PARAM, "invalid url format : "+r.URL.Path)
-	}
+	body, err = server.RequestHandler(vars["module"], "Base_"+vars["method"], uid, r, result,nil)
 	end := time.Now().UnixNano()
 	server.Respose(w, r, err, body, result, end-start)
 }
@@ -154,7 +141,6 @@ func (server *Server) RequestHandler(moduleName string, methodName string, uid u
 	var body map[string]interface{}
 	 //rr, e := r.MultipartReader()
 	 //fmt.Println(fmt.Sprintf("r.MultipartReader rr %v| e %v|bodyBytes %v|r.MultipartForm %v  ", rr, e, bodyBytes, r.MultipartForm))
-	 //rr.ReadForm(maxMemory)
 	if len(bodyBytes) == 0 {
 		//get请求
 		body = make(map[string]interface{})
@@ -227,7 +213,6 @@ func (server *Server) ResposeErr(r *http.Request, w http.ResponseWriter, reqBody
 }
 func (server *Server) Log(r *http.Request, w http.ResponseWriter, reqBody []byte, result []byte, success bool, duration int64) {
 	w.Write(result)
-	var l string
 	var uid, response string
 	uidCookie, e := r.Cookie("auth")
 	if e != nil {
@@ -244,10 +229,9 @@ func (server *Server) Log(r *http.Request, w http.ResponseWriter, reqBody []byte
 	format += "param: %s |"
 	format += "response: %s |"
 	addr := strings.Split(r.RemoteAddr, ":")
-	l = fmt.Sprintf(format, float64(duration)/1000000, uid, addr[0], r.URL.String(), response, string(result))
 	if success {
-		server.Info.Printf(l)
+		server.Info.Printf(format, float64(duration)/1000000, uid, addr[0], r.URL.String(), response, string(result))
 	}else {
-		server.Error.Printf(l)
+		server.Error.Print(format, float64(duration)/1000000, uid, addr[0], r.URL.String(), response, string(result))
 	}
 }
