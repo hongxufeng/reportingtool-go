@@ -17,8 +17,7 @@ import (
 
 type Server struct {
 	modules      map[string]Module
-	Info *fileLogger.FileLogger
-	Error *fileLogger.FileLogger
+	service *fileLogger.FileLogger
 	conf         *config.Config
 	mvaliduser   func(r *http.Request) (uid uint32) //加密方式    如果不是合法用户，需要返回0
 	parseBody    bool                               //是否把POST的内容解析为json对象
@@ -27,9 +26,8 @@ type Server struct {
 }
 
 func New(conf *config.Config,args ...bool) (server *Server, err error) {
-	server = &Server{make(map[string]Module), fileLogger.NewDefaultLogger(conf.LogDir, "Info.log"),fileLogger.NewDefaultLogger(conf.LogDir, "Error.log"), conf, mValidUser, true, false, false}
-	server.Info.SetPrefix("[INFO] ")
-	server.Error.SetPrefix("[ERROR] ")
+	server = &Server{make(map[string]Module), fileLogger.NewDefaultLogger(conf.LogDir, "Service.log"), conf, mValidUser, true, false, false}
+	server.service.SetPrefix("[SERVICE] ")
 	if len(args) >= 1 {
 		server.parseBody = args[0]
 	}
@@ -78,7 +76,7 @@ func (server *Server) AddModule(name string, module Module) (err error) {
 		return
 	}
 	fmt.Println("ok")
-	server.Info.Printf("add module %s success",name)
+	server.service.Printf("add module %s success",name)
 	server.modules[name] = module
 	return
 }
@@ -90,7 +88,7 @@ func (server *Server) StartService() error {
 	r.HandleFunc("/base/{module}/{method}", server.BaseHandler)
 	r.PathPrefix("/web/").Handler(http.StripPrefix("/web/", http.FileServer(http.Dir("web/"))))
 	fmt.Print("服务已经启动！")
-	server.Info.Print("服务已经启动！")
+	server.service.Print("服务已经启动！")
 	// Bind to a port and pass our router in
 	return http.ListenAndServe(server.conf.Address.Port, r)
 }
@@ -230,8 +228,8 @@ func (server *Server) Log(r *http.Request, w http.ResponseWriter, reqBody []byte
 	format += "response: %s |"
 	addr := strings.Split(r.RemoteAddr, ":")
 	if success {
-		server.Info.Printf(format, float64(duration)/1000000, uid, addr[0], r.URL.String(), response, string(result))
+		server.service.Info(format, float64(duration)/1000000, uid, addr[0], r.URL.String(), response, string(result))
 	}else {
-		server.Error.Print(format, float64(duration)/1000000, uid, addr[0], r.URL.String(), response, string(result))
+		server.service.Error(format, float64(duration)/1000000, uid, addr[0], r.URL.String(), response, string(result))
 	}
 }
