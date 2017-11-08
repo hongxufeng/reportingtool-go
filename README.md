@@ -13,7 +13,7 @@ The reportingtool is a project that presents database data on a table,tree or re
 * Custom extensions can be added on your own.
 * An HTTP framework with a defined format.
 ### unfinished project
-This is a project that is still under development.When the project is mature, I will give you more details by English.a preview of features[preview](https://github.com/hongxufeng/reportingtool-csharp/blob/master/ReportingTool/ReadMe.docx)
+This is a project that is still under development.When the project is mature, I will give you more details by English.a [preview](https://github.com/hongxufeng/reportingtool-csharp/blob/master/ReportingTool/ReadMe.docx) of features.
 I can only comment in Chinese for my broken English.Please forgive me.
 
 ## 使用须知
