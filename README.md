@@ -1,5 +1,21 @@
-# reportingtool-go
-reportingtool go语言版 貌似做得有点多啊 前端js，html，css后端 golang，sql ，xml，json 白菜价！
+reportingtool-go
+=====
+
+The reportingtool is a project that presents database data on a table,tree or rect  based on requirements.  Its design was inspired by the another project reporting-charp
+[Reporting-charp](https://github.com/hongxufeng/reportingtool-csharp)
+. It includes front-end projects wrote with js,html,css  and back-end projects wrote with go.Some of the project's features include:
+
+* It can  build quickly the website of the b/s framework
+* Represents database date as table,tree or rect easily.
+* You only need to render the content through a JS call.
+* Configure the element display through the XML attribute configuration.
+* Build the server quickly through the yaml configuration file(require the go environment).
+* Custom extensions can be added on your own.
+* An HTTP framework with a defined format.
+### unfinished project
+This is a project that is still under development.When the project is mature, I will give you more details by English.
+I can only comment in Chinese for my broken English.Please forgive me.
+
 ## 使用须知
 使用项目需先运行go build   然后在生成exe的地方运行reportingtool config.yaml
 
