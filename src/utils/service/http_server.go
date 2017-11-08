@@ -19,7 +19,7 @@ type Server struct {
 	modules      map[string]Module
 	service *fileLogger.FileLogger
 	conf         *config.Config
-	mvaliduser   func(r *http.Request) (uid uint32) //加密方式    如果不是合法用户，需要返回0
+	mvaliduser   func(r *http.Request) (uid uint32,err error) //加密方式    如果不是合法用户，需要返回0
 	parseBody    bool                               //是否把POST的内容解析为json对象
 	customResult bool                               //返回结果中是否包含result和tm项
 	multipart    bool                               //是否multipart post 上传文件
@@ -41,10 +41,10 @@ func New(conf *config.Config,args ...bool) (server *Server, err error) {
 	return
 }
 
-func mValidUser(r *http.Request) (uid uint32) {
+func mValidUser(r *http.Request) (uid uint32,err error) {
 	c, e := r.Cookie("auth")
 	if e != nil {
-		return 0
+		return 0,nil
 	}
 	auth := c.Value
 	var hashcode string
@@ -64,9 +64,9 @@ func mValidUser(r *http.Request) (uid uint32) {
 	}
 	valid, e := datahelper.UserValid(uid, hashcode)
 	if e != nil || !valid {
-		return 0
+		return 0,e
 	}
-	return uid
+	return uid,nil
 }
 
 func (server *Server) AddModule(name string, module Module) (err error) {

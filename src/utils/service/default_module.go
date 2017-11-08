@@ -10,7 +10,7 @@ type DefaultModule struct {
 }
 
 func (module *DefaultModule) Init(conf *config.Config) error {
-	module.log=fileLogger.NewDefaultLogger(conf.LogDir, "DefaultModule.log")
+	module.log=fileLogger.NewDefaultLogger(conf.LogDir, "Default.log")
 	return nil
 }
 func (module *DefaultModule) ErrorModule(req *HttpRequest, res map[string]interface{}) (e Error) {
