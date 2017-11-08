@@ -3,6 +3,7 @@ package user
 import (
 	"github.com/aiwuTech/fileLogger"
 	"utils/config"
+	"utils/service"
 )
 
 type UserModule struct {
@@ -14,3 +15,7 @@ func (module *UserModule) Init(conf *config.Config) error {
 	return nil
 }
 
+func (module *UserModule) Base_UserLogin(req *service.HttpRequest, result map[string]interface{}) (e error) {
+
+	return nil
+}

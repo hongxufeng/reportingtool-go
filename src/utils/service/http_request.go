@@ -14,10 +14,10 @@ import (
 const MAX_PS = 1000
 
 type HttpRequest struct {
-	Body    map[string]interface{}
-	BodyRaw []byte
+	Body    map[string]interface{}//可存储body解密的json解析后的结构体
+	BodyRaw []byte//可存储body解密的data
 	request *http.Request
-	Uid     uint32
+	Uid     uint32//用户的UID
 }
 
 func (hr *HttpRequest) GetParam(name string) string {
