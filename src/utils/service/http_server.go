@@ -100,11 +100,13 @@ func (server *Server) UserHandler(w http.ResponseWriter, r *http.Request) {
 	var body []byte
 	var uid uint32
 	vars := mux.Vars(r)
-	uid= server.mvaliduser(r)
-	if uid > 0 {
-		body, err = server.RequestHandler(vars["module"], "User_"+vars["method"], uid, r, result,nil)
-	} else {
-		err = NewError(ERR_INVALID_USER, "invalid user")
+	uid,err= server.mvaliduser(r)
+	if err==nil {
+		if uid > 0 {
+			body, err = server.RequestHandler(vars["module"], "User_"+vars["method"], uid, r, result, nil)
+		} else {
+			err = NewError(ERR_INVALID_USER, "invalid user")
+		}
 	}
 	end := time.Now().UnixNano()
 	server.Respose(w, r, err, body, result, end-start)
@@ -117,8 +119,10 @@ func (server *Server) BaseHandler(w http.ResponseWriter, r *http.Request) {
 	var err error
 	var body []byte
 	var uid uint32
-	uid = server.mvaliduser(r)
-	body, err = server.RequestHandler(vars["module"], "Base_"+vars["method"], uid, r, result,nil)
+	uid,err = server.mvaliduser(r)
+	if err==nil {
+		body, err = server.RequestHandler(vars["module"], "Base_"+vars["method"], uid, r, result, nil)
+	}
 	end := time.Now().UnixNano()
 	server.Respose(w, r, err, body, result, end-start)
 }
