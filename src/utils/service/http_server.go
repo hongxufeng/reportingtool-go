@@ -7,7 +7,7 @@ import (
 	"github.com/aiwuTech/fileLogger"
 	"strings"
 	"utils"
-	"datahelper"
+	"datahelper/user"
 	"time"
 	"encoding/json"
 	"reflect"
@@ -62,7 +62,7 @@ func mValidUser(r *http.Request) (uid uint32,err error) {
 		}
 		hashcode = ks[1]
 	}
-	valid, e := datahelper.UserValid(uid, hashcode)
+	valid, e := user.UserValid(uid, hashcode)
 	if e != nil || !valid {
 		return 0,e
 	}

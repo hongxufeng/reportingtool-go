@@ -18,8 +18,9 @@ const (
 	ERR_VERIFY_FAIL           = 2006 //验证失败
 	ERR_VCODE_TIMEOUT         = 2007 //验证码超时
 	ERR_INVALID_USER          = 2008 //用户验证不通过
-	ERR_STATUS_DENIED		    =2009  //用户状态关闭
+	RR_STATUS_DENIED		    =2009  //用户状态关闭
 	ERR_PERMISSION_DENIED     = 2010 //权限不足
+	ERR_LOGIN_FREQUENT        =2011   //登录频繁
 )
 type Error struct {
 	Code uint
