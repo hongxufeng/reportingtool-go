@@ -1,6 +1,5 @@
-reportingtool-go
-=====
-
+Reportingtool-go
+================
 The reportingtool is a project that presents database data on a table,tree or rect  based on requirements.  Its design was inspired by the another project
 [Reporting-charp](https://github.com/hongxufeng/reportingtool-csharp)
 . It includes front-end projects wrote with js,html,css  and back-end projects wrote with go.Some of the project's features include:
@@ -12,10 +11,25 @@ The reportingtool is a project that presents database data on a table,tree or re
 * Build the server quickly through the yaml configuration file(require the go environment).
 * Custom extensions can be added on your own.
 * An HTTP framework with a defined format.
-### unfinished project
+## Unfinished project
 This is a project that is still under development.When the project is mature, I will give you more details by English.How to use it in future? look [here](https://github.com/hongxufeng/reportingtool-csharp/blob/master/ReportingTool/ReadMe.docx).
 I can only comment in Chinese for my broken English.Please forgive me.
 
+## The difference between Vue.js
+#### Advantage
+* Seamless integration with database data,database data The data structure of the database does not need to be constructed again in js,just in XML!
+* Idiots generate code,simply configure js and XML to generate the required content.
+* Good for hiding data,sensitive information can be processed in the background.
+* The format of the specified format can be developed.
+* Write once,refer everywhere,don't need to be in a multifarious writing js, HTML.
+
+#### Weakness
+* This is just a simple table,tree or rect tool.
+* Clearly not such as the vue.js flexibility,but you can make it by yourself.
+* Some HTML is generated at the back end,vue.js focus on the data structure and generates HTML on the front end.(To some extent,It's advantage)
+
+
+In this statement ,for the view of my limited level, I beg your pardon for my error and the wrong statement of this project.
 ## 使用须知
 使用项目需先运行go build   然后在生成exe的地方运行reportingtool config.yaml
 
