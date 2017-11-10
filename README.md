@@ -50,6 +50,8 @@ go get github.com/aiwuTech/fileLogger
 
 yaml解析  go get gopkg.in/yaml.v2
 
+redis做缓存数据库  go get -u github.com/go-redis/redis
+
 修改服务器请求地址 在assets/js/core/ReportingTool.js的16行
 var serverURL="http://localhost:8080/ReportingTool"
 
@@ -72,4 +74,6 @@ var serverURL="http://localhost:8080/ReportingTool"
 5.要在请求数据时，增加loading panel  还有刷新数据时的  loading panel  以及表格内容放大
 
 6.傻瓜式配置，决定把一些需要的参数，放在配置文件里
+
+7.使用redis做缓存数据库，像账户验证的密码，登陆失败的次数等等，不能每次验证登录cookie都查mysql吧，还是决定使用redis，减少与关系数据库的交互，增加速度。
 
