@@ -52,6 +52,8 @@ yaml解析  go get gopkg.in/yaml.v2
 
 redis做缓存数据库  go get -u github.com/go-redis/redis
 
+解析Ajax请求用到的包    go get github.com/gorilla/schema
+
 修改服务器请求地址 在assets/js/core/ReportingTool.js的16行
 var serverURL="http://localhost:8080/ReportingTool"
 
