@@ -46,7 +46,7 @@ go get github.com/beevik/etree
 
 
 log 打印包
-go get github.com/aiwuTech/fileLogger
+go get github.com/hongxufeng/fileLogger
 
 yaml解析  go get gopkg.in/yaml.v2
 
