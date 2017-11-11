@@ -9,6 +9,7 @@ import (
 	"reflect"
 	"strings"
 	"utils"
+	"github.com/gorilla/schema"
 )
 
 const MAX_PS = 1000
@@ -446,6 +447,86 @@ func (hr *HttpRequest) GetParamOpt(params ...interface{}) error {
 		if e != nil {
 			return errors.New(fmt.Sprintf("parse [%v] error:%v", key, e.Error()))
 		}
+	}
+	return nil
+}
+//不带默认值的Form解析
+func (hr *HttpRequest) ParseForm(params ...interface{}) error {
+	if len(params)%2 != 0 {
+		return errors.New("params count must be odd")
+	}
+	for i := 0; i < len(params); i += 2 {
+		key := utils.ToString(params[i])
+		hr.request.ParseForm()
+		_, fe := hr.request.MultipartReader()
+		if fe != nil {
+			return fe
+		}
+		v := hr.request.FormValue(key)
+		if len(v)>0{
+			var e error
+			switch ref := params[i+1].(type) {
+			case *string:
+				*ref = utils.ToString(v)
+			case *float64:
+				*ref, e = utils.ToFloat64(v)
+			case *int:
+				*ref, e = utils.ToInt(v)
+			case *uint16:
+				*ref, e = utils.ToUint16(v)
+			case *uint32:
+				*ref, e = utils.ToUint32(v)
+			case *uint64:
+				*ref, e = utils.ToUint64(v)
+			case *int64:
+				*ref, e = utils.ToInt64(v)
+			case *int16:
+				*ref, e = utils.ToInt16(v)
+			case *int8:
+				*ref, e = utils.ToInt8(v)
+			case *uint:
+				*ref, e = utils.ToUint(v)
+				//case *map[string]interface{}:
+				//	switch m := v.(type) {
+				//	case map[string]interface{}:
+				//		*ref = m
+				//	default:
+				//		e = errors.New("value is not map[string]iterface{}")
+				//	}
+			case *[]string:
+				*ref, e = utils.ToStringSlice(v)
+			case *[]uint32:
+				*ref, e = utils.ToUint32Slice(v)
+			case *interface{}:
+				*ref = v
+			default:
+				return errors.New(fmt.Sprintf("unknown type %v ", reflect.TypeOf(ref)))
+			}
+			if e != nil {
+				return errors.New(fmt.Sprintf("parse [%v] error:%v", key, e.Error()))
+			}
+			if key == "ps" {
+				ps, e := utils.ToUint64(v)
+				if e == nil && ps > MAX_PS {
+					return errors.New("ps too large")
+				}
+			}
+		} else {
+			return errors.New(fmt.Sprintf("%v not provided", key))
+		}
+	}
+	return nil
+}
+//不带默认值的Ajax解析
+func (hr *HttpRequest) ParseAjax(model interface{}) (err error) {
+	err = hr.request.ParseForm()
+	if err != nil {
+		return
+	}
+	var decoder = schema.NewDecoder()
+	err = decoder.Decode(model, hr.request.PostForm)
+	if err != nil {
+		return
 	}
 	return nil
 }

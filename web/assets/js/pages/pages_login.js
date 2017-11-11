@@ -57,7 +57,7 @@ $.validator.setDefaults({
         var password = md5($("#login-password").val());
         var postData={
             method: "POST",
-            url:"/base/user/userLogin",
+            url:"base/user/UserLogin",
             data:{
                 username:username,
                 password:password
@@ -66,7 +66,7 @@ $.validator.setDefaults({
                 var jsonObject = JSON.parse(data);
                 if(jsonObject.status==="ok"){
                     //写cookie
-                    window.location.href="/reportingtool";
+                    window.location.href="/web/reportingtool";
                 }else {
                     FailureAnimation();
                     return false
@@ -83,8 +83,9 @@ $.validator.setDefaults({
                 failureBlock.removeClass("wobble").addClass("shake")
             }
         };
-        failureAnimation();
-        return false
+        $.ajax(postData);
+        // failureAnimation();
+        // return false
     }
 });
 

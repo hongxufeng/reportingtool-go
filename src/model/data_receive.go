@@ -13,3 +13,8 @@ type Settings struct {
 	ColPage int
 	HR bool
 }
+
+type LoginData struct {
+	Username string
+	Password string
+}

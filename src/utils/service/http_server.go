@@ -86,7 +86,7 @@ func (server *Server) StartService() error {
 	// Routes consist of a path and a handler function.
 	r.HandleFunc("/user/{module}/{method}", server.UserHandler)
 	r.HandleFunc("/base/{module}/{method}", server.BaseHandler)
-	r.PathPrefix("/web/").Handler(http.StripPrefix("/web/", http.FileServer(http.Dir("web/"))))
+	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("web/"))))
 	fmt.Print("服务已经启动！")
 	server.service.Print("服务已经启动！")
 	// Bind to a port and pass our router in

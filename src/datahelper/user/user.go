@@ -30,14 +30,14 @@ func CheckUserState(username string) (valid bool, e error) {
 	valid=true
 	return
 }
-func CheckAuth(uid uint32, password string) (ud *usercache.UserDetail, e error) {
+func CheckAuth(name string, password string) (ud *usercache.UserDetail, e error) {
 	return
 }
+
 func CreateSuccessResp(ud *usercache.UserDetail) (res map[string]interface{}, e error) {
 	res = make(map[string]interface{}, 0)
 	res["loginstatus"] = 0
 	var sdata LoginSuccessData
-	//返回的cookie要加盐！！！
 	sdata.Token = fmt.Sprintf("%d_%s", ud.Uid, utils.Md5String(fmt.Sprintf("%s|%s", ud.Uid, ud.Password)))
 	res["userdata"] = sdata
 	return
