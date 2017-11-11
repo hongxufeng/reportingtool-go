@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/aiwuTech/fileLogger"
 	"utils/config"
+	"github.com/hongxufeng/fileLogger"
 )
 
 type DefaultModule struct {

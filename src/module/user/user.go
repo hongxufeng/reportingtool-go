@@ -2,11 +2,11 @@ package user
 
 
 import (
-	"github.com/aiwuTech/fileLogger"
 	"utils/config"
 	"utils/service"
 	"datahelper/user"
 	"model"
+	"github.com/hongxufeng/fileLogger"
 )
 
 type UserModule struct {
