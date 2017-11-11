@@ -55,24 +55,6 @@ $.validator.setDefaults({
     submitHandler: function() {
         var username = $("#login-username").val();
         var password = md5($("#login-password").val());
-        var postData={
-            method: "POST",
-            url:"base/user/UserLogin",
-            data:{
-                username:username,
-                password:password
-            },
-            success:function (data, textStatus, jqXHR) {
-                var jsonObject = JSON.parse(data);
-                if(jsonObject.status==="ok"){
-                    //写cookie
-                    window.location.href="/web/reportingtool";
-                }else {
-                    FailureAnimation();
-                    return false
-                }
-            }
-        };
         var failureAnimation=function () {
             var failureBlock=$(".alert-dismissable")
             $(".login-title").css("display","none")
@@ -81,6 +63,25 @@ $.validator.setDefaults({
                 failureBlock.removeClass("shake").addClass("wobble")
             }else {
                 failureBlock.removeClass("wobble").addClass("shake")
+            }
+        };
+        var postData={
+            method: "POST",
+            url:"base/user/UserLogin",
+            data:{
+                username:username,
+                password:password
+            },
+            success:function (data, textStatus, jqXHR) {
+                //已经是json对象无需解析
+                // var jsonObject = JSON.parse(data);
+                if(data.res.loginstatus===0){
+                    //写cookie
+                    window.location.href="reportingtool.html";
+                }else {
+                    failureAnimation();
+                    return false
+                }
             }
         };
         $.ajax(postData);
