@@ -10,8 +10,8 @@ import (
 var ERROR_PASSWORD_WRONG=errors.New("密码不正确！")
 
 type LoginSuccessData struct {
-	Uid      uint32 `json:"uid"`
 	Token    string `json:"token"`
+	Avatar   string`json:"avatar"`
 }
 
 type LoginFailData struct {
@@ -42,6 +42,7 @@ func CheckUserState(uid uint32) (state bool, e error) {
 	return
 }
 func CheckAuth(uid uint32, password string) (ud *usercache.UserDetail, e error) {
+	//fmt.Print(utils.Md5String(fmt.Sprintf("%s_%d",password,148360)))
 	ud,e=usercache.GetUserDetail(uid)
 	if e!=nil{
 		return
@@ -58,6 +59,7 @@ func CreateSuccessResp(ud *usercache.UserDetail) (res map[string]interface{}, e 
 	res["loginstatus"] = 0
 	var sdata LoginSuccessData
 	sdata.Token = fmt.Sprintf("%d_%s", ud.Uid, utils.Md5String(fmt.Sprintf("%s|%s", ud.Uid, ud.Password)))
+	sdata.Avatar=ud.Avatar
 	res["userdata"] = sdata
 	return
 }

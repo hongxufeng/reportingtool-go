@@ -130,7 +130,6 @@ func (server *Server) RequestHandler(moduleName string, methodName string, uid u
 				return nil, NewError(ERR_INTERNAL, "read http data error : "+e.Error())
 			}
 		}
-		fmt.Print(bodyBytes)
 	} else {
 		bodyBytes = nil
 	}
