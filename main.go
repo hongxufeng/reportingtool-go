@@ -21,7 +21,7 @@ func main() {
 		return
 	}
 	//fmt.Printf("\n%v\n\n", conf)
-	server, err := service.New(&conf,false,false,false)
+	server, err := service.New(&conf,2,false,false)
 	if err != nil {
 		fmt.Println(err.Error())
 		return

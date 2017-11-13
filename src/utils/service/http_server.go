@@ -4,6 +4,7 @@ import (
 	"github.com/gorilla/mux"
 	"net/http"
 	"fmt"
+	"github.com/hongxufeng/fileLogger"
 	"strings"
 	"utils"
 	"datahelper/user"
@@ -12,7 +13,7 @@ import (
 	"reflect"
 	"io/ioutil"
 	"utils/config"
-	"github.com/hongxufeng/fileLogger"
+	"net/url"
 )
 
 type Server struct {
@@ -20,23 +21,15 @@ type Server struct {
 	log          *fileLogger.FileLogger
 	conf         *config.Config
 	mvaliduser   func(r *http.Request) (uid uint32,err error) //加密方式    如果不是合法用户，需要返回0
-	parseBody    bool                               //是否把POST的内容解析为json对象
+	parseBody    uint32                              //0代表不解析，1代表把POST内容为json，2代表urlencoded，
 	customResult bool                               //返回结果中是否包含result和tm项
 	multipart    bool                               //是否multipart post 上传文件
 }
 
-func New(conf *config.Config,args ...bool) (server *Server, err error) {
-	server = &Server{make(map[string]Module), fileLogger.NewDefaultLogger(conf.LogDir, "Service.log"), conf, mValidUser, true, false, false}
+func New(conf *config.Config,parseBody uint32,customResult bool,multipart bool) (server *Server, err error) {
+	server = &Server{make(map[string]Module), fileLogger.NewDefaultLogger(conf.LogDir, "Service.log"), conf, mValidUser, parseBody, customResult, multipart}
 	server.log.SetPrefix("[SERVICE] ")
-	if len(args) >= 1 {
-		server.parseBody = args[0]
-	}
-	if len(args) >= 2 {
-		server.customResult = args[1]
-	}
-	if len(args) >= 3 {
-		server.multipart = args[2]
-	}
+
 	err=server.AddModule("default", &DefaultModule{})
 	return
 }
@@ -137,34 +130,39 @@ func (server *Server) RequestHandler(moduleName string, methodName string, uid u
 				return nil, NewError(ERR_INTERNAL, "read http data error : "+e.Error())
 			}
 		}
+		fmt.Print(bodyBytes)
 	} else {
 		bodyBytes = nil
 	}
-	var body map[string]interface{}
+	var urlencodedbody map[string][]string
+	var jsonbody map[string]interface{}
 	 //rr, e := r.MultipartReader()
 	 //fmt.Println(fmt.Sprintf("r.MultipartReader rr %v| e %v|bodyBytes %v|r.MultipartForm %v  ", rr, e, bodyBytes, r.MultipartForm))
 	if len(bodyBytes) == 0 {
 		//get请求
-		body = make(map[string]interface{})
-	} else if server.parseBody {
-		e := json.Unmarshal(bodyBytes, &body)
+		jsonbody = make(map[string]interface{})
+		urlencodedbody=make(map[string][]string)
+	} else if server.parseBody==1 {
+		e := json.Unmarshal(bodyBytes, &jsonbody)
 		if e != nil {
 			return bodyBytes, NewError(ERR_INVALID_PARAM, "read body error : "+e.Error())
 		}
+	}else if server.parseBody==2{
+		urlencodedbody, e = url.ParseQuery(string(bodyBytes))
 	}
 	var values []reflect.Value
 	module, ok := server.modules[moduleName]
 	if ok {
 		method := reflect.ValueOf(module).MethodByName(methodName)
 		if method.IsValid() {
-			values = method.Call([]reflect.Value{reflect.ValueOf(&HttpRequest{body, bodyBytes, r, uid}), reflect.ValueOf(result)})
+			values = method.Call([]reflect.Value{reflect.ValueOf(&HttpRequest{urlencodedbody,jsonbody, bodyBytes, r, uid}), reflect.ValueOf(result)})
 		} else {
 			method = reflect.ValueOf(server.modules["default"]).MethodByName("ErrorMethod")
-			values = method.Call([]reflect.Value{reflect.ValueOf(&HttpRequest{body, bodyBytes, r, uid}), reflect.ValueOf(result)})
+			values = method.Call([]reflect.Value{reflect.ValueOf(&HttpRequest{urlencodedbody,jsonbody, bodyBytes, r, uid}), reflect.ValueOf(result)})
 		}
 	} else {
 		method := reflect.ValueOf(server.modules["default"]).MethodByName("ErrorModule")
-		values = method.Call([]reflect.Value{reflect.ValueOf(&HttpRequest{body, bodyBytes, r, uid}), reflect.ValueOf(result)})
+		values = method.Call([]reflect.Value{reflect.ValueOf(&HttpRequest{urlencodedbody,jsonbody, bodyBytes, r, uid}), reflect.ValueOf(result)})
 	}
 	if len(values) != 1 {
 		return bodyBytes, NewError(ERR_INTERNAL, fmt.Sprintf("method %s.%s return value is not right.", moduleName, methodName))

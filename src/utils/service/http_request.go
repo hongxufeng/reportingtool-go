@@ -9,16 +9,16 @@ import (
 	"reflect"
 	"strings"
 	"utils"
-	"github.com/gorilla/schema"
 )
 
 const MAX_PS = 1000
 
 type HttpRequest struct {
-	Body    map[string]interface{}//可存储body解密的json解析后的结构体
-	BodyRaw []byte//可存储body解密的data
-	request *http.Request
-	Uid     uint32//用户的UID
+	UrlEncodedBody map[string][]string
+	JsonBody       map[string]interface{} //可存储body解密的json解析后的结构体
+	BodyRaw        []byte                 //可存储body解密的data
+	request        *http.Request
+	Uid            uint32 //用户的UID
 }
 
 func (hr *HttpRequest) GetParam(name string) string {
@@ -70,7 +70,7 @@ func (hr *HttpRequest) X_Wap_profile() string {
 //检查Body中的字段是否齐全
 func (hr *HttpRequest) EnsureBody(keys ...string) (string, bool) {
 	for _, key := range keys {
-		if _, ok := hr.Body[key]; !ok {
+		if _, ok := hr.JsonBody[key]; !ok {
 			return key, false
 		}
 	}
@@ -84,7 +84,7 @@ func (hr *HttpRequest) ParseOpt(params ...interface{}) error {
 	}
 	for i := 0; i < len(params); i += 3 {
 		key := utils.ToString(params[i])
-		v, ok := hr.Body[key]
+		v, ok := hr.JsonBody[key]
 		var e error
 		switch ref := params[i+1].(type) {
 		case *string:
@@ -188,7 +188,7 @@ func (hr *HttpRequest) Parse(params ...interface{}) error {
 	}
 	for i := 0; i < len(params); i += 2 {
 		key := utils.ToString(params[i])
-		if v, ok := hr.Body[key]; ok {
+		if v, ok := hr.JsonBody[key]; ok {
 			var e error
 			switch ref := params[i+1].(type) {
 			case *string:
@@ -450,83 +450,120 @@ func (hr *HttpRequest) GetParamOpt(params ...interface{}) error {
 	}
 	return nil
 }
-//不带默认值的Form解析
-func (hr *HttpRequest) ParseForm(params ...interface{}) error {
+
+//不带默认值的EncodeUrl解析
+func (hr *HttpRequest) ParseEncodeUrl(params ...interface{}) error {
 	if len(params)%2 != 0 {
 		return errors.New("params count must be odd")
 	}
+	//fmt.Print(hr.UrlEncodedBody)
 	for i := 0; i < len(params); i += 2 {
 		key := utils.ToString(params[i])
-		hr.request.ParseForm()
-		_, fe := hr.request.MultipartReader()
-		if fe != nil {
-			return fe
-		}
-		v := hr.request.FormValue(key)
-		if len(v)>0{
-			var e error
-			switch ref := params[i+1].(type) {
-			case *string:
+		vs := hr.UrlEncodedBody[key]
+		v:=vs[0]
+		//fmt.Print(v)
+		var e error
+		switch ref := params[i+1].(type) {
+		case *string:
+			if len(v) > 0 {
 				*ref = utils.ToString(v)
-			case *float64:
+			} else {
+				*ref = utils.ToString(params[i+2])
+			}
+		case *float64:
+			if len(v) > 0 {
 				*ref, e = utils.ToFloat64(v)
-			case *int:
+			} else {
+				*ref, e = utils.ToFloat64(params[i+2])
+			}
+		case *int:
+			if len(v) > 0 {
 				*ref, e = utils.ToInt(v)
-			case *uint16:
-				*ref, e = utils.ToUint16(v)
-			case *uint32:
-				*ref, e = utils.ToUint32(v)
-			case *uint64:
-				*ref, e = utils.ToUint64(v)
-			case *int64:
-				*ref, e = utils.ToInt64(v)
-			case *int16:
-				*ref, e = utils.ToInt16(v)
-			case *int8:
+			} else {
+				*ref, e = utils.ToInt(params[i+2])
+			}
+		case *int8:
+			if len(v) > 0 {
 				*ref, e = utils.ToInt8(v)
-			case *uint:
+			} else {
+				*ref, e = utils.ToInt8(params[i+2])
+			}
+		case *int16:
+			if len(v) > 0 {
+				*ref, e = utils.ToInt16(v)
+			} else {
+				*ref, e = utils.ToInt16(params[i+2])
+			}
+		case *int32:
+			if len(v) > 0 {
+				*ref, e = utils.ToInt32(v)
+			} else {
+				*ref, e = utils.ToInt32(params[i+2])
+			}
+		case *int64:
+			if len(v) > 0 {
+				*ref, e = utils.ToInt64(v)
+			} else {
+				*ref, e = utils.ToInt64(params[i+2])
+			}
+		case *uint:
+			if len(v) > 0 {
 				*ref, e = utils.ToUint(v)
-				//case *map[string]interface{}:
-				//	switch m := v.(type) {
-				//	case map[string]interface{}:
-				//		*ref = m
-				//	default:
-				//		e = errors.New("value is not map[string]iterface{}")
-				//	}
-			case *[]string:
+			} else {
+				*ref, e = utils.ToUint(params[i+2])
+			}
+		case *uint8:
+			if len(v) > 0 {
+				*ref, e = utils.ToUint8(v)
+			} else {
+				*ref, e = utils.ToUint8(params[i+2])
+			}
+		case *uint16:
+			if len(v) > 0 {
+				*ref, e = utils.ToUint16(v)
+			} else {
+				*ref, e = utils.ToUint16(params[i+2])
+			}
+		case *uint32:
+			if len(v) > 0 {
+				*ref, e = utils.ToUint32(v)
+			} else {
+				*ref, e = utils.ToUint32(params[i+2])
+			}
+		case *uint64:
+			if len(v) > 0 {
+				*ref, e = utils.ToUint64(v)
+			} else {
+				*ref, e = utils.ToUint64(params[i+2])
+			}
+		case *bool:
+			if len(v) > 0 {
+				*ref, e = utils.ToBool(v)
+			} else {
+				*ref, e = utils.ToBool(params[i+2])
+			}
+		case *[]string:
+			if len(v) > 0 {
 				*ref, e = utils.ToStringSlice(v)
-			case *[]uint32:
+			} else {
+				*ref = params[i+2].([]string)
+			}
+		case *[]uint32:
+			if len(v) > 0 {
 				*ref, e = utils.ToUint32Slice(v)
-			case *interface{}:
-				*ref = v
-			default:
-				return errors.New(fmt.Sprintf("unknown type %v ", reflect.TypeOf(ref)))
+			} else {
+				*ref = params[i+2].([]uint32)
 			}
-			if e != nil {
-				return errors.New(fmt.Sprintf("parse [%v] error:%v", key, e.Error()))
-			}
-			if key == "ps" {
-				ps, e := utils.ToUint64(v)
-				if e == nil && ps > MAX_PS {
-					return errors.New("ps too large")
-				}
-			}
-		} else {
-			return errors.New(fmt.Sprintf("%v not provided", key))
+		case *map[string]interface{}:
+			e = errors.New("do not support map[string]iterface{}")
+		case *[]interface{}:
+			e = errors.New("do not support []iterface{}")
+		default:
+			return errors.New(fmt.Sprintf("unknown type %v ", key, reflect.TypeOf(ref)))
 		}
-	}
-	return nil
-}
-//不带默认值的Ajax解析
-func (hr *HttpRequest) ParseAjax(model interface{}) (err error) {
-	err = hr.request.ParseForm()
-	if err != nil {
-		return
-	}
-	var decoder = schema.NewDecoder()
-	err = decoder.Decode(model, hr.request.PostForm)
-	if err != nil {
-		return
+		if e != nil {
+			return errors.New(fmt.Sprintf("parse [%v] error:%v", key, e.Error()))
+		}
 	}
 	return nil
 }

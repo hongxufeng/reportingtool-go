@@ -5,8 +5,8 @@ import (
 	"utils/config"
 	"utils/service"
 	"datahelper/user"
-	"model"
 	"github.com/hongxufeng/fileLogger"
+	"model"
 )
 
 type UserModule struct {
@@ -19,24 +19,29 @@ func (module *UserModule) Init(conf *config.Config) error {
 }
 
 func (module *UserModule) Base_UserLogin(req *service.HttpRequest, result map[string]interface{}) (e error) {
-	param :=model.LoginData{}
-	e = req.ParseAjax(&param)
+	var loginData model.LoginData
+	e=req.ParseEncodeUrl("username",&loginData.Username,"password",&loginData.Password)
 	if e != nil {
+		return
+	}
+	uid,e := user.GetUidbyName(loginData.Username)
+	if uid==0||e!=nil{
+		result["res"] = user.CreateFailResp(service.ERR_USER_NOT_FOUND, "貌似用户帐号不存在！")
+		return
+	}
+	if state, _ := user.CheckUserState(uid);!state {
+		result["res"] = user.CreateFailResp(service.RR_STATUS_DENIED, "用户登录状态关闭！")
 		return
 	}
 	//判断登录频繁，防止暴力破解
-	if forbid, _ := user.CheckUserForbid(param.Username);forbid {
-		result["res"] = user.CreateFailResp(service.ERR_LOGIN_FREQUENT, "登陆过于频繁,请稍候再试")
+	if forbid, _ := user.CheckUserForbid(uid);forbid {
+		result["res"] = user.CreateFailResp(service.ERR_LOGIN_FREQUENT, "登陆过于频繁,请稍候再试！")
 		return
 	}
-	if state, _ := user.CheckUserState(param.Username);state {
-		result["res"] = user.CreateFailResp(service.RR_STATUS_DENIED, "用户登录状态关闭")
-		return
-	}
-
-	ud, e := user.CheckAuth(param.Username, param.Password)
+	ud, e := user.CheckAuth(uid, loginData.Password)
 	if e != nil {
-		module.log.Error("%s  auth failed !",param.Username)
+		module.log.Error("%s  auth failed !",loginData.Username)
+		//这里增加判断登录频繁次数
 		result["res"] = user.CreateFailResp( service.ERR_INVALID_USER, "对不起，用户名或密码错误！")
 		return nil
 	}

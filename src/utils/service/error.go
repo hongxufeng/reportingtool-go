@@ -21,6 +21,7 @@ const (
 	RR_STATUS_DENIED		    =2009  //用户状态关闭
 	ERR_PERMISSION_DENIED     = 2010 //权限不足
 	ERR_LOGIN_FREQUENT        =2011   //登录频繁
+	ERR_USER_NOT_FOUND        =2012   //用户不存在
 )
 type Error struct {
 	Code uint

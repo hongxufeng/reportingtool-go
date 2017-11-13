@@ -4,7 +4,11 @@ import (
 	"fmt"
 	"utils"
 	"datahelper/usercache"
+	"errors"
 )
+
+var ERROR_PASSWORD_WRONG=errors.New("密码不正确！")
+
 type LoginSuccessData struct {
 	Uid      uint32 `json:"uid"`
 	Token    string `json:"token"`
@@ -15,23 +19,38 @@ type LoginFailData struct {
 	Msg      string `json:"msg"`
 }
 //验证用户
-func UserValid(uid uint32, hashcode string) (valid bool, e error) {
+func UserValid(uid uint32, passwordm string) (valid bool, e error) {
 	//验证
 	valid=true
 	return
 }
-func CheckUserForbid(username string) (valid bool, e error) {
-	//验证
-	valid=true
+func GetUidbyName(name string) (uid uint32, e error) {
+	uid=0
+	if(name=="wind"){
+		uid=331805370
+	}
 	return
 }
-func CheckUserState(username string) (valid bool, e error) {
+func CheckUserForbid(uid uint32) (forbid bool, e error) {
 	//验证
-	valid=true
+	forbid=false
 	return
 }
-func CheckAuth(name string, password string) (ud *usercache.UserDetail, e error) {
+func CheckUserState(uid uint32) (state bool, e error) {
+	//验证
+	state=true
 	return
+}
+func CheckAuth(uid uint32, password string) (ud *usercache.UserDetail, e error) {
+	ud,e=usercache.GetUserDetail(uid)
+	if e!=nil{
+		return
+	}
+	if passwordm :=utils.Md5String(fmt.Sprintf("%s_%d",password,ud.Salt));ud.Password==passwordm{
+		return ud,nil
+	}else {
+		return nil,ERROR_PASSWORD_WRONG
+	}
 }
 
 func CreateSuccessResp(ud *usercache.UserDetail) (res map[string]interface{}, e error) {
