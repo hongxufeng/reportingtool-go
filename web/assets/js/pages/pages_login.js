@@ -90,7 +90,7 @@ $.validator.setDefaults({
                 }
             },
             error:function (data) {
-                alert("您未搭建服务器呢！")
+                alert("您需要先搭建服务器哦！")
                 return false
             }
         };
