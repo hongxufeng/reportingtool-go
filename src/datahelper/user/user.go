@@ -10,7 +10,7 @@ import (
 var ERROR_PASSWORD_WRONG=errors.New("密码不正确！")
 
 type LoginSuccessData struct {
-	Token    string `json:"token"`
+	Auth    string `json:"auth"`
 	Avatar   string`json:"avatar"`
 }
 
@@ -58,7 +58,7 @@ func CreateSuccessResp(ud *usercache.UserDetail) (res map[string]interface{}, e 
 	res = make(map[string]interface{}, 0)
 	res["loginstatus"] = 0
 	var sdata LoginSuccessData
-	sdata.Token = fmt.Sprintf("%d_%s", ud.Uid, utils.Md5String(fmt.Sprintf("%s|%s", ud.Uid, ud.Password)))
+	sdata.Auth = fmt.Sprintf("%d_%s", ud.Uid, utils.Md5String(fmt.Sprintf("%s|%s", ud.Uid, ud.Password)))
 	sdata.Avatar=ud.Avatar
 	res["userdata"] = sdata
 	return

@@ -76,12 +76,22 @@ $.validator.setDefaults({
                 //已经是json对象无需解析
                 // var jsonObject = JSON.parse(data);
                 if(data.res.loginstatus===0){
+                    if(Cookies.get('auth')!=undefined){
+                        Cookies.remove('auth');
+                        Cookies.remove('avatar');
+                    }
                     //写cookie
+                    Cookies.set('auth', data.res.userdata.auth, { expires: 30 });
+                    Cookies.set('avatar',data.res.userdata.avatar)
                     window.location.href="reportingtool.html";
                 }else {
                     failureAnimation();
                     return false
                 }
+            },
+            error:function (data) {
+                alert("您未搭建服务器呢！")
+                return false
             }
         };
         $.ajax(postData);
