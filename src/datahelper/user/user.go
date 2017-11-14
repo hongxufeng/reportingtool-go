@@ -2,7 +2,7 @@ package user
 
 import (
 	"fmt"
-	"utils"
+	"utils/function"
 	"datahelper/usercache"
 	"errors"
 )
@@ -47,7 +47,7 @@ func CheckAuth(uid uint32, password string) (ud *usercache.UserDetail, e error) 
 	if e!=nil{
 		return
 	}
-	if passwordm :=utils.Md5String(fmt.Sprintf("%s_%d",password,ud.Salt));ud.Password==passwordm{
+	if passwordm :=function.Md5String(fmt.Sprintf("%s_%d",password,ud.Salt));ud.Password==passwordm{
 		return ud,nil
 	}else {
 		return nil,ERROR_PASSWORD_WRONG
@@ -58,7 +58,7 @@ func CreateSuccessResp(ud *usercache.UserDetail) (res map[string]interface{}, e 
 	res = make(map[string]interface{}, 0)
 	res["loginstatus"] = 0
 	var sdata LoginSuccessData
-	sdata.Auth = fmt.Sprintf("%d_%s", ud.Uid, utils.Md5String(fmt.Sprintf("%s|%s", ud.Uid, ud.Password)))
+	sdata.Auth = fmt.Sprintf("%d_%s", ud.Uid, function.Md5String(fmt.Sprintf("%s|%s", ud.Uid, ud.Password)))
 	sdata.Avatar=ud.Avatar
 	res["userdata"] = sdata
 	return

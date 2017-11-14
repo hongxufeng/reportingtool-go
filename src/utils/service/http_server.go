@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/hongxufeng/fileLogger"
 	"strings"
-	"utils"
+	"utils/function"
 	"datahelper/user"
 	"time"
 	"encoding/json"
@@ -49,7 +49,7 @@ func mValidUser(r *http.Request) (uid uint32,err error) {
 	}
 
 	if len(ks) == 2 {
-		uid, e = utils.ToUint32(ks[0])
+		uid, e = function.ToUint32(ks[0])
 		if e != nil {
 			fmt.Println(e.Error())
 		}

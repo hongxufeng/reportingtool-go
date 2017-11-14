@@ -6,6 +6,7 @@ import (
 	"utils/config"
 	"os"
 	"module/user"
+	"module/report"
 )
 
 var conf config.Config
@@ -27,6 +28,7 @@ func main() {
 		return
 	}
 	server.AddModule("user",&user.UserModule{})
+	server.AddModule("report",&report.ReportModule{})
 	fmt.Println(server.StartService())
 }
 

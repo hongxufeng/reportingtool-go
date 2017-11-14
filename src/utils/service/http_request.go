@@ -8,7 +8,7 @@ import (
 	"os"
 	"reflect"
 	"strings"
-	"utils"
+	"utils/function"
 )
 
 const MAX_PS = 1000
@@ -83,74 +83,74 @@ func (hr *HttpRequest) ParseOpt(params ...interface{}) error {
 		return errors.New("params count invalid")
 	}
 	for i := 0; i < len(params); i += 3 {
-		key := utils.ToString(params[i])
+		key := function.ToString(params[i])
 		v, ok := hr.JsonBody[key]
 		var e error
 		switch ref := params[i+1].(type) {
 		case *string:
 			if ok {
-				*ref = utils.ToString(v)
+				*ref = function.ToString(v)
 			} else {
-				*ref = utils.ToString(params[i+2])
+				*ref = function.ToString(params[i+2])
 			}
 
 		case *float64:
 			if ok {
-				*ref, e = utils.ToFloat64(v)
+				*ref, e = function.ToFloat64(v)
 			} else {
-				*ref, e = utils.ToFloat64(params[i+2])
+				*ref, e = function.ToFloat64(params[i+2])
 			}
 		case *int:
 			if ok {
-				*ref, e = utils.ToInt(v)
+				*ref, e = function.ToInt(v)
 			} else {
-				*ref, e = utils.ToInt(params[i+2])
+				*ref, e = function.ToInt(params[i+2])
 			}
 		case *uint32:
 			if ok {
-				*ref, e = utils.ToUint32(v)
+				*ref, e = function.ToUint32(v)
 			} else {
-				*ref, e = utils.ToUint32(params[i+2])
+				*ref, e = function.ToUint32(params[i+2])
 			}
 		case *uint64:
 			if ok {
-				*ref, e = utils.ToUint64(v)
+				*ref, e = function.ToUint64(v)
 			} else {
-				*ref, e = utils.ToUint64(params[i+2])
+				*ref, e = function.ToUint64(params[i+2])
 			}
 		case *int64:
 			if ok {
-				*ref, e = utils.ToInt64(v)
+				*ref, e = function.ToInt64(v)
 			} else {
-				*ref, e = utils.ToInt64(params[i+2])
+				*ref, e = function.ToInt64(params[i+2])
 			}
 		case *int8:
 			if ok {
-				*ref, e = utils.ToInt8(v)
+				*ref, e = function.ToInt8(v)
 			} else {
-				*ref, e = utils.ToInt8(params[i+2])
+				*ref, e = function.ToInt8(params[i+2])
 			}
 		case *uint:
 			if ok {
-				*ref, e = utils.ToUint(v)
+				*ref, e = function.ToUint(v)
 			} else {
-				*ref, e = utils.ToUint(params[i+2])
+				*ref, e = function.ToUint(params[i+2])
 			}
 		case *bool:
 			if ok {
-				*ref, e = utils.ToBool(v)
+				*ref, e = function.ToBool(v)
 			} else {
-				*ref, e = utils.ToBool(params[i+2])
+				*ref, e = function.ToBool(params[i+2])
 			}
 		case *[]string:
 			if ok {
-				*ref, e = utils.ToStringSlice(v)
+				*ref, e = function.ToStringSlice(v)
 			} else {
 				*ref = params[i+2].([]string)
 			}
 		case *[]uint32:
 			if ok {
-				*ref, e = utils.ToUint32Slice(v)
+				*ref, e = function.ToUint32Slice(v)
 			} else {
 				*ref = params[i+2].([]uint32)
 			}
@@ -187,30 +187,30 @@ func (hr *HttpRequest) Parse(params ...interface{}) error {
 		return errors.New("params count must be odd")
 	}
 	for i := 0; i < len(params); i += 2 {
-		key := utils.ToString(params[i])
+		key := function.ToString(params[i])
 		if v, ok := hr.JsonBody[key]; ok {
 			var e error
 			switch ref := params[i+1].(type) {
 			case *string:
-				*ref = utils.ToString(v)
+				*ref = function.ToString(v)
 			case *float64:
-				*ref, e = utils.ToFloat64(v)
+				*ref, e = function.ToFloat64(v)
 			case *int:
-				*ref, e = utils.ToInt(v)
+				*ref, e = function.ToInt(v)
 			case *uint16:
-				*ref, e = utils.ToUint16(v)
+				*ref, e = function.ToUint16(v)
 			case *uint32:
-				*ref, e = utils.ToUint32(v)
+				*ref, e = function.ToUint32(v)
 			case *uint64:
-				*ref, e = utils.ToUint64(v)
+				*ref, e = function.ToUint64(v)
 			case *int64:
-				*ref, e = utils.ToInt64(v)
+				*ref, e = function.ToInt64(v)
 			case *int16:
-				*ref, e = utils.ToInt16(v)
+				*ref, e = function.ToInt16(v)
 			case *int8:
-				*ref, e = utils.ToInt8(v)
+				*ref, e = function.ToInt8(v)
 			case *uint:
-				*ref, e = utils.ToUint(v)
+				*ref, e = function.ToUint(v)
 			case *map[string]interface{}:
 				switch m := v.(type) {
 				case map[string]interface{}:
@@ -219,9 +219,9 @@ func (hr *HttpRequest) Parse(params ...interface{}) error {
 					e = errors.New("value is not map[string]iterface{}")
 				}
 			case *[]string:
-				*ref, e = utils.ToStringSlice(v)
+				*ref, e = function.ToStringSlice(v)
 			case *[]uint32:
-				*ref, e = utils.ToUint32Slice(v)
+				*ref, e = function.ToUint32Slice(v)
 			case *interface{}:
 				*ref = v
 			default:
@@ -231,7 +231,7 @@ func (hr *HttpRequest) Parse(params ...interface{}) error {
 				return errors.New(fmt.Sprintf("parse [%v] error:%v", key, e.Error()))
 			}
 			if key == "ps" {
-				ps, e := utils.ToUint64(v)
+				ps, e := function.ToUint64(v)
 				if e == nil && ps > MAX_PS {
 					return errors.New("ps too large")
 				}
@@ -285,44 +285,44 @@ func (hr *HttpRequest) GetParams(params ...interface{}) error {
 		return errors.New("params count must be odd")
 	}
 	for i := 0; i < len(params); i += 2 {
-		key := utils.ToString(params[i])
+		key := function.ToString(params[i])
 		if v := hr.request.URL.Query().Get(key); v != "" {
 			var e error
 			switch ref := params[i+1].(type) {
 			case *string:
-				*ref = utils.ToString(v)
+				*ref = function.ToString(v)
 			case *float64:
-				*ref, e = utils.ToFloat64(v)
+				*ref, e = function.ToFloat64(v)
 			case *int:
-				*ref, e = utils.ToInt(v)
+				*ref, e = function.ToInt(v)
 			case *int8:
-				*ref, e = utils.ToInt8(v)
+				*ref, e = function.ToInt8(v)
 			case *int16:
-				*ref, e = utils.ToInt16(v)
+				*ref, e = function.ToInt16(v)
 			case *int32:
-				*ref, e = utils.ToInt32(v)
+				*ref, e = function.ToInt32(v)
 			case *int64:
-				*ref, e = utils.ToInt64(v)
+				*ref, e = function.ToInt64(v)
 			case *uint:
-				*ref, e = utils.ToUint(v)
+				*ref, e = function.ToUint(v)
 			case *uint8:
-				*ref, e = utils.ToUint8(v)
+				*ref, e = function.ToUint8(v)
 			case *uint16:
-				*ref, e = utils.ToUint16(v)
+				*ref, e = function.ToUint16(v)
 			case *uint32:
-				*ref, e = utils.ToUint32(v)
+				*ref, e = function.ToUint32(v)
 			case *uint64:
-				*ref, e = utils.ToUint64(v)
+				*ref, e = function.ToUint64(v)
 			case *map[string]interface{}:
 				e = errors.New("do not support map[string]iterface{}")
 			case *[]interface{}:
 				e = errors.New("do not support []iterface{}")
 			case *[]string:
 				ll := strings.Split(v, ",")
-				*ref, e = utils.ToStringSlice(ll)
+				*ref, e = function.ToStringSlice(ll)
 			case *[]uint32:
 				ll := strings.Split(v, ",")
-				*ref, e = utils.ToUint32Slice(ll)
+				*ref, e = function.ToUint32Slice(ll)
 			case *interface{}:
 				*ref = v
 			default:
@@ -343,97 +343,97 @@ func (hr *HttpRequest) GetParamOpt(params ...interface{}) error {
 		return errors.New("params count invalid")
 	}
 	for i := 0; i < len(params); i += 3 {
-		key := utils.ToString(params[i])
+		key := function.ToString(params[i])
 		v := hr.request.URL.Query().Get(key)
 		var e error
 		switch ref := params[i+1].(type) {
 		case *string:
 			if v != "" {
-				*ref = utils.ToString(v)
+				*ref = function.ToString(v)
 			} else {
-				*ref = utils.ToString(params[i+2])
+				*ref = function.ToString(params[i+2])
 			}
 		case *float64:
 			if v != "" {
-				*ref, e = utils.ToFloat64(v)
+				*ref, e = function.ToFloat64(v)
 			} else {
-				*ref, e = utils.ToFloat64(params[i+2])
+				*ref, e = function.ToFloat64(params[i+2])
 			}
 		case *int:
 			if v != "" {
-				*ref, e = utils.ToInt(v)
+				*ref, e = function.ToInt(v)
 			} else {
-				*ref, e = utils.ToInt(params[i+2])
+				*ref, e = function.ToInt(params[i+2])
 			}
 		case *int8:
 			if v != "" {
-				*ref, e = utils.ToInt8(v)
+				*ref, e = function.ToInt8(v)
 			} else {
-				*ref, e = utils.ToInt8(params[i+2])
+				*ref, e = function.ToInt8(params[i+2])
 			}
 		case *int16:
 			if v != "" {
-				*ref, e = utils.ToInt16(v)
+				*ref, e = function.ToInt16(v)
 			} else {
-				*ref, e = utils.ToInt16(params[i+2])
+				*ref, e = function.ToInt16(params[i+2])
 			}
 		case *int32:
 			if v != "" {
-				*ref, e = utils.ToInt32(v)
+				*ref, e = function.ToInt32(v)
 			} else {
-				*ref, e = utils.ToInt32(params[i+2])
+				*ref, e = function.ToInt32(params[i+2])
 			}
 		case *int64:
 			if v != "" {
-				*ref, e = utils.ToInt64(v)
+				*ref, e = function.ToInt64(v)
 			} else {
-				*ref, e = utils.ToInt64(params[i+2])
+				*ref, e = function.ToInt64(params[i+2])
 			}
 		case *uint:
 			if v != "" {
-				*ref, e = utils.ToUint(v)
+				*ref, e = function.ToUint(v)
 			} else {
-				*ref, e = utils.ToUint(params[i+2])
+				*ref, e = function.ToUint(params[i+2])
 			}
 		case *uint8:
 			if v != "" {
-				*ref, e = utils.ToUint8(v)
+				*ref, e = function.ToUint8(v)
 			} else {
-				*ref, e = utils.ToUint8(params[i+2])
+				*ref, e = function.ToUint8(params[i+2])
 			}
 		case *uint16:
 			if v != "" {
-				*ref, e = utils.ToUint16(v)
+				*ref, e = function.ToUint16(v)
 			} else {
-				*ref, e = utils.ToUint16(params[i+2])
+				*ref, e = function.ToUint16(params[i+2])
 			}
 		case *uint32:
 			if v != "" {
-				*ref, e = utils.ToUint32(v)
+				*ref, e = function.ToUint32(v)
 			} else {
-				*ref, e = utils.ToUint32(params[i+2])
+				*ref, e = function.ToUint32(params[i+2])
 			}
 		case *uint64:
 			if v != "" {
-				*ref, e = utils.ToUint64(v)
+				*ref, e = function.ToUint64(v)
 			} else {
-				*ref, e = utils.ToUint64(params[i+2])
+				*ref, e = function.ToUint64(params[i+2])
 			}
 		case *bool:
 			if v != "" {
-				*ref, e = utils.ToBool(v)
+				*ref, e = function.ToBool(v)
 			} else {
-				*ref, e = utils.ToBool(params[i+2])
+				*ref, e = function.ToBool(params[i+2])
 			}
 		case *[]string:
 			if v != "" {
-				*ref, e = utils.ToStringSlice(v)
+				*ref, e = function.ToStringSlice(v)
 			} else {
 				*ref = params[i+2].([]string)
 			}
 		case *[]uint32:
 			if v != "" {
-				*ref, e = utils.ToUint32Slice(v)
+				*ref, e = function.ToUint32Slice(v)
 			} else {
 				*ref = params[i+2].([]uint32)
 			}
@@ -458,7 +458,7 @@ func (hr *HttpRequest) ParseEncodeUrl(params ...interface{}) error {
 	}
 	//fmt.Print(hr.UrlEncodedBody)
 	for i := 0; i < len(params); i += 2 {
-		key := utils.ToString(params[i])
+		key := function.ToString(params[i])
 		vs := hr.UrlEncodedBody[key]
 		v:=vs[0]
 		//fmt.Print(v)
@@ -466,91 +466,91 @@ func (hr *HttpRequest) ParseEncodeUrl(params ...interface{}) error {
 		switch ref := params[i+1].(type) {
 		case *string:
 			if len(v) > 0 {
-				*ref = utils.ToString(v)
+				*ref = function.ToString(v)
 			} else {
-				*ref = utils.ToString(params[i+2])
+				*ref = function.ToString(params[i+2])
 			}
 		case *float64:
 			if len(v) > 0 {
-				*ref, e = utils.ToFloat64(v)
+				*ref, e = function.ToFloat64(v)
 			} else {
-				*ref, e = utils.ToFloat64(params[i+2])
+				*ref, e = function.ToFloat64(params[i+2])
 			}
 		case *int:
 			if len(v) > 0 {
-				*ref, e = utils.ToInt(v)
+				*ref, e = function.ToInt(v)
 			} else {
-				*ref, e = utils.ToInt(params[i+2])
+				*ref, e = function.ToInt(params[i+2])
 			}
 		case *int8:
 			if len(v) > 0 {
-				*ref, e = utils.ToInt8(v)
+				*ref, e = function.ToInt8(v)
 			} else {
-				*ref, e = utils.ToInt8(params[i+2])
+				*ref, e = function.ToInt8(params[i+2])
 			}
 		case *int16:
 			if len(v) > 0 {
-				*ref, e = utils.ToInt16(v)
+				*ref, e = function.ToInt16(v)
 			} else {
-				*ref, e = utils.ToInt16(params[i+2])
+				*ref, e = function.ToInt16(params[i+2])
 			}
 		case *int32:
 			if len(v) > 0 {
-				*ref, e = utils.ToInt32(v)
+				*ref, e = function.ToInt32(v)
 			} else {
-				*ref, e = utils.ToInt32(params[i+2])
+				*ref, e = function.ToInt32(params[i+2])
 			}
 		case *int64:
 			if len(v) > 0 {
-				*ref, e = utils.ToInt64(v)
+				*ref, e = function.ToInt64(v)
 			} else {
-				*ref, e = utils.ToInt64(params[i+2])
+				*ref, e = function.ToInt64(params[i+2])
 			}
 		case *uint:
 			if len(v) > 0 {
-				*ref, e = utils.ToUint(v)
+				*ref, e = function.ToUint(v)
 			} else {
-				*ref, e = utils.ToUint(params[i+2])
+				*ref, e = function.ToUint(params[i+2])
 			}
 		case *uint8:
 			if len(v) > 0 {
-				*ref, e = utils.ToUint8(v)
+				*ref, e = function.ToUint8(v)
 			} else {
-				*ref, e = utils.ToUint8(params[i+2])
+				*ref, e = function.ToUint8(params[i+2])
 			}
 		case *uint16:
 			if len(v) > 0 {
-				*ref, e = utils.ToUint16(v)
+				*ref, e = function.ToUint16(v)
 			} else {
-				*ref, e = utils.ToUint16(params[i+2])
+				*ref, e = function.ToUint16(params[i+2])
 			}
 		case *uint32:
 			if len(v) > 0 {
-				*ref, e = utils.ToUint32(v)
+				*ref, e = function.ToUint32(v)
 			} else {
-				*ref, e = utils.ToUint32(params[i+2])
+				*ref, e = function.ToUint32(params[i+2])
 			}
 		case *uint64:
 			if len(v) > 0 {
-				*ref, e = utils.ToUint64(v)
+				*ref, e = function.ToUint64(v)
 			} else {
-				*ref, e = utils.ToUint64(params[i+2])
+				*ref, e = function.ToUint64(params[i+2])
 			}
 		case *bool:
 			if len(v) > 0 {
-				*ref, e = utils.ToBool(v)
+				*ref, e = function.ToBool(v)
 			} else {
-				*ref, e = utils.ToBool(params[i+2])
+				*ref, e = function.ToBool(params[i+2])
 			}
 		case *[]string:
 			if len(v) > 0 {
-				*ref, e = utils.ToStringSlice(v)
+				*ref, e = function.ToStringSlice(v)
 			} else {
 				*ref = params[i+2].([]string)
 			}
 		case *[]uint32:
 			if len(v) > 0 {
-				*ref, e = utils.ToUint32Slice(v)
+				*ref, e = function.ToUint32Slice(v)
 			} else {
 				*ref = params[i+2].([]uint32)
 			}

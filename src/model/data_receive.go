@@ -11,7 +11,6 @@ type Settings struct {
 	Page int
 	Rows int
 	ColPage int
-	HR bool
 }
 
 type LoginData struct {
