@@ -55,7 +55,10 @@ $.validator.setDefaults({
     submitHandler: function() {
         var username = $("#login-username").val();
         var password = md5($("#login-password").val());
-        var failureAnimation=function () {
+        var failureAnimation=function (msg) {
+            if(msg!=undefined){
+                $("#tip").html(msg)
+            }
             var failureBlock=$(".alert-dismissable")
             $(".login-title").css("display","none")
             failureBlock.css("display","block")
@@ -85,7 +88,7 @@ $.validator.setDefaults({
                     Cookies.set('avatar',data.res.userdata.avatar, { expires: 365 })
                     window.location.href="reportingtool.html";
                 }else {
-                    failureAnimation();
+                    failureAnimation(data.res.faildata.msg);
                     return false
                 }
             },
