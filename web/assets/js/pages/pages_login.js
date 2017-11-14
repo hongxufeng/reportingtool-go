@@ -93,7 +93,7 @@ $.validator.setDefaults({
                 }
             },
             error:function (data) {
-                alert("您需要先搭建服务器哦！")
+                failureAnimation("您需要先搭建服务器哦！")
                 return false
             }
         };
