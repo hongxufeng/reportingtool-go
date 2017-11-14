@@ -18,7 +18,8 @@ import (
 
 type Server struct {
 	modules      map[string]Module
-	log          *fileLogger.FileLogger
+	info          *fileLogger.FileLogger
+	error         *fileLogger.FileLogger
 	conf         *config.Config
 	mvaliduser   func(r *http.Request) (uid uint32,err error) //加密方式    如果不是合法用户，需要返回0
 	parseBody    uint32                              //0代表不解析，1代表把POST内容为json，2代表urlencoded，
@@ -27,8 +28,9 @@ type Server struct {
 }
 
 func New(conf *config.Config,parseBody uint32,customResult bool,multipart bool) (server *Server, err error) {
-	server = &Server{make(map[string]Module), fileLogger.NewDefaultLogger(conf.LogDir, "Service.log"), conf, mValidUser, parseBody, customResult, multipart}
-	server.log.SetPrefix("[SERVICE] ")
+	server = &Server{make(map[string]Module), fileLogger.NewDefaultLogger(conf.LogDir, "Service_Info.log"), fileLogger.NewDefaultLogger(conf.LogDir, "Service_Error.log"),conf, mValidUser, parseBody, customResult, multipart}
+	server.info.SetPrefix("[SERVICE] ")
+	server.error.SetPrefix("[SERVICE] ")
 
 	err=server.AddModule("default", &DefaultModule{})
 	return
@@ -69,7 +71,7 @@ func (server *Server) AddModule(name string, module Module) (err error) {
 		return
 	}
 	fmt.Println("ok")
-	server.log.Printf("add module %s success",name)
+	server.info.Printf("add module %s success",name)
 	server.modules[name] = module
 	return
 }
@@ -81,7 +83,7 @@ func (server *Server) StartService() error {
 	r.HandleFunc("/base/{module}/{method}", server.BaseHandler)
 	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("web/"))))
 	fmt.Print("服务已经启动！")
-	server.log.Print("服务已经启动！")
+	server.info.Print("服务已经启动！")
 	// Bind to a port and pass our router in
 	return http.ListenAndServe(server.conf.Address.Port, r)
 }
@@ -229,8 +231,8 @@ func (server *Server) Log(r *http.Request, w http.ResponseWriter, reqBody []byte
 	format += "response: %s |"
 	addr := strings.Split(r.RemoteAddr, ":")
 	if success {
-		server.log.Info(format, float64(duration)/1000000, uid, addr[0], r.URL.String(), response, string(result))
+		server.info.Info(format, float64(duration)/1000000, uid, addr[0], r.URL.String(), response, string(result))
 	}else {
-		server.log.Error(format, float64(duration)/1000000, uid, addr[0], r.URL.String(), response, string(result))
+		server.error.Error(format, float64(duration)/1000000, uid, addr[0], r.URL.String(), response, string(result))
 	}
 }

@@ -10,11 +10,14 @@ import (
 )
 
 type UserModule struct {
-	log *fileLogger.FileLogger
+	info *fileLogger.FileLogger
+	error *fileLogger.FileLogger
 }
 
 func (module *UserModule) Init(conf *config.Config) error {
-	module.log=fileLogger.NewDefaultLogger(conf.LogDir, "User.log")
+	module=&UserModule{fileLogger.NewDefaultLogger(conf.LogDir, "User_Info.log"),fileLogger.NewDefaultLogger(conf.LogDir, "User_Error.log")}
+	module.info.SetPrefix("[SERVICE] ")
+	module.error.SetPrefix("[SERVICE] ")
 	return nil
 }
 
@@ -40,7 +43,7 @@ func (module *UserModule) Base_UserLogin(req *service.HttpRequest, result map[st
 	}
 	ud, e := user.CheckAuth(uid, loginData.Password)
 	if e != nil {
-		module.log.Error("%s  auth failed !",loginData.Username)
+		module.error.Error("%s  auth failed !",loginData.Username)
 		//这里增加判断登录频繁次数
 		result["res"] = user.CreateFailResp( service.ERR_INVALID_USER, "少侠，您输入的密码有误啊！")
 		return nil
