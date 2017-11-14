@@ -7,7 +7,7 @@ var BasePagesInit = function() {
                 return false
             }
         }else {
-            alert(decodeURI(Cookies.get("avatar")))
+            // alert(decodeURI(Cookies.get("avatar")))
             $("[alt=\"Avatar\"]").attr("src", decodeURI(Cookies.get("avatar")))
         }
     };
