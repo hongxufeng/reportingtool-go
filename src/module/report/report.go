@@ -3,6 +3,7 @@ package report
 import (
 	"github.com/hongxufeng/fileLogger"
 	"utils/config"
+	"utils/service"
 )
 
 type ReportModule struct {
@@ -15,5 +16,10 @@ func (module *ReportModule) Init(conf *config.Config) error {
 	module.info.SetPrefix("[SERVICE] ")
 	module.error.SetPrefix("[SERVICE] ")
 	return nil
+}
+
+func (module *ReportModule) User_Reportingtool (req *service.HttpRequest, result map[string]interface{}) (e error) {
+
+	return
 }
 

@@ -399,12 +399,13 @@
         <!-- OneUI Core JS: jQuery, Bootstrap, slimScroll, scrollLock, Appear, CountTo, Placeholder, Cookie and App.js -->
         <script src="assets/js/core/jQuery.min.js"></script>
         <script src="assets/js/app.min.js"></script>
+        <script src="assets/js/core/Page.js"></script>
         <script src="assets/js/core/ReportingTool.js"></script>
 
         <script type="text/javascript">
-            $(document).ready(function () {
+            window.onload=function () {
                 $("#table").rt({ configFile: "test", table: "课程概况", navBar: true });
-        });
+        };
         </script>
         <!-- Page JS Plugins + Page JS Code -->
     </body>

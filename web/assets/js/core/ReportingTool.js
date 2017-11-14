@@ -259,6 +259,10 @@
                     if (!jsonObject.exception) {
                         settings.complete();
                     }
+                },
+                error:function () {
+                    alert("您未搭建服务器哦！")
+                    return false
                 }
             }
             $.ajax(postOpts);

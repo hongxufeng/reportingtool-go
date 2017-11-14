@@ -85,7 +85,7 @@ $.validator.setDefaults({
                     }
                     //写cookie
                     Cookies.set('auth', data.res.userdata.auth, { expires: 90 });
-                    Cookies.set('avatar',data.res.userdata.avatar, { expires: 365 })
+                    Cookies.set('avatar',data.res.userdata.avatar, { expires: 90 })
                     window.location.href="reportingtool.html";
                 }else {
                     failureAnimation(data.res.faildata.msg);
