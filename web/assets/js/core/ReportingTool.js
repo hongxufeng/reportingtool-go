@@ -1,19 +1,19 @@
 ﻿(function () {
-    var js = $('head>[src*="/assets/js/core/ReportingTool.js"]');
-    js.before("<script src='/assets/js/core/jquery.history.js' type='text/javascript'></script>");
-    js.before("<script src='/assets/js/core/bootstrap-datepicker/bootstrap-datepicker.min.js' type='text/javascript'></script>");
-    js.before("<script src='/assets/js/core/bootstrap-datepicker/bootstrap-datepicker.zh-CN.min.js' type='text/javascript'></script>");
+    var js = $('[src="assets/js/core/ReportingTool.js"]');
+    js.before("<script src='assets/js/core/jquery.history.js' type='text/javascript'></script>");
+    js.before("<script src='assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js' type='text/javascript'></script>");
+    js.before("<script src='assets/plugins/bootstrap-datepicker/bootstrap-datepicker.zh-CN.min.js' type='text/javascript'></script>");
     // js.before("<script src='/ims_system/js/TableInModal.js' type='text/javascript'></script>");
-    var css = $('head>[href*="/assets/css/reportingtool/ReportingTool.css"]');
-    css.before("<link href='/assets/js/core/bootstrap-datepicker/bootstrap-datepicker.min.css' rel='stylesheet' type='text/css' />");
+    var css = $('[href="assets/css/reportingtool/ReportingTool.css"]');
+    css.before("<link href='assets/plugins/bootstrap-datepicker/bootstrap-datepicker.css' rel='stylesheet' type='text/css' />");
     // css.before("<link href='/ims_system/css/TableInModal.css' rel='stylesheet' type='text/css' />");
     if ($.support.opacity) {
-        css.after("<link href='/assets/css/reportingtool/CheckBox.css' rel='stylesheet' type='text/css' />");
+        css.after("<link href='assets/css/reportingtool/CheckBox.css' rel='stylesheet' type='text/css' />");
     }
 })();
 
 (function ($) {
-    var serverURL="/ReportingTool"
+    var serverURL="user/report/Reportingtool"
 
     var cachedRows = {};
     var nullRows = {};

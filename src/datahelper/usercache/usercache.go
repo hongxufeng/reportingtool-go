@@ -12,7 +12,7 @@ type UserDetail struct {
 }
 func GetUserDetail(uid uint32) (detail *UserDetail, e error) {
 	if uid==331805370{
-		detail=&UserDetail{uid,148360,"3dfaf9b0fc31457f7d068946181201f3","assets/img/avatar/.jpg"}
+		detail=&UserDetail{uid,148360,"3dfaf9b0fc31457f7d068946181201f3","assets/img/avatar/W.jpg"}
 	}else {
 		e=ERROR_USER_NOT_FOUND
 	}
