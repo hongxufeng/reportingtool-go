@@ -54,7 +54,7 @@ func CheckAuth(uid uint32, password string) (ud *usercache.UserDetail, e error) 
 	}
 }
 
-func CreateSuccessResp(ud *usercache.UserDetail) (res map[string]interface{}, e error) {
+func CreateSuccessResp(ud *usercache.UserDetail) (res map[string]interface{}) {
 	res = make(map[string]interface{}, 0)
 	res["loginstatus"] = 0
 	var sdata LoginSuccessData

@@ -5,6 +5,9 @@ import (
 	"utils/config"
 	"utils/service"
 	"model"
+	"datahelper/report"
+	"errors"
+	"fmt"
 )
 
 type ReportModule struct {
@@ -19,24 +22,34 @@ func (module *ReportModule) Init(conf *config.Config) error {
 	return nil
 }
 
-func (module *ReportModule) User_Reportingtool (req *service.HttpRequest, result map[string]interface{}) (e error) {
-	var param  model.Param
-	e=req.ParseEncodeUrl("cmd",&param.Settings.Cmd)
-	if e!=nil {
+func (module *ReportModule) User_Reportingtool (req *service.HttpRequest, result map[string]interface{}) (err error) {
+	var settings  model.Settings
+	err=req.ParseEncodeUrl("cmd",&settings.Cmd)
+	if err!=nil {
 		return
 	}
-	if param.Settings.Cmd==model.CMD_GetTable{
-		e=req.GetParams("table",&param.Settings.TableID,"page",&param.Settings.Page,"rows",&param.Settings.Rows,"colpage",&param.Settings.ColPage)
-		if e!=nil {
+	if settings.Cmd==model.CMD_GetTable{
+		err=req.GetParams("table",&settings.TableID,"page",&settings.Page,"rows",&settings.Rows,"colpage",&settings.ColPage)
+		if err!=nil {
 			return
 		}
-		e=req.ParseEncodeUrl("configFile",&param.Settings.ConfigFile,"hasCheckbox",&param.Settings.HasCheckbox,"style",&param.Settings.Style,"rowList",&param.Settings.RowList)
-		if e!=nil{
+		err=req.ParseEncodeUrl("configFile",&settings.ConfigFile,"hasCheckbox",&settings.HasCheckbox,"style",&settings.Style,"rowList",&settings.RowList)
+		if err!=nil{
 			return
 		}
-		result["res"]=param.Settings.RowList
-	}
+		param,e:=report.New(req.Uid,settings)
+		if(e!=nil){
+			return e
+		}else {
+			result["res"],err=param.GetTable()
+		}
+	}else if settings.Cmd==model.CMD_SearchTree {
+		
+	}else if settings.Cmd==model.CMD_LocateNode {
 
+	}else {
+		return errors.New(fmt.Sprintf("cmd [%v] is not support",settings.Cmd))
+	}
 	return
 }
 
