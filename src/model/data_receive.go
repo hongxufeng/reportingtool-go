@@ -5,7 +5,7 @@ type Settings struct {
 	Style string
 	TableID string
 	ConfigFile string
-	HasCheckbox string
+	HasCheckbox bool
 	RowList string
 	Condition string
 	Page int

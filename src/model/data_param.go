@@ -1,5 +1,14 @@
 package model
 
+const (
+	CMD_GetTable="GetTable"
+	CMD_SearchTree="SearchTree"
+	CMD_LocateNode="LocateNode"
+	Style_Rect="rect"
+	Style_Table = "table"
+	Style_Tree = "tree"
+)
+
 type Param struct {
 	XmlTable interface{}//XML获得的数据结构
 	Settings Settings
@@ -8,9 +17,4 @@ type Param struct {
 	ColConfigDict []ColumnConfig
 }
 
-const (
-	Rect="rect"
-	Table = "table"
-	Tree = "tree"
-)
 
