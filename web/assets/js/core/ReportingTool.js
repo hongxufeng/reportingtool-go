@@ -166,7 +166,7 @@
                 url: serverURL + getQuery(),
                 data: { cmd: "GetTable", configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, rowList: settings.rowList.toString() },
                 success: function (data, textStatus, jqXHR) {
-                    var jsonObject = JSON.parse(data);
+                    // var jsonObject = JSON.parse(data);
                     if (settings.searchBar === true) {
                         var rtSearch = _this.find(".rt-search");
                         if (settings.style != "tree") {
@@ -290,7 +290,7 @@
             $.post(serverURL+ getQuery(), {
                 cmd: "GetTable", configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, rowList: settings.rowList.toString()
             }, function (data, status) {
-                var jsonObject = JSON.parse(data);
+                // var jsonObject = JSON.parse(data);
                 if (settings.searchBar === true) {
                     if (jsonObject.search) {
                         if (settings.style === "table") {
@@ -338,7 +338,7 @@
             $.post(serverURL + getQuery(), {
                 cmd: "GetTable", configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, rowList: settings.rowList.toString()
             }, function (data, status) {
-                var jsonObject = JSON.parse(data);
+                // var jsonObject = JSON.parse(data);
                 _this.find(".rt-body").html(jsonObject.body);
                 _this.find(".rt-condition").html(jsonObject.condition);
                 _this.find(".rt-selector").html(jsonObject.selector);
@@ -400,7 +400,7 @@
                             cmd: "GetTable", configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style
                         },
                         success: function (data, textStatus, jqXHR) {
-                            var jsonObject = JSON.parse(data);
+                            // var jsonObject = JSON.parse(data);
                             childtree.append(jsonObject.body);
                             counter++;
                             if (counter === treesLength) {
@@ -420,7 +420,7 @@
             $.post(serverURL+"?table=" + globalVars.queryObj.table, {
                 cmd: "SearchTree", configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, condition: cd
             }, function (data, status) {
-                var jsonObject = JSON.parse(data);
+                // var jsonObject = JSON.parse(data);
                 _this.find(".rt-body").html(jsonObject.body);
             });
         }
@@ -429,7 +429,7 @@
             $.post(serverURL+"?table=" + table, {
                 cmd: "LocateNode", configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, condition: $(this).attr("data-parentnode")
             }, function (data, status) {
-                var jsonObject = JSON.parse(data);
+                // var jsonObject = JSON.parse(data);
                 for (var i = 0; i < jsonObject.length; i++) {
                     var obj = jsonObject[i], elem = null;
                     if (obj.parent != "ROOTNODE") {
