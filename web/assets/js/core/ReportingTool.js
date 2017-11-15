@@ -13,7 +13,7 @@
 })();
 
 (function ($) {
-    var serverURL="user/report/Reportingtool"
+    var serverURL="user/report/"
 
     var cachedRows = {};
     var nullRows = {};
@@ -163,8 +163,8 @@
             var postOpts = {
                 async: settings.asyncLoad,
                 method: "POST",
-                url: serverURL + getQuery(),
-                data: { cmd: "GetTable", configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, rowList: settings.rowList.toString() },
+                url: serverURL+"GetTable" + getQuery(),
+                data: {  configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, rowList: settings.rowList.toString() },
                 success: function (data, textStatus, jqXHR) {
                     // var jsonObject = JSON.parse(data);
                     if (settings.searchBar === true) {
@@ -287,8 +287,8 @@
             else {
                 History.replaceState(null, globalVars.pageTitle, url);
             }
-            $.post(serverURL+ getQuery(), {
-                cmd: "GetTable", configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, rowList: settings.rowList.toString()
+            $.post(serverURL+"GetTable"+ getQuery(), {
+                configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, rowList: settings.rowList.toString()
             }, function (data, status) {
                 // var jsonObject = JSON.parse(data);
                 if (settings.searchBar === true) {
@@ -335,8 +335,8 @@
             else {
                 History.replaceState(null, globalVars.pageTitle, buildQueryStr());
             }
-            $.post(serverURL + getQuery(), {
-                cmd: "GetTable", configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, rowList: settings.rowList.toString()
+            $.post(serverURL+"GetTable" + getQuery(), {
+                configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, rowList: settings.rowList.toString()
             }, function (data, status) {
                 // var jsonObject = JSON.parse(data);
                 _this.find(".rt-body").html(jsonObject.body);
@@ -394,10 +394,10 @@
                 for (var t in trees) {
                     $.ajax({
                         async: false,
-                        url: serverURL+"?table=" + encodeURI(t) + "&" + trees[t],
+                        url: serverURL+"GetTable"+"?table=" + encodeURI(t) + "&" + trees[t],
                         method: "POST",
                         data: {
-                            cmd: "GetTable", configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style
+                            configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style
                         },
                         success: function (data, textStatus, jqXHR) {
                             // var jsonObject = JSON.parse(data);
@@ -417,8 +417,8 @@
             if (!cd) {
                 return;
             }
-            $.post(serverURL+"?table=" + globalVars.queryObj.table, {
-                cmd: "SearchTree", configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, condition: cd
+            $.post(serverURL+"SearchTree"+"?table=" + globalVars.queryObj.table, {
+                configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, condition: cd
             }, function (data, status) {
                 // var jsonObject = JSON.parse(data);
                 _this.find(".rt-body").html(jsonObject.body);
@@ -426,8 +426,8 @@
         }
         var locateNode = function () {
             var table = encodeURI($(this).attr("data-tableid"));
-            $.post(serverURL+"?table=" + table, {
-                cmd: "LocateNode", configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, condition: $(this).attr("data-parentnode")
+            $.post(serverURL+"LocateNode"+"?table=" + table, {
+                configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, condition: $(this).attr("data-parentnode")
             }, function (data, status) {
                 // var jsonObject = JSON.parse(data);
                 for (var i = 0; i < jsonObject.length; i++) {
@@ -870,6 +870,7 @@
             }
             $(this).trigger(event);
         }
+        //导出为Excel表格函数
         var exportExcel = function () {
             window.open(serverURL+"/GenerateExcel.aspx" + getQuery() + "&ConfigFile=" + settings.configFile);
         }

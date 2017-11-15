@@ -1,7 +1,6 @@
 package model
 
 type Settings struct {
-	Cmd string
 	Style string
 	TableID string
 	ConfigFile string
