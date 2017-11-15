@@ -13,9 +13,13 @@ type Param struct {
 }
 
 func New(uid uint32,settings model.Settings) (param *Param,err error){
+	var XmlTable interface{}
+	var ColConfigDict []model.ColumnConfig
+	param=&Param{XmlTable,settings,uid,true,ColConfigDict}
 	return
 }
 func (param *Param) GetTable() (res map[string]interface{},err error){
+	res=make(map[string]interface{}, 0)
 	res["search"]="search"
 	res["body"]="body"
 	res["selector"]="selector"
