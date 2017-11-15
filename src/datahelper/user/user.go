@@ -5,6 +5,7 @@ import (
 	"utils/function"
 	"datahelper/usercache"
 	"errors"
+	"net/url"
 )
 
 var ERROR_PASSWORD_WRONG=errors.New("密码不正确！")
@@ -19,9 +20,27 @@ type LoginFailData struct {
 	Msg      string `json:"msg"`
 }
 //验证用户
-func UserValid(uid uint32, passwordm string) (valid bool, e error) {
+func UserValid(uid uint32, hashcode string,useragent string) (valid bool, err error) {
 	//验证
-	valid=true
+	ud,err :=usercache.GetUserDetail(uid)
+	if err!=nil{
+		return
+	}
+	if ud.UserAgent==useragent{
+		//fmt.Print("ture")
+		token,e:=url.QueryUnescape(hashcode)
+		if e != nil {
+			return false,e
+		}
+		fmt.Print(token+"||"+fmt.Sprintf("%d_%s", ud.Uid, function.Md5String(fmt.Sprintf("%s|%s", ud.Uid, ud.Password))))
+		if token==function.Md5String(fmt.Sprintf("%s|%s", ud.Uid, ud.Password)){
+			valid=true
+		}else {
+			valid=false
+		}
+	}else {
+		err=errors.New("您的登录IP不正确噢，怎么能偷盗人家帐号！")
+	}
 	return
 }
 func GetUidbyName(name string) (uid uint32, e error) {

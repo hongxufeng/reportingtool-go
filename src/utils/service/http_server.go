@@ -57,7 +57,7 @@ func mValidUser(r *http.Request) (uid uint32,err error) {
 		}
 		hashcode = ks[1]
 	}
-	valid, e := user.UserValid(uid, hashcode)
+	valid, e := user.UserValid(uid, hashcode,r.UserAgent())
 	if e != nil || !valid {
 		return 0,e
 	}
