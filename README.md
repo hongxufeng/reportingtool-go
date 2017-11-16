@@ -54,8 +54,11 @@ redis做缓存数据库  go get -u github.com/go-redis/redis  
 
 
 数据库链接配置在config.yaml格式如下：
+
 mysql: user:password@/dbname
+
 redis: redis://:qwerty@localhost:6379/1
+
 如何使用请参考[mysql](https://github.com/go-sql-driver/mysql/wiki/Examples)和[redis](https://godoc.org/github.com/go-redis/redis#example-ParseURL)
 
 
