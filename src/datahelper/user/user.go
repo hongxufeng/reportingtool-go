@@ -6,6 +6,7 @@ import (
 	"datahelper/usercache"
 	"errors"
 	"net/url"
+	"strings"
 )
 
 var ERROR_PASSWORD_WRONG=errors.New("密码不正确！")
@@ -26,7 +27,8 @@ func UserValid(uid uint32, hashcode string,useragent string) (valid bool, err er
 	if err!=nil{
 		return
 	}
-	if ud.UserAgent==useragent{
+	//fmt.Println(ud.UserAgent+"||"+useragent)
+	if strings.Index(useragent,ud.UserAgent)>-1{
 		//fmt.Print("ture")
 		token,e:=url.QueryUnescape(hashcode)
 		if e != nil {
