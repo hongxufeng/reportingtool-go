@@ -6,10 +6,6 @@ import (
 	"fmt"
 	"gopkg.in/yaml.v2"
 )
-type MysqlType struct {
-	Master string   `yaml:"master"`
-	Slave  []string `yaml:"slave"`
-}
 
 type Address struct {
 	Ip   string `yaml:"ip"`
@@ -19,7 +15,8 @@ type Address struct {
 type Config struct {
 	Address Address `yaml:"address"`
 	LogDir  string  `yaml:"log"`
-	Mysql  MysqlType `yaml:"mysql"`
+	Mysql   string  `yaml:"mysql"`
+	Redis   string  `yaml:"redis"`
 }
 
 func (c *Config) LoadPath(path string) error {
