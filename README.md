@@ -36,7 +36,6 @@ In this statement ,for the view of my limited level, I beg your pardon for my er
 因项目使用 mysql 数据库 需增加依赖  go-sql-driver/mysql
 在终端 运行命令go get github.com/go-sql-driver/mysql
 
-
 增加第三方路由器  依赖
 在终端 运行命令go get github.com/gorilla/mux   //以前的路由功能太少，不用了
 
@@ -50,7 +49,15 @@ go get github.com/hongxufeng/fileLogger
 
 yaml解析  go get gopkg.in/yaml.v2
 
-redis做缓存数据库  go get -u github.com/go-redis/redis
+
+redis做缓存数据库  go get -u github.com/go-redis/redis  
+
+
+数据库链接配置在config.yaml格式如下：
+mysql: user:password@/dbname
+redis: redis://:qwerty@localhost:6379/1
+如何使用请参考[mysql](https://github.com/go-sql-driver/mysql/wiki/Examples)和[redis](https://godoc.org/github.com/go-redis/redis#example-ParseURL)
+
 
 修改服务器请求地址 在assets/js/core/ReportingTool.js的16行
 var serverURL="http://localhost:8080/ReportingTool"
