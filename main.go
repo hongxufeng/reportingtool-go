@@ -7,6 +7,7 @@ import (
 	"os"
 	"module/user"
 	"module/report"
+	"datahelper/db"
 )
 
 var conf config.Config
@@ -19,6 +20,14 @@ func main() {
 	err := conf.LoadPath(os.Args[1])
 	if err != nil {
 		fmt.Println("Load Config error :", err.Error())
+		return
+	}
+	fmt.Println("begin init db")
+	e:=db.Init(conf)
+	if e==nil {
+		fmt.Println("init db ok")
+	}else {
+		fmt.Println(e.Error())
 		return
 	}
 	//fmt.Printf("\n%v\n\n", conf)

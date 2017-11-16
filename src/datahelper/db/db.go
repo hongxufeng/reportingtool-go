@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-redis/redis"
 	"utils/config"
 )
@@ -14,6 +15,10 @@ func Init(config config.Config) (err error) {
 	if err != nil {
 		return  // Just for example purpose. You should use proper error handling instead of panic
 	}
+	err = mysqlmain.Ping()
+	if err != nil {
+		return // proper error handling instead of panic in your app
+	}
 
 	opt, err := redis.ParseURL(config.Redis)
 	if err != nil {
@@ -21,5 +26,10 @@ func Init(config config.Config) (err error) {
 	}
 	// Create client as usually.
 	rediscache= redis.NewClient(opt)
+
+	_, err = rediscache.Ping().Result()
+	if err != nil {
+		return
+	}
 	return
 }
