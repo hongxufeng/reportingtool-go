@@ -146,10 +146,13 @@ func (server *Server) RequestHandler(moduleName string, methodName string, uid u
 	} else if server.parseBody==1 {
 		e := json.Unmarshal(bodyBytes, &jsonbody)
 		if e != nil {
-			return bodyBytes, NewError(ERR_INVALID_PARAM, "read body error : "+e.Error())
+			return bodyBytes, NewError(ERR_INVALID_PARAM, "read json body error : "+e.Error())
 		}
 	}else if server.parseBody==2{
 		urlencodedbody, e = url.ParseQuery(string(bodyBytes))
+		if e!=nil{
+			return bodyBytes, NewError(ERR_INVALID_PARAM, "read urlencoded body error : "+e.Error())
+		}
 	}
 	var values []reflect.Value
 	module, ok := server.modules[moduleName]

@@ -32,11 +32,10 @@ func UserValid(uid uint32, hashcode string,useragent string) (valid bool, err er
 		if e != nil {
 			return false,e
 		}
-		fmt.Print(token+"||"+fmt.Sprintf("%d_%s", ud.Uid, function.Md5String(fmt.Sprintf("%s|%s", ud.Uid, ud.Password))))
 		if token==function.Md5String(fmt.Sprintf("%s|%s", ud.Uid, ud.Password)){
 			valid=true
 		}else {
-			valid=false
+			err=errors.New("您的cookie失效了呢，请重新登录！")
 		}
 	}else {
 		err=errors.New("您的登录IP不正确噢，怎么能偷盗人家帐号！")
