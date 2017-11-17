@@ -5,10 +5,12 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-redis/redis"
 	"utils/config"
+	"github.com/hongxufeng/fileLogger"
 )
 
-var mysqlmain *sql.DB
-var rediscache *redis.Client
+var MysqlMain *sql.DB
+var RedisCache *redis.Client
+var DBLog *fileLogger.FileLogger
 
 const (
 	CACHE_USER_DETAIL = "W_Redis_Cache_User_Detail_Byte"
@@ -17,11 +19,13 @@ const (
 )
 
 func Init(config config.Config) (err error) {
-	mysqlmain, err = sql.Open("mysql", config.Mysql)
+	DBLog=fileLogger.NewDefaultLogger(config.LogDir, "DB_LOG.log")
+	DBLog.SetPrefix("[DB] ")
+	MysqlMain, err = sql.Open("mysql", config.Mysql)
 	if err != nil {
 		return  // Just for example purpose. You should use proper error handling instead of panic
 	}
-	err = mysqlmain.Ping()
+	err = MysqlMain.Ping()
 	if err != nil {
 		return // proper error handling instead of panic in your app
 	}
@@ -31,9 +35,9 @@ func Init(config config.Config) (err error) {
 		return
 	}
 	// Create client as usually.
-	rediscache= redis.NewClient(opt)
+	RedisCache= redis.NewClient(opt)
 
-	_, err = rediscache.Ping().Result()
+	_, err = RedisCache.Ping().Result()
 	if err != nil {
 		return
 	}

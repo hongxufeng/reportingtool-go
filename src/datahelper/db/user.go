@@ -8,17 +8,33 @@ import (
 )
 
 func UserLoginErrCnt(uid uint32) (cnt int64, err error) {
-	cnt, err = rediscache.Incr(function.MakeKey(CACHE_USER_LOGIN_ERROR, uid)).Result()
+	cnt, err = RedisCache.Incr(function.MakeKey(CACHE_USER_LOGIN_ERROR, uid)).Result()
 	if err != redis.Nil&&err != nil {
 		return
 	}  else {
-		cnt++
-		err=rediscache.Set(function.MakeKey(CACHE_USER_LOGIN_ERROR, uid),cnt,time.Minute * 10).Err()
+		//cnt++
+		err=RedisCache.Set(function.MakeKey(CACHE_USER_LOGIN_ERROR, uid),cnt,time.Minute * 10).Err()
 	}
-	fmt.Println(cnt)
+	//fmt.Println(cnt)
 	return
 }
 func SetUserForbid(uid uint32) (err error) {
-	err=rediscache.Set(function.MakeKey(CACHE_USER_LOGIN_FORBID, uid),true,time.Minute * 10).Err()
+	err=RedisCache.Set(function.MakeKey(CACHE_USER_LOGIN_FORBID, uid),true,time.Minute * 10).Err()
+	return
+}
+func CheckUserForbid(uid uint32) (forbid bool, err error) {
+	//验证
+	_,err=RedisCache.Get(function.MakeKey(CACHE_USER_LOGIN_FORBID, uid)).Result()
+	if err == redis.Nil {
+		return false,nil
+	} else if err != nil {
+		return true,err
+	} else {
+		return true,nil
+	}
+}
+func CheckUserState(uid uint32) (state bool, e error) {
+	//验证
+	state=true
 	return
 }

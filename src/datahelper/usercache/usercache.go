@@ -8,6 +8,7 @@ var ERROR_USER_NOT_FOUND = errors.New("用户未找到！")
 
 type UserDetail struct {
 	Uid       uint32  `json:"uid"`
+	State     bool    `json:"state"`
 	Salt      uint32  `json:"salt"`
 	Password  string  `json:"password"`
 	Avatar    string  `json:"avatar"`

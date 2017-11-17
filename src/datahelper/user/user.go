@@ -7,6 +7,7 @@ import (
 	"errors"
 	"net/url"
 	"strings"
+	"datahelper/db"
 )
 
 var ERROR_PASSWORD_WRONG=errors.New("密码不正确！")
@@ -52,14 +53,10 @@ func GetUidbyName(name string) (uid uint32, e error) {
 	return
 }
 func CheckUserForbid(uid uint32) (forbid bool, e error) {
-	//验证
-	forbid=false
-	return
+	return db.CheckUserForbid(uid)
 }
 func CheckUserState(uid uint32) (state bool, e error) {
-	//验证
-	state=true
-	return
+	return db.CheckUserState(uid)
 }
 func CheckAuth(uid uint32, password string) (ud *usercache.UserDetail, e error) {
 	//fmt.Print(utils.Md5String(fmt.Sprintf("%s_%d",password,148360)))

@@ -47,12 +47,13 @@ func (module *UserModule) Base_UserLogin(req *service.HttpRequest, result map[st
 	}
 	ud, e := user.CheckAuth(uid, loginData.Password)
 	if e != nil {
-		fmt.Print(uid)
-		fmt.Print(fmt.Sprintf("%d  auth failed  |",uid))
 		Info.Info("%d  auth failed",uid)
 		if cnt, _ := db.UserLoginErrCnt(uid); cnt >= 5 {
 			db.SetUserForbid(uid)
-			Info.Info("forbid user :%d",uid )
+			Info.Info("forbid user :%d", uid)
+			if(module.level>=service.DEV) {
+				fmt.Printf("forbid user :%d", uid)
+			}
 		}
 		//这里增加判断登录频繁次数
 		result["res"] = user.CreateFailResp( service.ERR_INVALID_USER, "少侠，您输入的密码有误啊！")
