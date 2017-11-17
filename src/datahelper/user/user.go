@@ -10,8 +10,6 @@ import (
 	"datahelper/db"
 )
 
-var ERROR_PASSWORD_WRONG=errors.New("密码不正确！")
-
 type LoginSuccessData struct {
 	Auth    string `json:"auth"`
 	Avatar   string`json:"avatar"`
@@ -77,7 +75,7 @@ func CheckAuth(uid uint32, password string) (ud *usercache.UserDetail, e error) 
 	if passwordm :=function.Md5String(fmt.Sprintf("%s_%d",password,ud.Salt));ud.Password==passwordm{
 		return ud,nil
 	}else {
-		return nil,ERROR_PASSWORD_WRONG
+		return nil,errors.New("您的密码貌似不正确哦！")
 	}
 }
 

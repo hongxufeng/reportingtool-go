@@ -460,97 +460,96 @@ func (hr *HttpRequest) ParseEncodeUrl(params ...interface{}) error {
 	for i := 0; i < len(params); i += 2 {
 		key := function.ToString(params[i])
 		vs := hr.UrlEncodedBody[key]
-		v:=vs[0]
 		//fmt.Print(v)
 		var e error
 		switch ref := params[i+1].(type) {
 		case *string:
-			if len(v) > 0 {
-				*ref = function.ToString(v)
+			if len(vs) > 0 {
+				*ref = function.ToString(vs[0])
 			} else {
 				*ref = function.ToString(params[i+2])
 			}
 		case *float64:
-			if len(v) > 0 {
-				*ref, e = function.ToFloat64(v)
+			if len(vs) > 0 {
+				*ref, e = function.ToFloat64(vs[0])
 			} else {
 				*ref, e = function.ToFloat64(params[i+2])
 			}
 		case *int:
-			if len(v) > 0 {
-				*ref, e = function.ToInt(v)
+			if len(vs) > 0 {
+				*ref, e = function.ToInt(vs[0])
 			} else {
 				*ref, e = function.ToInt(params[i+2])
 			}
 		case *int8:
-			if len(v) > 0 {
-				*ref, e = function.ToInt8(v)
+			if len(vs) > 0 {
+				*ref, e = function.ToInt8(vs[0])
 			} else {
 				*ref, e = function.ToInt8(params[i+2])
 			}
 		case *int16:
-			if len(v) > 0 {
-				*ref, e = function.ToInt16(v)
+			if len(vs) > 0 {
+				*ref, e = function.ToInt16(vs[0])
 			} else {
 				*ref, e = function.ToInt16(params[i+2])
 			}
 		case *int32:
-			if len(v) > 0 {
-				*ref, e = function.ToInt32(v)
+			if len(vs) > 0 {
+				*ref, e = function.ToInt32(vs[0])
 			} else {
 				*ref, e = function.ToInt32(params[i+2])
 			}
 		case *int64:
-			if len(v) > 0 {
-				*ref, e = function.ToInt64(v)
+			if len(vs) > 0 {
+				*ref, e = function.ToInt64(vs[0])
 			} else {
 				*ref, e = function.ToInt64(params[i+2])
 			}
 		case *uint:
-			if len(v) > 0 {
-				*ref, e = function.ToUint(v)
+			if len(vs) > 0 {
+				*ref, e = function.ToUint(vs[0])
 			} else {
 				*ref, e = function.ToUint(params[i+2])
 			}
 		case *uint8:
-			if len(v) > 0 {
-				*ref, e = function.ToUint8(v)
+			if len(vs) > 0 {
+				*ref, e = function.ToUint8(vs[0])
 			} else {
 				*ref, e = function.ToUint8(params[i+2])
 			}
 		case *uint16:
-			if len(v) > 0 {
-				*ref, e = function.ToUint16(v)
+			if len(vs) > 0 {
+				*ref, e = function.ToUint16(vs[0])
 			} else {
 				*ref, e = function.ToUint16(params[i+2])
 			}
 		case *uint32:
-			if len(v) > 0 {
-				*ref, e = function.ToUint32(v)
+			if len(vs) > 0 {
+				*ref, e = function.ToUint32(vs[0])
 			} else {
 				*ref, e = function.ToUint32(params[i+2])
 			}
 		case *uint64:
-			if len(v) > 0 {
-				*ref, e = function.ToUint64(v)
+			if len(vs) > 0 {
+				*ref, e = function.ToUint64(vs[0])
 			} else {
 				*ref, e = function.ToUint64(params[i+2])
 			}
 		case *bool:
-			if len(v) > 0 {
-				*ref, e = function.ToBool(v)
+			if len(vs) > 0 {
+				*ref, e = function.ToBool(vs[0])
 			} else {
 				*ref, e = function.ToBool(params[i+2])
 			}
 		case *[]string:
-			if len(v) > 0 {
-				*ref, e = function.ToStringSlice(v)
+			if len(vs) > 0 {
+				*ref, e = function.ToStringSlice(vs[0])
 			} else {
 				*ref = params[i+2].([]string)
 			}
 		case *[]uint32:
-			if len(v) > 0 {
-				*ref, e = function.ToUint32Slice(v)
+			if len(vs) > 0 {
+				*ref, e = function.ToUint32Slice(vs[0])
 			} else {
 				*ref = params[i+2].([]uint32)
 			}

@@ -25,28 +25,27 @@ const (
 )
 type Error struct {
 	Code uint
-	Desc string
 	Show string //客户端显示的内容
 }
 
-func NewError(ecode uint, desc string, show ...string) (err Error) {
+func NewError(ecode uint, show ...string) (err Error) {
 	if len(show) > 0 {
-		err = Error{ecode, desc, show[0]}
+		err = Error{ecode, show[0]}
 	} else {
 		switch ecode {
 		case ERR_INVALID_PARAM:
-			err = Error{ecode, desc, "参数错误"}
+			err = Error{ecode, "参数错误"}
 		case ERR_INVALID_REQUEST:
-			err = Error{ecode, desc, "不合法的请求"}
+			err = Error{ecode, "不合法的请求"}
 		case ERR_MYSQL, ERR_REDIS:
-			err = Error{ecode, desc, "数据库错误"}
+			err = Error{ecode, "数据库错误"}
 		default:
-			err = Error{ecode, desc, "内部错误"}
+			err = Error{ecode, "内部错误"}
 		}
 	}
 	return
 }
 func (e Error) Error() (re string) {
-	return fmt.Sprintf("ecode=%v, desc=%v", e.Code, e.Desc)
+	return fmt.Sprintf("ecode=%v, show=%v", e.Code, e.Show)
 }
 

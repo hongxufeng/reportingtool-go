@@ -222,7 +222,6 @@ func (server *Server) ResposeErr(r *http.Request, w http.ResponseWriter, reqBody
 	result["status"] = "fail"
 	result["code"] = err.Code
 	result["msg"] = err.Show
-	result["detail"] = err.Desc
 	res, _ := json.Marshal(result)
 	server.Log(r, w, reqBody, res, false, duration)
 }
