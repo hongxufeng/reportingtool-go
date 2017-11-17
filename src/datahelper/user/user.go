@@ -52,11 +52,21 @@ func GetUidbyName(name string) (uid uint32, e error) {
 	}
 	return
 }
-func CheckUserForbid(uid uint32) (forbid bool, e error) {
-	return db.CheckUserForbid(uid)
+func CheckUserForbid(uid uint32) (forbid bool) {
+	forbid,_= db.CheckUserForbid(uid)
+	return
 }
-func CheckUserState(uid uint32) (state bool, e error) {
-	return db.CheckUserState(uid)
+func CheckUserState(uid uint32) (state bool) {
+	state,_=db.CheckUserState(uid)
+	return
+}
+func CheckUserLoginErr(uid uint32) (forbid bool) {
+	if cnt, _ := db.UserLoginErrCnt(uid); cnt >= 10 {
+		db.SetUserForbid(uid)
+		return true
+	}else {
+		return false
+	}
 }
 func CheckAuth(uid uint32, password string) (ud *usercache.UserDetail, e error) {
 	//fmt.Print(utils.Md5String(fmt.Sprintf("%s_%d",password,148360)))

@@ -7,8 +7,8 @@ import (
 	"datahelper/user"
 	"github.com/hongxufeng/fileLogger"
 	"model"
-	"datahelper/db"
 	"fmt"
+	"datahelper/db"
 )
 var Info *fileLogger.FileLogger
 var Error *fileLogger.FileLogger
@@ -36,26 +36,25 @@ func (module *UserModule) Base_UserLogin(req *service.HttpRequest, result map[st
 		result["res"] = user.CreateFailResp(service.ERR_USER_NOT_FOUND, "貌似您输入的帐号不存在！")
 		return
 	}
-	if state, e := user.CheckUserState(uid);!state||e!=nil {
+	if state:= user.CheckUserState(uid);!state{
 		result["res"] = user.CreateFailResp(service.RR_STATUS_DENIED, "现如今用户登录状态关闭呢！")
 		return
 	}
 	//判断登录频繁，防止暴力破解
-	if forbid, e := user.CheckUserForbid(uid);forbid ||e!=nil{
+	if forbid := user.CheckUserForbid(uid);forbid{
 		result["res"] = user.CreateFailResp(service.ERR_LOGIN_FREQUENT, "您登录有点频繁，请稍事休息！")
 		return
 	}
 	ud, e := user.CheckAuth(uid, loginData.Password)
 	if e != nil {
 		Info.Info("%d  auth failed",uid)
-		if cnt, _ := db.UserLoginErrCnt(uid); cnt >= 5 {
-			db.SetUserForbid(uid)
+		//这里增加判断登录频繁次数
+		if forbid := user.CheckUserLoginErr(uid);forbid{
 			Info.Info("forbid user :%d", uid)
 			if(module.level>=service.DEV) {
 				fmt.Printf("forbid user :%d", uid)
 			}
 		}
-		//这里增加判断登录频繁次数
 		result["res"] = user.CreateFailResp( service.ERR_INVALID_USER, "少侠，您输入的密码有误啊！")
 		return
 	}
