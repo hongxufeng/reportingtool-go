@@ -8,15 +8,18 @@ import (
 	"datahelper/report"
 )
 
+var Info *fileLogger.FileLogger
+var Error *fileLogger.FileLogger
 type ReportModule struct {
-	info  *fileLogger.FileLogger
-	error *fileLogger.FileLogger
+	level service.LEVEL
 }
 
 func (module *ReportModule) Init(conf *config.Config) error {
-	module = &ReportModule{fileLogger.NewDefaultLogger(conf.LogDir, "Report_Info.log"), fileLogger.NewDefaultLogger(conf.LogDir, "Report_Error.log")}
-	module.info.SetPrefix("[SERVICE] ")
-	module.error.SetPrefix("[SERVICE] ")
+	module.level=service.SetEnvironment(conf.Environment)
+	Info=fileLogger.NewDefaultLogger(conf.LogDir, "Report_Info.log")
+	Error=fileLogger.NewDefaultLogger(conf.LogDir, "Report_Error.log")
+	Info.SetPrefix("[REPORT] ")
+	Error.SetPrefix("[REPORT] ")
 	return nil
 }
 

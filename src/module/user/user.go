@@ -8,17 +8,20 @@ import (
 	"github.com/hongxufeng/fileLogger"
 	"model"
 	"datahelper/db"
+	"fmt"
 )
-
+var Info *fileLogger.FileLogger
+var Error *fileLogger.FileLogger
 type UserModule struct {
-	info *fileLogger.FileLogger
-	error *fileLogger.FileLogger
+	level service.LEVEL
 }
 
 func (module *UserModule) Init(conf *config.Config) error {
-	module=&UserModule{fileLogger.NewDefaultLogger(conf.LogDir, "User_Info.log"),fileLogger.NewDefaultLogger(conf.LogDir, "User_Error.log")}
-	module.info.SetPrefix("[SERVICE] ")
-	module.error.SetPrefix("[SERVICE] ")
+	module.level=service.SetEnvironment(conf.Environment)
+	Info=fileLogger.NewDefaultLogger(conf.LogDir, "User_Info.log")
+	Error=fileLogger.NewDefaultLogger(conf.LogDir, "User_Error.log")
+	Info.SetPrefix("[USER] ")
+	Error.SetPrefix("[USER] ")
 	return nil
 }
 
@@ -44,10 +47,12 @@ func (module *UserModule) Base_UserLogin(req *service.HttpRequest, result map[st
 	}
 	ud, e := user.CheckAuth(uid, loginData.Password)
 	if e != nil {
-		module.error.Error("%s  auth failed !",loginData.Username)
+		fmt.Print(uid)
+		fmt.Print(fmt.Sprintf("%d  auth failed  |",uid))
+		Info.Info("%d  auth failed",uid)
 		if cnt, _ := db.UserLoginErrCnt(uid); cnt >= 5 {
 			db.SetUserForbid(uid)
-			module.info.Info("forbid user :%s",loginData.Username )
+			Info.Info("forbid user :%d",uid )
 		}
 		//这里增加判断登录频繁次数
 		result["res"] = user.CreateFailResp( service.ERR_INVALID_USER, "少侠，您输入的密码有误啊！")

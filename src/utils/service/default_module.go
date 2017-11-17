@@ -2,15 +2,14 @@ package service
 
 import (
 	"utils/config"
-	"github.com/hongxufeng/fileLogger"
 )
 
 type DefaultModule struct {
-	log *fileLogger.FileLogger
+	level LEVEL
 }
 
 func (module *DefaultModule) Init(conf *config.Config) error {
-	module.log=fileLogger.NewDefaultLogger(conf.LogDir, "Default.log")
+	module.level=SetEnvironment(conf.Environment)
 	return nil
 }
 func (module *DefaultModule) ErrorModule(req *HttpRequest, res map[string]interface{}) (e Error) {

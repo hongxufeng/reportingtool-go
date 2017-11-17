@@ -64,6 +64,17 @@ func mValidUser(r *http.Request) (uid uint32,err error) {
 	return uid,nil
 }
 
+func SetEnvironment(environment string) LEVEL {
+	switch environment {
+	case "DEV": return DEV
+	case "TEST":return TEST
+	case "PRE":return PRE
+	case "PROD":return PROD
+	default:
+		return OFF
+	}
+}
+
 func (server *Server) AddModule(name string, module Module) (err error) {
 	fmt.Printf("add module %s... ", name)
 	err = module.Init(server.conf)

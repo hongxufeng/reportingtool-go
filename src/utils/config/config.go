@@ -13,6 +13,7 @@ type Address struct {
 }
 
 type Config struct {
+	Environment string `yaml:environment`
 	Address Address `yaml:"address"`
 	LogDir  string  `yaml:"log"`
 	Mysql   string  `yaml:"mysql"`
