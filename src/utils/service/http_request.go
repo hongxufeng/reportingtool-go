@@ -329,7 +329,7 @@ func (hr *HttpRequest) GetParams(params ...interface{}) error {
 				return errors.New(fmt.Sprintf("unknown type %v ", reflect.TypeOf(ref)))
 			}
 			if e != nil {
-				return errors.New(fmt.Sprintf("parse1111 [%v] error:%v", key, e.Error()))
+				return errors.New(fmt.Sprintf("parse [%v] error:%v", key, e.Error()))
 			}
 		} else {
 			return errors.New(fmt.Sprintf("%v not provided value", key))
@@ -456,112 +456,56 @@ func (hr *HttpRequest) ParseEncodeUrl(params ...interface{}) error {
 	if len(params)%2 != 0 {
 		return errors.New("params count must be odd")
 	}
-	//fmt.Print(hr.UrlEncodedBody)
 	for i := 0; i < len(params); i += 2 {
 		key := function.ToString(params[i])
-		vs := hr.UrlEncodedBody[key]
-		//fmt.Print(v)
-		var e error
-		switch ref := params[i+1].(type) {
-		case *string:
-			if len(vs) > 0 {
-				*ref = function.ToString(vs[0])
-			} else {
-				*ref = function.ToString(params[i+2])
+		if vs := hr.UrlEncodedBody[key]; len(vs)>0 {
+			v:=vs[0]
+			var e error
+			switch ref := params[i+1].(type) {
+			case *string:
+				*ref = function.ToString(v)
+			case *float64:
+				*ref, e = function.ToFloat64(v)
+			case *int:
+				*ref, e = function.ToInt(v)
+			case *int8:
+				*ref, e = function.ToInt8(v)
+			case *int16:
+				*ref, e = function.ToInt16(v)
+			case *int32:
+				*ref, e = function.ToInt32(v)
+			case *int64:
+				*ref, e = function.ToInt64(v)
+			case *uint:
+				*ref, e = function.ToUint(v)
+			case *uint8:
+				*ref, e = function.ToUint8(v)
+			case *uint16:
+				*ref, e = function.ToUint16(v)
+			case *uint32:
+				*ref, e = function.ToUint32(v)
+			case *uint64:
+				*ref, e = function.ToUint64(v)
+			case *map[string]interface{}:
+				e = errors.New("do not support map[string]iterface{}")
+			case *[]interface{}:
+				e = errors.New("do not support []iterface{}")
+			case *[]string:
+				ll := strings.Split(v, ",")
+				*ref, e = function.ToStringSlice(ll)
+			case *[]uint32:
+				ll := strings.Split(v, ",")
+				*ref, e = function.ToUint32Slice(ll)
+			case *interface{}:
+				*ref = v
+			default:
+				return errors.New(fmt.Sprintf("unknown type %v ", reflect.TypeOf(ref)))
 			}
-		case *float64:
-			if len(vs) > 0 {
-				*ref, e = function.ToFloat64(vs[0])
-			} else {
-				*ref, e = function.ToFloat64(params[i+2])
+			if e != nil {
+				return errors.New(fmt.Sprintf("parse [%v] error:%v", key, e.Error()))
 			}
-		case *int:
-			if len(vs) > 0 {
-				*ref, e = function.ToInt(vs[0])
-			} else {
-				*ref, e = function.ToInt(params[i+2])
-			}
-		case *int8:
-			if len(vs) > 0 {
-				*ref, e = function.ToInt8(vs[0])
-			} else {
-				*ref, e = function.ToInt8(params[i+2])
-			}
-		case *int16:
-			if len(vs) > 0 {
-				*ref, e = function.ToInt16(vs[0])
-			} else {
-				*ref, e = function.ToInt16(params[i+2])
-			}
-		case *int32:
-			if len(vs) > 0 {
-				*ref, e = function.ToInt32(vs[0])
-			} else {
-				*ref, e = function.ToInt32(params[i+2])
-			}
-		case *int64:
-			if len(vs) > 0 {
-				*ref, e = function.ToInt64(vs[0])
-			} else {
-				*ref, e = function.ToInt64(params[i+2])
-			}
-		case *uint:
-			if len(vs) > 0 {
-				*ref, e = function.ToUint(vs[0])
-			} else {
-				*ref, e = function.ToUint(params[i+2])
-			}
-		case *uint8:
-			if len(vs) > 0 {
-				*ref, e = function.ToUint8(vs[0])
-			} else {
-				*ref, e = function.ToUint8(params[i+2])
-			}
-		case *uint16:
-			if len(vs) > 0 {
-				*ref, e = function.ToUint16(vs[0])
-			} else {
-				*ref, e = function.ToUint16(params[i+2])
-			}
-		case *uint32:
-			if len(vs) > 0 {
-				*ref, e = function.ToUint32(vs[0])
-			} else {
-				*ref, e = function.ToUint32(params[i+2])
-			}
-		case *uint64:
-			if len(vs) > 0 {
-				*ref, e = function.ToUint64(vs[0])
-			} else {
-				*ref, e = function.ToUint64(params[i+2])
-			}
-		case *bool:
-			if len(vs) > 0 {
-				*ref, e = function.ToBool(vs[0])
-			} else {
-				*ref, e = function.ToBool(params[i+2])
-			}
-		case *[]string:
-			if len(vs) > 0 {
-				*ref, e = function.ToStringSlice(vs[0])
-			} else {
-				*ref = params[i+2].([]string)
-			}
-		case *[]uint32:
-			if len(vs) > 0 {
-				*ref, e = function.ToUint32Slice(vs[0])
-			} else {
-				*ref = params[i+2].([]uint32)
-			}
-		case *map[string]interface{}:
-			e = errors.New("do not support map[string]iterface{}")
-		case *[]interface{}:
-			e = errors.New("do not support []iterface{}")
-		default:
-			return errors.New(fmt.Sprintf("unknown type %v ", key, reflect.TypeOf(ref)))
-		}
-		if e != nil {
-			return errors.New(fmt.Sprintf("parse [%v] error:%v", key, e.Error()))
+		} else {
+			return errors.New(fmt.Sprintf("%v not provided value", key))
 		}
 	}
 	return nil
