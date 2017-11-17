@@ -1,0 +1,36 @@
+/*
+Navicat MySQL Data Transfer
+
+Source Server         : rm-2ze3in8d9p149sin4o.mysql.rds.aliyuncs.com
+Source Server Version : 50718
+Source Host           : rm-2ze3in8d9p149sin4o.mysql.rds.aliyuncs.com:3306
+Source Database       : yy
+
+Target Server Type    : MYSQL
+Target Server Version : 50718
+File Encoding         : 65001
+
+Date: 2017-11-17 17:42:25
+*/
+
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for `w_user_list`
+-- ----------------------------
+DROP TABLE IF EXISTS `w_user_list`;
+CREATE TABLE `w_user_list` (
+  `uid` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户自增uid',
+  `username` varchar(255) NOT NULL DEFAULT '' COMMENT '用户名，登陆可用',
+  `password` varchar(255) NOT NULL COMMENT '经salt加密过的密码',
+  `salt` smallint(6) NOT NULL,
+  `state` tinyint(4) NOT NULL DEFAULT '1' COMMENT '用户状态',
+  `avatar` varchar(255) DEFAULT NULL COMMENT '用户头像地址',
+  `user_agent` varchar(255) DEFAULT NULL COMMENT '用户登录的user_agent',
+  `time_create` datetime DEFAULT NULL COMMENT '注册时间',
+  PRIMARY KEY (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='W_后台登录用户表';
+
+-- ----------------------------
+-- Records of w_user_list
+-- ----------------------------
