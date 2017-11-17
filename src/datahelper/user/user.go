@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"strings"
 	"datahelper/db"
+	"model"
 )
 
 type LoginSuccessData struct {
@@ -45,8 +46,8 @@ func UserValid(uid uint32, hashcode string,useragent string) (valid bool, err er
 }
 func GetUidbyName(name string) (uid uint32, e error) {
 	uid=0
-	if(name=="wind"){
-		uid=331805370
+	if(name==model.User_W_Name){
+		uid=model.User_W_Uid
 	}
 	return
 }
@@ -59,7 +60,8 @@ func CheckUserState(uid uint32) (state bool) {
 	return
 }
 func CheckUserLoginErr(uid uint32) (forbid bool) {
-	if cnt, _ := db.UserLoginErrCnt(uid); cnt >= 10 {
+	//十分钟内登录十次后则判断频繁登录
+	if cnt, _ := db.UserLoginErrCnt(uid); cnt >= model.User_Forfid_Cnt {
 		db.SetUserForbid(uid)
 		return true
 	}else {

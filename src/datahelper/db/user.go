@@ -3,7 +3,7 @@ package db
 import (
 	"utils/function"
 	"github.com/go-redis/redis"
-	"time"
+	"model"
 )
 
 func UserLoginErrCnt(uid uint32) (cnt int64, err error) {
@@ -12,13 +12,13 @@ func UserLoginErrCnt(uid uint32) (cnt int64, err error) {
 		return
 	}  else {
 		//cnt++
-		err=RedisCache.Set(function.MakeKey(CACHE_USER_LOGIN_ERROR, uid),cnt,time.Minute * 10).Err()
+		err=RedisCache.Set(function.MakeKey(CACHE_USER_LOGIN_ERROR, uid),cnt,model.User_Forfid_Expiration_Duration).Err()
 	}
 	//fmt.Println(cnt)
 	return
 }
 func SetUserForbid(uid uint32) (err error) {
-	err=RedisCache.Set(function.MakeKey(CACHE_USER_LOGIN_FORBID, uid),true,time.Minute * 10).Err()
+	err=RedisCache.Set(function.MakeKey(CACHE_USER_LOGIN_FORBID, uid),true,model.User_Forfid_Expiration_Duration).Err()
 	return
 }
 func CheckUserForbid(uid uint32) (forbid bool, err error) {
