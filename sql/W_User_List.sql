@@ -1,17 +1,4 @@
-/*
-Navicat MySQL Data Transfer
 
-Source Server         : rm-2ze3in8d9p149sin4o.mysql.rds.aliyuncs.com
-Source Server Version : 50718
-Source Host           : rm-2ze3in8d9p149sin4o.mysql.rds.aliyuncs.com:3306
-Source Database       : yy
-
-Target Server Type    : MYSQL
-Target Server Version : 50718
-File Encoding         : 65001
-
-Date: 2017-11-17 17:42:25
-*/
 
 SET FOREIGN_KEY_CHECKS=0;
 
