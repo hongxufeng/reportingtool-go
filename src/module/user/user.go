@@ -8,7 +8,6 @@ import (
 	"github.com/hongxufeng/fileLogger"
 	"model"
 	"fmt"
-	"datahelper/db"
 )
 var Info *fileLogger.FileLogger
 var Error *fileLogger.FileLogger

@@ -4,7 +4,6 @@ import (
 	"utils/function"
 	"github.com/go-redis/redis"
 	"time"
-	"fmt"
 )
 
 func UserLoginErrCnt(uid uint32) (cnt int64, err error) {
@@ -26,12 +25,11 @@ func CheckUserForbid(uid uint32) (forbid bool, err error) {
 	//验证
 	_,err=RedisCache.Get(function.MakeKey(CACHE_USER_LOGIN_FORBID, uid)).Result()
 	if err == redis.Nil {
-		return false,nil
+		forbid=false
 	} else if err != nil {
-		return true,err
-	} else {
-		return true,nil
+		forbid=true
 	}
+	return
 }
 func CheckUserState(uid uint32) (state bool, e error) {
 	//验证
