@@ -18,7 +18,7 @@ const (
 	CACHE_USER_LOGIN_FORBID="W_Redis_Cache_User_Login_Forbid_Bool"
 )
 
-func Init(config config.Config) (err error) {
+func Init(config *config.Config) (err error) {
 	DBLog=fileLogger.NewDefaultLogger(config.LogDir, "DB_LOG.log")
 	DBLog.SetPrefix("[DB] ")
 	MysqlMain, err = sql.Open("mysql", config.Mysql)

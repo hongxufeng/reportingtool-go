@@ -23,7 +23,7 @@ func main() {
 		return
 	}
 	fmt.Println("begin init db")
-	e:=db.Init(conf)
+	e:=db.Init(&conf)
 	if e==nil {
 		fmt.Println("init db ok")
 	}else {
