@@ -79,7 +79,7 @@ var serverURL="http://localhost:8080/ReportingTool"
 
 3.准备写个彩蛋 可永久登录系统（完成，彩蛋用户   帐号wind密码shadow   如果用户注册人数多了  自增uid超过331805370，则彩蛋用户自动失效，并且新增加安全性验证，彩蛋用户需要符合某些条件，方能登录系统）备注：http没有绝对的安全，只是会增加破解难度，太复杂不弄了吧，有点心里安慰就行了！
 
-传说中beego开发者大神astaxie的安全机制[seesion劫持](https://github.com/astaxie/build-web-application-with-golang/blob/master/zh/06.4.md)这些方法貌似也是隔靴搔痒而已，早想到到，完全拿下你的路由，再知道你的加密方式，完全防不住！安全性还没我的具有迷惑性！
+传说中beego开发者大神astaxie的安全机制[seesion劫持](https://github.com/astaxie/build-web-application-with-golang/blob/master/zh/06.4.md)这些方法貌似也是隔靴搔痒而已，早想到到，完全拿下你的路由，再知道你的加密方式，完全防不住！安全性还没我的具有迷惑性，我本想判断用户IP，但如果用户各种游走，换IP是经常的事，并不能有好的用户体验，而且IP也能模拟，选择方法是验证useragent，一般验证了系统、内核、浏览器等信息，就可以判断是不是登录的那台机子发来的请求，换了浏览器都是不能验证通过的，当然这也是可以模拟的，其实防不住的.进行数据加密？加密在js有，防君子不防小人吗？可以用不对称加密，私钥和公钥？实在是懒得，其实是懒的，因为这个事实[md5弱点](https://baike.baidu.com/item/MD5/212708?fr=aladdin#4)，密码有完全安全的么，还是那句话，有点心理安慰就行了
 
 4.为避免繁杂的路由配置，决定路由配置分为验证用户登录和不验证用户两种，再根据反射，找寻相应的接口函数
 
