@@ -30,12 +30,18 @@ func (module *UserModule) Base_UserLogin(req *service.HttpRequest, result map[st
 	if err != nil {
 		return
 	}
-	uid,e := user.GetUidbyName(loginData.Username)
-	if uid==0||e!=nil{
+	if(module.level>=service.DEV) {
+		fmt.Println(loginData.Username)
+	}
+	uid:= user.GetUidbyName(loginData.Username)
+	if(module.level>=service.DEV) {
+		fmt.Println(uid)
+	}
+	if uid==0{
 		result["res"] = user.CreateFailResp(service.ERR_USER_NOT_FOUND, "貌似您输入的帐号不存在！")
 		return
 	}
-	if state:= user.CheckUserState(uid);!state{
+	if state:= user.CheckUserState(uid);state{
 		result["res"] = user.CreateFailResp(service.RR_STATUS_DENIED, "现如今用户登录状态关闭呢！")
 		return
 	}

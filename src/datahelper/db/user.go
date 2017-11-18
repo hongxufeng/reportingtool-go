@@ -31,3 +31,16 @@ func CheckUserForbid(uid uint32) (forbid bool, err error) {
 	}
 	return
 }
+func GetUidbyName(name string) (uid uint32,err error) {
+	uid=0
+	query := "SELECT uid FROM w_user_list WHERE username=?"
+	result, err := MysqlMain.Query(query, name)
+	if err!=nil {
+		return
+	}
+	defer result.Close()
+	if result.Next(){
+		err = result.Scan(&uid)
+	}
+	return
+}

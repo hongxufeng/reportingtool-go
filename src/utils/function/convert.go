@@ -10,6 +10,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"utils/function/mapstruct"
 )
 
 //要求to必须已经分配好空间
@@ -442,4 +443,9 @@ func JSONDecode(b []byte, v interface{}) (e error) {
 		return e
 	}
 	return
+}
+
+// //MAP->结构
+func MapToStruct(data map[string]interface{}, obj interface{}) error {
+	return mapstruct.Decode(data, obj)
 }

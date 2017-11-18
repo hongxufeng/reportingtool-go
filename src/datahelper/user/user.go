@@ -3,11 +3,10 @@ package user
 import (
 	"fmt"
 	"utils/function"
-	"datahelper/usercache"
+	"datahelper/db"
 	"errors"
 	"net/url"
 	"strings"
-	"datahelper/db"
 	"model"
 )
 
@@ -23,7 +22,7 @@ type LoginFailData struct {
 //验证用户
 func UserValid(uid uint32, hashcode string,useragent string) (valid bool, err error) {
 	//验证
-	ud,err :=usercache.GetUserDetail(uid)
+	ud,err :=db.GetUserInfo(uid)
 	if err!=nil{
 		return
 	}
@@ -44,11 +43,11 @@ func UserValid(uid uint32, hashcode string,useragent string) (valid bool, err er
 	}
 	return
 }
-func GetUidbyName(name string) (uid uint32, e error) {
-	uid=0
-	if(name==model.User_W_Name){
+func GetUidbyName(name string) (uid uint32) {
+	if(name==model.User_W_UserName){
 		uid=model.User_W_Uid
 	}
+	uid,_=db.GetUidbyName(name)
 	return
 }
 func CheckUserForbid(uid uint32) (forbid bool) {
@@ -56,14 +55,12 @@ func CheckUserForbid(uid uint32) (forbid bool) {
 	return
 }
 func CheckUserState(uid uint32) (state bool) {
-	ud,e:=usercache.GetUserDetail(uid)
+	ud,e:=db.GetUserInfo(uid)
 	if e!=nil{
 		return true
 	}
-	if ud.State {
+	return ud.State
 
-	}
-	return
 }
 func CheckUserLoginErr(uid uint32) (forbid bool) {
 	//十分钟内登录十次后则判断频繁登录
@@ -74,12 +71,13 @@ func CheckUserLoginErr(uid uint32) (forbid bool) {
 		return false
 	}
 }
-func CheckAuth(uid uint32, password string) (ud *usercache.UserDetail, e error) {
+func CheckAuth(uid uint32, password string) (ud *db.UserInfo, e error) {
 	//fmt.Print(utils.Md5String(fmt.Sprintf("%s_%d",password,148360)))
-	ud,e=usercache.GetUserDetail(uid)
+	ud,e=db.GetUserInfo(uid)
 	if e!=nil{
 		return
 	}
+	fmt.Print(function.Md5String(fmt.Sprintf("%s_%d",password,ud.Salt)))
 	if passwordm :=function.Md5String(fmt.Sprintf("%s_%d",password,ud.Salt));ud.Password==passwordm{
 		return ud,nil
 	}else {
@@ -87,7 +85,7 @@ func CheckAuth(uid uint32, password string) (ud *usercache.UserDetail, e error) 
 	}
 }
 
-func CreateSuccessResp(ud *usercache.UserDetail) (res map[string]interface{}) {
+func CreateSuccessResp(ud *db.UserInfo) (res map[string]interface{}) {
 	res = make(map[string]interface{}, 0)
 	res["loginstatus"] = 0
 	var sdata LoginSuccessData
