@@ -56,7 +56,13 @@ func CheckUserForbid(uid uint32) (forbid bool) {
 	return
 }
 func CheckUserState(uid uint32) (state bool) {
-	state,_=db.CheckUserState(uid)
+	ud,e:=usercache.GetUserDetail(uid)
+	if e!=nil{
+		return true
+	}
+	if ud.State {
+
+	}
 	return
 }
 func CheckUserLoginErr(uid uint32) (forbid bool) {

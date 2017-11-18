@@ -31,8 +31,3 @@ func CheckUserForbid(uid uint32) (forbid bool, err error) {
 	}
 	return
 }
-func CheckUserState(uid uint32) (state bool, e error) {
-	//验证
-	state=true
-	return
-}
