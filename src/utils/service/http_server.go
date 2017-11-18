@@ -17,9 +17,10 @@ import (
 )
 
 type Server struct {
+	level        LEVEL
 	modules      map[string]Module
-	info          *fileLogger.FileLogger
-	error         *fileLogger.FileLogger
+	info         *fileLogger.FileLogger
+	error        *fileLogger.FileLogger
 	conf         *config.Config
 	mvaliduser   func(r *http.Request) (uid uint32,err error) //加密方式    如果不是合法用户，需要返回0
 	parseBody    uint32                              //0代表不解析，1代表把POST内容为json，2代表urlencoded，
@@ -28,7 +29,7 @@ type Server struct {
 }
 
 func New(conf *config.Config,parseBody uint32,customResult bool,multipart bool) (server *Server, err error) {
-	server = &Server{make(map[string]Module), fileLogger.NewDefaultLogger(conf.LogDir, "Service_Info.log"), fileLogger.NewDefaultLogger(conf.LogDir, "Service_Error.log"),conf, mValidUser, parseBody, customResult, multipart}
+	server = &Server{SetEnvironment(conf.Environment),make(map[string]Module), fileLogger.NewDefaultLogger(conf.LogDir, "Service_Info.log"), fileLogger.NewDefaultLogger(conf.LogDir, "Service_Error.log"),conf, mValidUser, parseBody, customResult, multipart}
 	server.info.SetPrefix("[SERVICE] ")
 	server.error.SetPrefix("[SERVICE] ")
 
@@ -93,7 +94,7 @@ func (server *Server) StartService() error {
 	r.HandleFunc("/user/{module}/{method}", server.UserHandler)
 	r.HandleFunc("/base/{module}/{method}", server.BaseHandler)
 	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("web/"))))
-	fmt.Print("服务已经启动！")
+	fmt.Println("服务已经启动！")
 	server.info.Print("服务已经启动！")
 	// Bind to a port and pass our router in
 	return http.ListenAndServe(server.conf.Address.Port, r)

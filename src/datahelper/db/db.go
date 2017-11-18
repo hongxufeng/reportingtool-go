@@ -13,7 +13,6 @@ var RedisCache *redis.Client
 var DBLog *fileLogger.FileLogger
 
 const (
-	SQL_USER_INFO="SELECT uid,username,password,salt,state,avatar,user_agent FROM w_user_list WHERE username="
 	CACHE_USER_INFO = "W_Redis_Cache_User_Info_Byte"
 	CACHE_USER_LOGIN_ERROR="W_Redis_Cache_User_Login_Error_Cnt"
 	CACHE_USER_LOGIN_FORBID="W_Redis_Cache_User_Login_Forbid_Bool"

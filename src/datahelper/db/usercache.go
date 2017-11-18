@@ -5,6 +5,8 @@ import (
 	"utils/function"
 	"github.com/go-redis/redis"
 	"encoding/json"
+	"fmt"
+	"errors"
 )
 
 type UserInfo struct {
@@ -31,8 +33,8 @@ func GetUserInfo(uid uint32) (userinfo *UserInfo, err error) {
 	}
 	info,e:=RedisCache.Get(function.MakeKey(CACHE_USER_INFO, uid)).Result()
 	if e == redis.Nil {
-		//查数据库
-		//return nil,errors.New("您输入的用户并未找到呢！")
+		//查数据库，设置redis
+		return SetUserInfoCache(uid)
 	} else if e != nil {
 		return nil,e
 	} else {
@@ -40,14 +42,46 @@ func GetUserInfo(uid uint32) (userinfo *UserInfo, err error) {
 			var rm map[string]interface{}
 			e := json.Unmarshal([]byte(info), &rm)
 			if e != nil {
-				//查数据库
+				//查数据库，设置redis
+				return SetUserInfoCache(uid)
 			}
 			if e := function.MapToStruct(rm, &userinfo); e != nil {
-				//查数据库
+				//查数据库，设置redis
+				return SetUserInfoCache(uid)
 			}
 		}else {
-			//查数据库
+			//查数据库，设置redis
+			return SetUserInfoCache(uid)
 		}
+	}
+	return
+}
+
+func SetUserInfoCache(uid uint32) (userinfo *UserInfo, err error) {
+	userinfo,err=GetUserInfobyDB(uid)
+	if err!=nil {
+		return
+	}
+	bts, err:= json.Marshal(userinfo)
+	if err != nil {
+		fmt.Println("json.Marshal error " + err.Error())
+		return
+	}
+	err=RedisCache.Set(function.MakeKey(CACHE_USER_INFO, uid),string(bts),model.User_Info_Persistence_Duration).Err()
+	return
+}
+
+func GetUserInfobyDB(uid uint32) (userinfo *UserInfo, err error) {
+	query:="SELECT uid,username,nickname,password,salt,state,avatar,user_agent FROM w_user_list WHERE uid=?"
+	result, e := MysqlMain.Query(query, uid)
+	if e != nil {
+		return
+	}
+	defer result.Close()
+	if result.Next() {
+		err= result.Scan(&userinfo.Uid,&userinfo.UserName,&userinfo.NickName,&userinfo.Password,&userinfo.Salt,&userinfo.Avatar,&userinfo.UserAgent)
+	}else {
+		err=errors.New("您输入的用户未找到呢！")
 	}
 	return
 }
