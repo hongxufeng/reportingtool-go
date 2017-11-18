@@ -79,7 +79,7 @@ var serverURL="http://localhost:8080/ReportingTool"
 
 3.准备写个彩蛋 可永久登录系统（完成，彩蛋用户   帐号wind密码shadow   如果用户注册人数多了  自增uid超过331805370，则彩蛋用户自动失效，并且新增加安全性验证，彩蛋用户需要符合某些条件，方能登录系统）备注：http没有绝对的安全，只是会增加破解难度，太复杂不弄了吧，有点心里安慰就行了！
 
-传说中beego开发者大神的安全机制[seesion劫持](https://github.com/astaxie/build-web-application-with-golang/blob/master/zh/06.4.md)这些方法貌似也是隔靴搔痒而已，早想到到，完全拿下你的路由，再知道你的加密方式，完全防不住！安全性还没我的具有迷惑性！
+传说中beego开发者大神astaxie的安全机制[seesion劫持](https://github.com/astaxie/build-web-application-with-golang/blob/master/zh/06.4.md)这些方法貌似也是隔靴搔痒而已，早想到到，完全拿下你的路由，再知道你的加密方式，完全防不住！安全性还没我的具有迷惑性！
 
 4.为避免繁杂的路由配置，决定路由配置分为验证用户登录和不验证用户两种，再根据反射，找寻相应的接口函数
 
