@@ -486,6 +486,8 @@ func (hr *HttpRequest) ParseEncodeUrl(params ...interface{}) error {
 				*ref, e = function.ToUint32(v)
 			case *uint64:
 				*ref, e = function.ToUint64(v)
+			case *bool:
+				*ref, e = function.ToBool(v)
 			case *map[string]interface{}:
 				e = errors.New("do not support map[string]iterface{}")
 			case *[]interface{}:

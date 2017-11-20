@@ -3,6 +3,7 @@ package report
 import (
 	"model"
 	"github.com/beevik/etree"
+	"fmt"
 )
 
 type Param struct {
@@ -14,11 +15,20 @@ type Param struct {
 }
 
 func New(uid uint32,settings model.Settings) (param *Param,err error){
+	fmt.Println("11")
 	var XmlTable interface{}
 	var ColConfigDict []model.ColumnConfig
 	doc := etree.NewDocument()
-	if err := doc.ReadFromFile("xml/test.xml"); err != nil {
-		panic(err)
+	filename:="xml/"+settings.ConfigFile+".xml"
+	fmt.Println(filename)
+	err = doc.ReadFromFile(filename)
+	if err != nil {
+		return
+	}
+	path:="./tables/table[@id='"+settings.TableID+"']/*";
+	fmt.Println(path)
+	for _, e := range doc.FindElements(path) {
+		fmt.Printf("%s: %s\n", e.Tag, e.Text())
 	}
 	param=&Param{XmlTable,settings,uid,true,ColConfigDict}
 	return

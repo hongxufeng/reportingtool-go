@@ -30,6 +30,7 @@ func (module *ReportModule) User_GetTable(req *service.HttpRequest, result map[s
 	if err != nil {
 		return
 	}
+	fmt.Println(settings.TableID)
 	err = req.ParseEncodeUrl("configFile", &settings.ConfigFile, "hasCheckbox", &settings.HasCheckbox, "style", &settings.Style, "rowList", &settings.RowList)
 	if err != nil {
 		return
