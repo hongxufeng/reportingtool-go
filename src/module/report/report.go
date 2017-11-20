@@ -6,6 +6,7 @@ import (
 	"utils/service"
 	"model"
 	"datahelper/report"
+	"fmt"
 )
 
 var Info *fileLogger.FileLogger
@@ -32,6 +33,9 @@ func (module *ReportModule) User_GetTable(req *service.HttpRequest, result map[s
 	err = req.ParseEncodeUrl("configFile", &settings.ConfigFile, "hasCheckbox", &settings.HasCheckbox, "style", &settings.Style, "rowList", &settings.RowList)
 	if err != nil {
 		return
+	}
+	if module.level>=service.DEV{
+		fmt.Println(settings)
 	}
 	param, err := report.New(req.Uid, settings)
 	if (err != nil) {

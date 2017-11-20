@@ -2,6 +2,7 @@ package report
 
 import (
 	"model"
+	"github.com/beevik/etree"
 )
 
 type Param struct {
@@ -15,6 +16,10 @@ type Param struct {
 func New(uid uint32,settings model.Settings) (param *Param,err error){
 	var XmlTable interface{}
 	var ColConfigDict []model.ColumnConfig
+	doc := etree.NewDocument()
+	if err := doc.ReadFromFile("xml/test.xml"); err != nil {
+		panic(err)
+	}
 	param=&Param{XmlTable,settings,uid,true,ColConfigDict}
 	return
 }

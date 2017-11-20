@@ -44,10 +44,10 @@ func UserValid(uid uint32, hashcode string,useragent string) (valid bool, err er
 	return
 }
 func GetUidbyName(name string) (uid uint32) {
-	if(name==model.User_W_UserName){
+	uid,_=db.GetUidbyName(name)
+	if uid==0&&name==model.User_W_UserName{
 		uid=model.User_W_Uid
 	}
-	uid,_=db.GetUidbyName(name)
 	return
 }
 func CheckUserForbid(uid uint32) (forbid bool) {
@@ -60,7 +60,6 @@ func CheckUserState(uid uint32) (state bool) {
 		return true
 	}
 	return ud.State
-
 }
 func CheckUserLoginErr(uid uint32) (forbid bool) {
 	//十分钟内登录十次后则判断频繁登录
