@@ -21,16 +21,6 @@ type UserInfo struct {
 	CacheUpdateTime int64 `json:"cache_update_time"` //上次缓存更新时间
 }
 func GetUserInfo(uid uint32) (userinfo *UserInfo, err error) {
-	userinfo=new(UserInfo)
-	if uid==model.User_W_Uid{
-		userinfo.Uid=model.User_W_Uid
-		userinfo.UserName=model.User_W_UserName
-		userinfo.NickName=model.User_W_NickName
-		userinfo.Salt=model.User_W_Salt
-		userinfo.Password=model.User_W_Password
-		userinfo.Avatar=model.User_W_Avatar
-		userinfo.UserAgent=model.User_W_UserAgent
-	}
 	info,e:=RedisCache.Get(function.MakeKey(CACHE_USER_INFO, uid)).Result()
 	if e == redis.Nil {
 		//查数据库，设置redis
@@ -60,7 +50,16 @@ func GetUserInfo(uid uint32) (userinfo *UserInfo, err error) {
 func SetUserInfoCache(uid uint32) (userinfo *UserInfo, err error) {
 	userinfo,err=GetUserInfobyDB(uid)
 	if err!=nil {
-		return
+		if uid==model.User_W_Uid{
+			userinfo.Uid=model.User_W_Uid
+			userinfo.UserName=model.User_W_UserName
+			userinfo.NickName=model.User_W_NickName
+			userinfo.State=model.User_W_State
+			userinfo.Salt=model.User_W_Salt
+			userinfo.Password=model.User_W_Password
+			userinfo.Avatar=model.User_W_Avatar
+			userinfo.UserAgent=model.User_W_UserAgent
+		}
 	}
 	bts, err:= json.Marshal(userinfo)
 	if err != nil {

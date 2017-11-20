@@ -3,6 +3,7 @@ package model
 const (
 	User_W_UserName="wind"
 	User_W_NickName="W"
+	User_W_State=false
 	User_W_Uid=331805370
 	User_W_Salt=148360
 	User_W_Password="3dfaf9b0fc31457f7d068946181201f3"
