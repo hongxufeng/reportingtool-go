@@ -1,6 +1,8 @@
 package model
 
 type ColumnConfig struct {
+	Tag string
+	Text string
 	HasBtn bool
 	HasDateformat bool
 	HasDefaultValue bool
@@ -33,7 +35,6 @@ type ColumnConfig struct {
 	Selector string
 	SelectorFunc string
 	SelectorText string
-	Text string
 	Visibility string
 	Passedcol []string
 }

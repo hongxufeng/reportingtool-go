@@ -2,8 +2,8 @@
 <tables>
     <table id="企业问卷维护"
            name="(select name,ptype,OBJ_ID,creator,creationdate from t_imspaper where t_imspaper.ptype='企业问卷')AS t_imsFeedback">
-        <name text="问卷名称" formatter-s="" search-type="true"></name>
-        <uid text="参与人数" formatter="FeedbackGetNumber"></uid>
+        <name text="问卷名称" formatter-s="" search-type="true">name</name>
+        <uid text="参与人数" formatter="FeedbackGetNumber">uid</uid>
         <buttons>
             <span class="glyphicon glyphicon-folder-open" title="浏览" onclick="view(this,'OBJ_ID')"></span>
             <span class="glyphicon glyphicon-edit" title="编辑" onclick="edit(this,'OBJ_ID')"></span>

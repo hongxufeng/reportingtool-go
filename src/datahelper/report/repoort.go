@@ -4,33 +4,34 @@ import (
 	"model"
 	"github.com/beevik/etree"
 	"fmt"
+	"datahelper/db"
 )
 
 type Param struct {
-	XmlTable interface{}//XML获得的数据结构
 	Settings model.Settings
 	Uid uint32
-	IsAdmin bool  //用户判断得到的权限
+	Power int8  //用户判断得到的权限
 	ColConfigDict []model.ColumnConfig
 }
 
 func New(uid uint32,settings model.Settings) (param *Param,err error){
-	fmt.Println("11")
-	var XmlTable interface{}
 	var ColConfigDict []model.ColumnConfig
 	doc := etree.NewDocument()
 	filename:="xml/"+settings.ConfigFile+".xml"
-	fmt.Println(filename)
+	//fmt.Println(filename)
 	err = doc.ReadFromFile(filename)
 	if err != nil {
 		return
 	}
 	path:="./tables/table[@id='"+settings.TableID+"']/*";
-	fmt.Println(path)
+	//fmt.Println(path)
 	for _, e := range doc.FindElements(path) {
 		fmt.Printf("%s: %s\n", e.Tag, e.Text())
+		//赋值ColConfigDict
 	}
-	param=&Param{XmlTable,settings,uid,true,ColConfigDict}
+	//根据uid判断权限
+	ud,err:=db.GetUserInfo(uid)
+	param=&Param{settings,uid,ud.Power,ColConfigDict}
 	return
 }
 func (param *Param) GetTable() (res map[string]interface{},err error){

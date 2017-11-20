@@ -14,6 +14,7 @@ type UserInfo struct {
 	UserName  string `json:"user_name"`
 	NickName  string `json:"nick_name"`
 	State     bool    `json:"state"`
+	Power     int8    `json:"power"`
 	Salt      uint32  `json:"salt"`
 	Password  string  `json:"password"`
 	Avatar    string  `json:"avatar"`
@@ -72,14 +73,14 @@ func SetUserInfoCache(uid uint32) (userinfo *UserInfo, err error) {
 
 func GetUserInfobyDB(uid uint32) (*UserInfo,error) {
 	userinfo := new(UserInfo)
-	query:="SELECT uid,username,nickname,password,salt,state,avatar,user_agent FROM w_user_list WHERE uid=?"
+	query:="SELECT uid,username,nickname,password,salt,state,power,avatar,user_agent FROM w_user_list WHERE uid=?"
 	result, e := MysqlMain.Query(query, uid)
 	if e != nil {
 		return userinfo,e
 	}
 	defer result.Close()
 	if result.Next() {
-		e= result.Scan(&userinfo.Uid,&userinfo.UserName,&userinfo.NickName,&userinfo.Password,&userinfo.Salt,&userinfo.State,&userinfo.Avatar,&userinfo.UserAgent)
+		e= result.Scan(&userinfo.Uid,&userinfo.UserName,&userinfo.NickName,&userinfo.Password,&userinfo.Salt,&userinfo.State,&userinfo.Power,&userinfo.Avatar,&userinfo.UserAgent)
 	}else {
 		e=errors.New("您输入的用户未找到呢！")
 	}
