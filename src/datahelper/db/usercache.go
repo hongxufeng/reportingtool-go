@@ -71,17 +71,18 @@ func SetUserInfoCache(uid uint32) (userinfo *UserInfo, err error) {
 	return
 }
 
-func GetUserInfobyDB(uid uint32) (userinfo *UserInfo, err error) {
+func GetUserInfobyDB(uid uint32) (*UserInfo,error) {
+	userinfo := new(UserInfo)
 	query:="SELECT uid,username,nickname,password,salt,state,avatar,user_agent FROM w_user_list WHERE uid=?"
 	result, e := MysqlMain.Query(query, uid)
 	if e != nil {
-		return
+		return userinfo,e
 	}
 	defer result.Close()
 	if result.Next() {
-		err= result.Scan(&userinfo.Uid,&userinfo.UserName,&userinfo.NickName,&userinfo.Password,&userinfo.Salt,&userinfo.Avatar,&userinfo.UserAgent)
+		e= result.Scan(&userinfo.Uid,&userinfo.UserName,&userinfo.NickName,&userinfo.Password,&userinfo.Salt,&userinfo.State,&userinfo.Avatar,&userinfo.UserAgent)
 	}else {
-		err=errors.New("您输入的用户未找到呢！")
+		e=errors.New("您输入的用户未找到呢！")
 	}
-	return
+	return userinfo,e
 }
