@@ -1,4 +1,3 @@
-
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
@@ -11,7 +10,7 @@ CREATE TABLE `w_user_list` (
   `password` char(50) NOT NULL COMMENT '经salt加密过的密码',
   `nickname` varchar(25) DEFAULT NULL,
   `salt` int(6) NOT NULL,
-  `state` bit(1) NOT NULL COMMENT '用户状态',
+  `state` tinyint(1) NOT NULL COMMENT '用户状态',
   `avatar` varchar(255) DEFAULT NULL COMMENT '用户头像地址',
   `user_agent` varchar(255) NOT NULL COMMENT '用户登录的user_agent',
   `time_create` datetime DEFAULT NULL COMMENT '注册时间',
@@ -21,4 +20,4 @@ CREATE TABLE `w_user_list` (
 -- ----------------------------
 -- Records of w_user_list
 -- ----------------------------
-INSERT INTO `w_user_list` VALUES ('1', 'moon', '1f0c428a6bfe454bb1115805cc0cdaaa', '月儿', '211314', '', null, 'Mozilla', null);
+INSERT INTO `w_user_list` VALUES ('1', 'moon', '1f0c428a6bfe454bb1115805cc0cdaaa', '月儿', '211314', '0', 'assets/img/avatar/Sora.jpg', 'Mozilla', null);
