@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"datahelper/db"
 	"strings"
+	"utils/service"
 )
 
 type Param struct {
+	TableConfig model.TableConfig
 	Settings model.Settings
 	Uid uint32
 	Power int8  //用户判断得到的权限
@@ -23,6 +25,36 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 	err = doc.ReadFromFile(filename)
 	if err != nil {
 		return
+	}
+	tableconfig:=model.TableConfig{}
+	if tableelement:=doc.FindElements("./tables/table[@id='"+settings.TableID+"']");len(tableelement)>0{
+		table:=tableelement[0]
+		defaultorder := table.SelectAttr("defaultorder")
+		if defaultorder!=nil{
+			tableconfig.HasDefaultOrder=true
+			tableconfig.DefaultOrder=defaultorder.Value
+		}
+		name := table.SelectAttr("name")
+		if name==nil{
+			err=service.NewError(service.ERR_XML_ATTRIBUTE_LACK,"XML配置属性name缺失哦！")
+		}else{
+			tableconfig.Name=name.Value
+		}
+		adminname := table.SelectAttr("adminname")
+		if adminname!=nil{
+			tableconfig.HasAdminName=true
+			tableconfig.AdminName=adminname.Value
+		}
+		power := table.SelectAttr("power")
+		if power!=nil{
+			tableconfig.HasPower=true
+			tableconfig.Power=power.Value
+		}
+		excel := table.SelectAttr("excel")
+		if excel!=nil{
+			tableconfig.HasExcel=true
+			tableconfig.Excel=excel.Value
+		}
 	}
 	path:="./tables/table[@id='"+settings.TableID+"']/*";
 	//fmt.Println(path)
@@ -44,6 +76,11 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 			cc.HasDateformat=true
 			cc.Dateformat=dateformat.Value
 		}
+		checkbox := elemnt.SelectAttr("checkbox")
+		if checkbox!=nil{
+			cc.HasCheckBox=true
+			cc.CheckBox=checkbox.Value
+		}
 		defaultvalue := elemnt.SelectAttr("defaultvalue")
 		if defaultvalue!=nil{
 			cc.HasDefaultValue=true
@@ -54,15 +91,20 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 			cc.HasFormatter=true
 			cc.Formatter=formatter.Value
 		}
+		selector := elemnt.SelectAttr("selector")
+		if selector!=nil{
+			cc.IsInselector=true
+			cc.Selector=selector.Value
+		}
 		formatterr := elemnt.SelectAttr("formatter-r")
 		if formatterr!=nil{
 			cc.HasFormatterR=true
 			cc.FormatterR=formatterr.Value
 		}
-		selector := elemnt.SelectAttr("selector")
-		if selector!=nil{
-			cc.IsInselector=true
-			cc.Selector=selector.Value
+		searchtype := elemnt.SelectAttr("search-type")
+		if searchtype!=nil{
+			cc.HasSearchType=true
+			cc.SearchType=searchtype.Value
 		}
 		selectorfunc := elemnt.SelectAttr("selector-func")
 		if selectorfunc!=nil{
@@ -121,9 +163,10 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 		ColConfigDict=append(ColConfigDict, cc)
 	}
 	fmt.Println(ColConfigDict)
+	fmt.Println(tableconfig)
 	//根据uid判断权限
 	ud,err:=db.GetUserInfo(uid)
-	param=&Param{settings,uid,ud.Power,ColConfigDict}
+	param=&Param{tableconfig,settings,uid,ud.Power,ColConfigDict}
 	return
 }
 func (param *Param) GetTable() (res map[string]interface{},err error){

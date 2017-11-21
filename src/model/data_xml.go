@@ -18,6 +18,8 @@ type ColumnConfig struct {
 	IsInPercentageform bool
 	IsInselector bool
 	Search4Admin bool
+	HasCheckBox bool
+	CheckBox string
 	BtnIcon string
 	BtnFunc string
 	ColumnName string
@@ -37,4 +39,15 @@ type ColumnConfig struct {
 	SelectorText string
 	Visibility string
 	Passedcol []string
+}
+type TableConfig struct {
+	Name string
+	DefaultOrder string
+	HasDefaultOrder bool
+	Excel string//生成excel
+	HasExcel bool
+	AdminName string
+	HasAdminName bool
+	Power string
+	HasPower bool
 }
