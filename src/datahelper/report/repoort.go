@@ -171,11 +171,11 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 }
 func (param *Param) GetTable() (res map[string]interface{},err error){
 	res=make(map[string]interface{}, 0)
-	res["search"]="search"
-	res["body"]="body"
-	res["selector"]="selector"
-	res["condition"]="condition"
-	res["row"]="row"
+	res["search"]=GetTableSearch(param)
+	res["body"]=GetTableBody(param)
+	res["selector"]=GetTableSelector(param)
+	res["condition"]=GetTableCondition(param)
+	res["row"]=GetTableRow(param)
 	return
 }
 func (param *Param) SearchTree() (res map[string]interface{},err error){
