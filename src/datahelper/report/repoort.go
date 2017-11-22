@@ -23,7 +23,7 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 	var ColConfigDict []model.ColumnConfig
 	doc := etree.NewDocument()
 	filename:="xml/"+settings.ConfigFile+".xml"
-	//fmt.Println(filename)
+	fmt.Println(filename)
 	err = doc.ReadFromFile(filename)
 	if err != nil {
 		return
@@ -60,6 +60,7 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 		}
 	}else {
 		err=service.NewError(service.ERR_XML_TABLE_LACK,"您配置的XML表格是不在的啊！")
+		return
 	}
 	path:="./tables/table[@id='"+settings.TableID+"']/*";
 	//fmt.Println(path)
