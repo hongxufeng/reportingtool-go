@@ -48,6 +48,6 @@ type TableConfig struct {
 	HasExcel bool
 	AdminName string
 	HasAdminName bool
-	Power string
+	Power uint8
 	HasPower bool
 }

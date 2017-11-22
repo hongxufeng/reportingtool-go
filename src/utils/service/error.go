@@ -19,11 +19,12 @@ const (
 	ERR_VCODE_TIMEOUT         = 2007 //验证码超时
 	ERR_INVALID_USER          = 2008 //用户验证不通过
 	RR_STATUS_DENIED		    =2009  //用户状态关闭
-	ERR_PERMISSION_DENIED     = 2010 //权限不足
+	ERR_POWER_DENIED          = 2010 //权限不足
 	ERR_LOGIN_FREQUENT        =2011   //登录频繁
 	ERR_USER_NOT_FOUND        =2012   //用户不存在
 
-	ERR_XML_ATTRIBUTE_LACK    =3001   //XML配置属性缺失
+	ERR_XML_TABLE_LACK        =3001   //XML表格缺失
+	ERR_XML_ATTRIBUTE_LACK    =3002   //XML配置属性缺失
 )
 type Error struct {
 	Code uint

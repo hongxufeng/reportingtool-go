@@ -4,6 +4,7 @@ import "bytes"
 
 func GetTableSearch(param *Param) string{
 	var buf bytes.Buffer
+	buf.WriteString("")
 	return buf.String()
 }
 func GetTableBody(param *Param) string{

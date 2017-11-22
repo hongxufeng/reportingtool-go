@@ -7,13 +7,15 @@ import (
 	"datahelper/db"
 	"strings"
 	"utils/service"
+	"bytes"
+	"utils/function"
 )
 
 type Param struct {
 	TableConfig model.TableConfig
 	Settings model.Settings
 	Uid uint32
-	Power int8  //用户判断得到的权限
+	Power uint8  //用户判断得到的权限 暂时用0代表最高权限
 	ColConfigDict []model.ColumnConfig
 }
 
@@ -28,6 +30,7 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 	}
 	tableconfig:=model.TableConfig{}
 	if tableelement:=doc.FindElements("./tables/table[@id='"+settings.TableID+"']");len(tableelement)>0{
+		fmt.Println(len(tableelement))
 		table:=tableelement[0]
 		defaultorder := table.SelectAttr("defaultorder")
 		if defaultorder!=nil{
@@ -48,13 +51,15 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 		power := table.SelectAttr("power")
 		if power!=nil{
 			tableconfig.HasPower=true
-			tableconfig.Power=power.Value
+			tableconfig.Power,_=function.StringToUint8(power.Value)
 		}
 		excel := table.SelectAttr("excel")
 		if excel!=nil{
 			tableconfig.HasExcel=true
 			tableconfig.Excel=excel.Value
 		}
+	}else {
+		err=service.NewError(service.ERR_XML_TABLE_LACK,"您配置的XML表格是不在的啊！")
 	}
 	path:="./tables/table[@id='"+settings.TableID+"']/*";
 	//fmt.Println(path)
@@ -169,8 +174,29 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 	param=&Param{tableconfig,settings,uid,ud.Power,ColConfigDict}
 	return
 }
+func BuildSQL(param *Param) (string,error){
+	var buf bytes.Buffer
+	if param.TableConfig.HasAdminName&&param.Power==0 {
+		buf.WriteString(param.TableConfig.Name)
+	}else {
+		buf.WriteString(param.TableConfig.Name)
+	}
+	if param.TableConfig.HasDefaultOrder{
+		buf.WriteString("order by ")
+		buf.WriteString(param.TableConfig.DefaultOrder)
+	}
+	if param.TableConfig.HasPower&&param.Power>=param.TableConfig.Power {
+		return buf.String(),service.NewError(service.ERR_POWER_DENIED,"您的用户权限不足啊！")
+	}
+	return buf.String(),nil
+}
 func (param *Param) GetTable() (res map[string]interface{},err error){
 	res=make(map[string]interface{}, 0)
+	query,err:=BuildSQL(param)
+	if err!=nil{
+		return
+	}
+	fmt.Println(query)
 	res["search"]=GetTableSearch(param)
 	res["body"]=GetTableBody(param)
 	res["selector"]=GetTableSelector(param)

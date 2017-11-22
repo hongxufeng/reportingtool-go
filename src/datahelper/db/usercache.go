@@ -14,7 +14,7 @@ type UserInfo struct {
 	UserName  string `json:"user_name"`
 	NickName  string `json:"nick_name"`
 	State     bool    `json:"state"`
-	Power     int8    `json:"power"`
+	Power     uint8    `json:"power"`
 	Salt      uint32  `json:"salt"`
 	Password  string  `json:"password"`
 	Avatar    string  `json:"avatar"`
