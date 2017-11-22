@@ -5,14 +5,14 @@
         <name text="问卷名称" formatter-s="" search-type="true">name</name>
         <uid text="参与人数" formatter="FeedbackGetNumber">uid</uid>
         <buttons>
-            <span class="glyphicon glyphicon-folder-open" title="浏览" onclick="view(this,'OBJ_ID')"></span>
-            <span class="glyphicon glyphicon-edit" title="编辑" onclick="edit(this,'OBJ_ID')"></span>
-            <span class="glyphicon glyphicon-trash" title="删除" onclick="deleteThis(this,'OBJ_ID')"></span>
+            &lt;span class="glyphicon glyphicon-folder-open" title="浏览" onclick="view(this,'OBJ_ID')">&lt;/span>
+            &lt;span class="glyphicon glyphicon-edit" title="编辑" onclick="edit(this,'OBJ_ID')">&lt;/span>
+            &lt;span class="glyphicon glyphicon-trash" title="删除" onclick="deleteThis(this,'OBJ_ID')">&lt;/span>
         </buttons>
         <pagerbuttons>
-            <span class="rt-pager-btn" onclick="create()">
-                <span class="glyphicon glyphicon-plus" title="新增问卷"></span>添加
-            </span>
+            &lt;span class="rt-pager-btn" onclick="create()">
+            &lt;span class="glyphicon glyphicon-plus" title="新增问卷">&lt;/span>添加
+            &lt;/span>
         </pagerbuttons>
     </table>
 </tables>
