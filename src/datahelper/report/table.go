@@ -1,13 +1,16 @@
 package report
 
-import "bytes"
+import (
+	"bytes"
+	"database/sql"
+)
 
 func GetTableSearch(param *Param) string{
 	var buf bytes.Buffer
 	buf.WriteString("")
 	return buf.String()
 }
-func GetTableBody(param *Param) string{
+func GetTableBody(param *Param,rows *sql.Rows) string{
 	var buf bytes.Buffer
 	return buf.String()
 }

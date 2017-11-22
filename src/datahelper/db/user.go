@@ -4,6 +4,7 @@ import (
 	"utils/function"
 	"github.com/go-redis/redis"
 	"model"
+	"database/sql"
 )
 
 func UserLoginErrCnt(uid uint32) (cnt int64, err error) {
@@ -43,4 +44,9 @@ func GetUidbyName(name string) (uid uint32,err error) {
 		err = result.Scan(&uid)
 	}
 	return
+}
+func Query(query string) (*sql.Rows, error){
+	//还是不要设置redis
+	return MysqlMain.Query(query)
+
 }

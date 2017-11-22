@@ -168,6 +168,10 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 		}
 		ColConfigDict=append(ColConfigDict, cc)
 	}
+	if len(ColConfigDict)==0{
+		err=service.NewError(service.ERR_XML_ATTRIBUTE_LACK,"您至少需要配置一项XML中的列属性啊！")
+		return
+	}
 	fmt.Println(ColConfigDict)
 	fmt.Println(tableconfig)
 	//根据uid判断权限
@@ -175,8 +179,23 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 	param=&Param{tableconfig,settings,uid,ud.Power,ColConfigDict}
 	return
 }
-func BuildSQL(param *Param) (string,error){
+func BuildQuerySQL(param *Param) (string,error){
 	var buf bytes.Buffer
+	buf.WriteString("select ")
+	var size = len(param.ColConfigDict)
+	if size==0{
+		return buf.String(),service.NewError(service.ERR_XML_ATTRIBUTE_LACK,"您至少需要配置一项XML中的列属性啊！")
+	}
+	for i:=0; i<size;i++ {
+		if i!=0{
+			buf.WriteString(",")
+		}
+		if param.ColConfigDict[i].Tag=="buttons"||param.ColConfigDict[i].Tag=="pagerbuttons"{
+			continue
+		}
+		buf.WriteString(param.ColConfigDict[i].Tag)
+	}
+	buf.WriteString(" from ")
 	if param.TableConfig.HasAdminName&&param.Power==0 {
 		buf.WriteString(param.TableConfig.Name)
 	}else {
@@ -186,20 +205,50 @@ func BuildSQL(param *Param) (string,error){
 		buf.WriteString(" order by ")
 		buf.WriteString(param.TableConfig.DefaultOrder)
 	}
+
 	if param.TableConfig.HasPower&&param.Power>=param.TableConfig.Power {
 		return buf.String(),service.NewError(service.ERR_POWER_DENIED,"您的用户权限不足啊！")
 	}
 	return buf.String(),nil
 }
+func GetTableCount(param *Param) (count int,err error){
+	var buf bytes.Buffer
+	buf.WriteString("select count(*) from ")
+	if param.TableConfig.HasAdminName&&param.Power==0 {
+		buf.WriteString(param.TableConfig.Name)
+	}else {
+		buf.WriteString(param.TableConfig.Name)
+	}
+	fmt.Println(buf.String())
+	result,err:=db.Query(buf.String())
+	if err!=nil{
+		return
+	}
+	if result.Next(){
+		err=result.Scan(&count)
+	}else {
+		err=service.NewError(service.ERR_MYSQL)
+	}
+	return
+}
 func (param *Param) GetTable() (res map[string]interface{},err error){
 	res=make(map[string]interface{}, 0)
-	query,err:=BuildSQL(param)
+	count,err:=GetTableCount(param)
+	if err!=nil{
+		return
+	}
+	fmt.Println(count)
+	query,err:=BuildQuerySQL(param)
 	if err!=nil{
 		return
 	}
 	fmt.Println(query)
+	result,err:=db.Query(query)
+	if err!=nil{
+		return
+	}
 	res["search"]=GetTableSearch(param)
-	res["body"]=GetTableBody(param)
+	res["body"]=GetTableBody(param,result)
 	res["selector"]=GetTableSelector(param)
 	res["condition"]=GetTableCondition(param)
 	res["row"]=GetTableRow(param)
