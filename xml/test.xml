@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <tables>
     <table id="用户表"
-           name="select name,uid from w_user_list" defaultorder="uid desc">
+           name="select username,uid from w_user_list" defaultorder="uid desc">
         <name search-type="true">name</name>
         <uid  formatter="FeedbackGetNumber">uid</uid>
         <buttons>

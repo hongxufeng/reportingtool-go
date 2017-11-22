@@ -183,7 +183,7 @@ func BuildSQL(param *Param) (string,error){
 		buf.WriteString(param.TableConfig.Name)
 	}
 	if param.TableConfig.HasDefaultOrder{
-		buf.WriteString("order by ")
+		buf.WriteString(" order by ")
 		buf.WriteString(param.TableConfig.DefaultOrder)
 	}
 	if param.TableConfig.HasPower&&param.Power>=param.TableConfig.Power {
