@@ -83,9 +83,8 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 			cc.Dateformat=dateformat.Value
 		}
 		checkbox := elemnt.SelectAttr("checkbox")
-		if checkbox!=nil{
-			cc.HasCheckBox=true
-			cc.CheckBox=checkbox.Value
+		if checkbox!=nil&&checkbox.Value=="true"{
+			cc.ISCheckBox=true
 		}
 		defaultvalue := elemnt.SelectAttr("defaultvalue")
 		if defaultvalue!=nil{
@@ -121,20 +120,20 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 		if selectortext!=nil{
 			cc.SelectorText=selectortext.Value
 		}
-		linkto := elemnt.SelectAttr("linkto")
-		passedcol := elemnt.SelectAttr("passedcol")
-		if linkto!=nil&&passedcol!=nil{
-			cc.HasLinkTo=true
-			cc.LinkTo=linkto.Value
-			cc.Passedcol =strings.Split(passedcol.Value,",")
-			ignoredpassedcol := elemnt.SelectAttr("ignoredpassedcol")
-			if param.Power==0&&ignoredpassedcol!=nil{
-				ipd:=strings.Split(ignoredpassedcol.Value,",")
-				for  no,_:=range ipd{
-					cc.Passedcol=append(cc.Passedcol[:no],cc.Passedcol[no+1:]...)
-				}
-			}
-		}
+		//linkto := elemnt.SelectAttr("linkto")
+		//passedcol := elemnt.SelectAttr("passedcol")
+		//if linkto!=nil&&passedcol!=nil{
+		//	cc.HasLinkTo=true
+		//	cc.LinkTo=linkto.Value
+		//	cc.Passedcol =strings.Split(passedcol.Value,",")
+		//	ignoredpassedcol := elemnt.SelectAttr("ignoredpassedcol")
+		//	if param.Power==0&&ignoredpassedcol!=nil{
+		//		ipd:=strings.Split(ignoredpassedcol.Value,",")
+		//		for  no,_:=range ipd{
+		//			cc.Passedcol=append(cc.Passedcol[:no],cc.Passedcol[no+1:]...)
+		//		}
+		//	}
+		//}
 		selectormulti := elemnt.SelectAttr("selector-multi")
 		if selectormulti!=nil&&selectormulti.Value=="true"{
 			cc.HasSelectorMulti=true

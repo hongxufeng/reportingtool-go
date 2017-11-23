@@ -8,7 +8,7 @@ type ColumnConfig struct {
 	HasDefaultValue bool
 	HasFormatter bool
 	HasFormatterR bool
-	HasLinkTo bool
+	//HasLinkTo bool
 	HasNavname bool
 	HasPrecision bool
 	HasRegex bool
@@ -18,8 +18,7 @@ type ColumnConfig struct {
 	IsInPercentageform bool
 	IsInselector bool
 	Search4Admin bool
-	HasCheckBox bool
-	CheckBox string
+	ISCheckBox bool
 	BtnIcon string
 	BtnFunc string
 	ColumnName string
@@ -27,7 +26,7 @@ type ColumnConfig struct {
 	DefaultValue string
 	Formatter string
 	FormatterR string
-	LinkTo string
+	//LinkTo string
 	Navname string
 	Timetransfer string
 	Precision string

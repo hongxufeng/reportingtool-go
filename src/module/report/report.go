@@ -26,10 +26,11 @@ func (module *ReportModule) Init(conf *config.Config) error {
 
 func (module *ReportModule) User_GetTable(req *service.HttpRequest, result map[string]interface{}) (err error) {
 	var settings model.Settings
-	err = req.GetParams("table", &settings.TableID, "page", &settings.Page, "rows", &settings.Rows, "colpage", &settings.ColPage,"sort",&settings.Order)
+	err = req.GetParams("table", &settings.TableID, "page", &settings.Page, "rows", &settings.Rows, "colpage", &settings.ColPage)
 	if err != nil {
 		return
 	}
+	_=req.GetParams("sort",&settings.Order)
 	fmt.Println(settings.TableID)
 	err = req.ParseEncodeUrl("configFile", &settings.ConfigFile, "hasCheckbox", &settings.HasCheckbox, "style", &settings.Style, "rowList", &settings.RowList)
 	if err != nil {
