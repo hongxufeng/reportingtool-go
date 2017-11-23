@@ -10,6 +10,7 @@ type Settings struct {
 	Page int
 	Rows int
 	ColPage int
+	Order string
 }
 
 type LoginData struct {

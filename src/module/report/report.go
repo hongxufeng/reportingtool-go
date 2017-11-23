@@ -26,7 +26,7 @@ func (module *ReportModule) Init(conf *config.Config) error {
 
 func (module *ReportModule) User_GetTable(req *service.HttpRequest, result map[string]interface{}) (err error) {
 	var settings model.Settings
-	err = req.GetParams("table", &settings.TableID, "page", &settings.Page, "rows", &settings.Rows, "colpage", &settings.ColPage)
+	err = req.GetParams("table", &settings.TableID, "page", &settings.Page, "rows", &settings.Rows, "colpage", &settings.ColPage,"sort",&settings.Order)
 	if err != nil {
 		return
 	}

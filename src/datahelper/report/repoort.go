@@ -201,7 +201,10 @@ func BuildQuerySQL(param *Param) (string,error){
 	}else {
 		buf.WriteString(param.TableConfig.Name)
 	}
-	if param.TableConfig.HasDefaultOrder{
+	if param.Settings.Order!=""{
+		buf.WriteString(" order by ")
+		buf.WriteString(param.Settings.Order)
+	}else if param.TableConfig.HasDefaultOrder{
 		buf.WriteString(" order by ")
 		buf.WriteString(param.TableConfig.DefaultOrder)
 	}
