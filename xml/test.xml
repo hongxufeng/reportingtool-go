@@ -2,7 +2,7 @@
 <tables>
     <table id="用户表"
            name="w_user_list" defaultorder="uid desc">
-        <name search-type="true">name</name>
+        <username search-type="true">name</username>
         <uid  formatter="FeedbackGetNumber">uid</uid>
         <buttons>
             &lt;span class="glyphicon glyphicon-folder-open" title="浏览" onclick="view(this,'OBJ_ID')">&lt;/span>

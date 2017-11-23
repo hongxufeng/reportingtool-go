@@ -187,11 +187,11 @@ func BuildQuerySQL(param *Param) (string,error){
 		return buf.String(),service.NewError(service.ERR_XML_ATTRIBUTE_LACK,"您至少需要配置一项XML中的列属性啊！")
 	}
 	for i:=0; i<size;i++ {
-		if i!=0{
-			buf.WriteString(",")
-		}
 		if param.ColConfigDict[i].Tag=="buttons"||param.ColConfigDict[i].Tag=="pagerbuttons"{
 			continue
+		}
+		if i!=0{
+			buf.WriteString(",")
 		}
 		buf.WriteString(param.ColConfigDict[i].Tag)
 	}
@@ -205,7 +205,10 @@ func BuildQuerySQL(param *Param) (string,error){
 		buf.WriteString(" order by ")
 		buf.WriteString(param.TableConfig.DefaultOrder)
 	}
-
+	buf.WriteString(" limit ")
+	buf.WriteString(function.IntToString(param.Settings.Rows*(param.Settings.Page-1)))
+	buf.WriteString(",")
+	buf.WriteString(function.IntToString(param.Settings.Rows*param.Settings.Page-1))
 	if param.TableConfig.HasPower&&param.Power>=param.TableConfig.Power {
 		return buf.String(),service.NewError(service.ERR_POWER_DENIED,"您的用户权限不足啊！")
 	}
