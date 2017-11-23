@@ -3,6 +3,7 @@ package report
 import (
 	"bytes"
 	"database/sql"
+	"fmt"
 )
 
 func GetTableSearch(param *Param) string{
@@ -21,6 +22,12 @@ func GetTableBody(param *Param,rows *sql.Rows) string{
 		buf.WriteString("<input type=\\\"checkbox\\\" class=\\\"rt-checkbox\\\"/>")
 		buf.WriteString("</div>")
 		buf.WriteString("</th>")
+	}
+	columns,_:=rows.Columns()
+	size:=len(columns)
+	for i:=0;rows.Next();i++{
+		var s [size]string
+		rows.Scan(s...)
 	}
 
 	return buf.String()
