@@ -191,6 +191,7 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 	param=&Param{tableconfig,settings,uid,ud.Power,ColConfigDict}
 	return
 }
+
 func BuildQuerySQL(param *Param) (string,error){
 	var buf bytes.Buffer
 	buf.WriteString("select ")
@@ -213,6 +214,7 @@ func BuildQuerySQL(param *Param) (string,error){
 	}else {
 		buf.WriteString(param.TableConfig.Name)
 	}
+	//AppendWhere
 	if param.Settings.Order!=""{
 		buf.WriteString(" order by ")
 		buf.WriteString(param.Settings.Order)
@@ -229,6 +231,7 @@ func BuildQuerySQL(param *Param) (string,error){
 	}
 	return buf.String(),nil
 }
+
 func GetTableCount(param *Param) (count int,err error){
 	var buf bytes.Buffer
 	buf.WriteString("select count(*) from ")
@@ -249,6 +252,7 @@ func GetTableCount(param *Param) (count int,err error){
 	}
 	return
 }
+
 func (param *Param) GetTable(req *service.HttpRequest) (res map[string]interface{},err error){
 	res=make(map[string]interface{}, 0)
 	count,err:=GetTableCount(param)
@@ -277,9 +281,11 @@ func (param *Param) GetTable(req *service.HttpRequest) (res map[string]interface
 	res["row"]=rowbuf.String()
 	return
 }
+
 func (param *Param) SearchTree() (res map[string]interface{},err error){
 	return
 }
+
 func (param *Param) LocateNode() (res map[string]interface{},err error){
 	return
 }

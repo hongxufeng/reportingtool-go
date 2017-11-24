@@ -13,19 +13,26 @@
 })();
 
 (function ($) {
-    var serverURL="user/report/"
+    var serverURL = "user/report/"
 
     var cachedRows = {};
     var nullRows = {};
 
     $.fn.rt = function (options) {
 
-        var _this = this, globalVars = { tableID: "", pageTitle: "", initUrl: "", url: "", queryObj: { table: "", page: 1, rows: 15, colpage: 1 } };
+        var _this = this, globalVars = {
+            tableID: "",
+            pageTitle: "",
+            initUrl: "",
+            url: "",
+            queryObj: {table: "", page: 1, rows: 15, colpage: 1}
+        };
 
         var settings = $.extend({
             asyncLoad: false,
             asyncRefresh: $.support.opacity,
-            complete: function () { },
+            complete: function () {
+            },
             configFile: "",
             hasCheckbox: false,
             hasPager: true,
@@ -35,9 +42,12 @@
             rowList: [15, 30, 60, 100],
             saveState: true,
             searchBar: true,
-            searchBarOnShow: function () { },
-            searchBarOnHide: function () { },
-            searchComplete: function () { },
+            searchBarOnShow: function () {
+            },
+            searchBarOnHide: function () {
+            },
+            searchComplete: function () {
+            },
             striped: false,
             style: "table",
             table: "",
@@ -47,7 +57,7 @@
                       <div class=\"rt-condition\"></div>\
                       <div class=\"rt-search rt-" + settings.style + "\" style=\"display:none\"></div>\
                       <div class=\"rt-selector\"></div>\
-                      <div class=\"rt-body rt-"+ settings.style + "\"></div>");
+                      <div class=\"rt-body rt-" + settings.style + "\"></div>");
 
         var tableSearcher = "<div class=\"rt-search-cdts\"></div>\
                                     <div class=\"rt-search-btns\">\
@@ -77,16 +87,20 @@
                 if (pair[0] == variable) {
                     return decodeURI(pair[1]);
                 }
-            } return (false);
+            }
+            return (false);
         }
-        var getQueryVariable=function(variable){var query = window.location.search.substring(1);
+        var getQueryVariable = function (variable) {
+            var query = window.location.search.substring(1);
             var vars = query.split("&");
-            for (var i=0;i<vars.length;i++) {
+            for (var i = 0; i < vars.length; i++) {
                 var pair = vars[i].split("=");
-                if(pair[0] == variable){
+                if (pair[0] == variable) {
                     return decodeURI(pair[1]);
                 }
-            }return(false);}
+            }
+            return (false);
+        }
 
         globalVars.pageTitle = $("title").html();
 
@@ -163,10 +177,19 @@
             var postOpts = {
                 async: settings.asyncLoad,
                 method: "POST",
-                url: serverURL+"GetTable" + getQuery(),
-                data: {  configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, rowList: settings.rowList.toString() },
+                url: serverURL + "GetTable" + getQuery(),
+                data: {
+                    configFile: settings.configFile,
+                    hasCheckbox: settings.hasCheckbox,
+                    style: settings.style,
+                    rowList: settings.rowList.toString()
+                },
                 success: function (data, textStatus, jqXHR) {
-                    // var jsonObject = JSON.parse(data);
+                    if (data.status === "fail") {
+                        alert(data.msg)
+                        return false
+                    }
+                    var jsonObject = data.res
                     if (settings.searchBar === true) {
                         var rtSearch = _this.find(".rt-search");
                         if (settings.style != "tree") {
@@ -237,9 +260,15 @@
                     _this.on("click", ".rt-treeSearcher-btn", searchTree).on("click", ".rt-search-result .rt-node-cols", locateNode);
                     _this.on("click", ".rt-node-cols", nodeOnClick);
                     _this.on("click", ".rt-node>.rt-checkboxWrapper", checkNode);
-                    //_this.on("keyup", ".rt-search-txt", startSearching).on("change", ".rt-search-txt.date", startSearching);                   
+                    //_this.on("keyup", ".rt-search-txt", startSearching).on("change", ".rt-search-txt.date", startSearching);
                     $(".rt-search-txt.date").datepicker({
-                        format: "yy/mm/dd", weekStart: 1, language: "zh-CN", orientation: "bottom left", keyboardNavigation: false, autoclose: true, todayHighlight: true
+                        format: "yy/mm/dd",
+                        weekStart: 1,
+                        language: "zh-CN",
+                        orientation: "bottom left",
+                        keyboardNavigation: false,
+                        autoclose: true,
+                        todayHighlight: true
                     });
                     var queryArray = getQuery().substring(1).split('&');
                     for (var i = 0; i < queryArray.length; i++) {
@@ -260,7 +289,7 @@
                         settings.complete();
                     }
                 },
-                error:function () {
+                error: function () {
                     alert("您未搭建服务器哦！")
                     return false
                 }
@@ -287,8 +316,11 @@
             else {
                 History.replaceState(null, globalVars.pageTitle, url);
             }
-            $.post(serverURL+"GetTable"+ getQuery(), {
-                configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, rowList: settings.rowList.toString()
+            $.post(serverURL + "GetTable" + getQuery(), {
+                configFile: settings.configFile,
+                hasCheckbox: settings.hasCheckbox,
+                style: settings.style,
+                rowList: settings.rowList.toString()
             }, function (data, status) {
                 // var jsonObject = JSON.parse(data);
                 if (settings.searchBar === true) {
@@ -335,8 +367,11 @@
             else {
                 History.replaceState(null, globalVars.pageTitle, buildQueryStr());
             }
-            $.post(serverURL+"GetTable" + getQuery(), {
-                configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, rowList: settings.rowList.toString()
+            $.post(serverURL + "GetTable" + getQuery(), {
+                configFile: settings.configFile,
+                hasCheckbox: settings.hasCheckbox,
+                style: settings.style,
+                rowList: settings.rowList.toString()
             }, function (data, status) {
                 // var jsonObject = JSON.parse(data);
                 _this.find(".rt-body").html(jsonObject.body);
@@ -394,7 +429,7 @@
                 for (var t in trees) {
                     $.ajax({
                         async: false,
-                        url: serverURL+"GetTable"+"?table=" + encodeURI(t) + "&" + trees[t],
+                        url: serverURL + "GetTable" + "?table=" + encodeURI(t) + "&" + trees[t],
                         method: "POST",
                         data: {
                             configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style
@@ -417,7 +452,7 @@
             if (!cd) {
                 return;
             }
-            $.post(serverURL+"SearchTree"+"?table=" + globalVars.queryObj.table, {
+            $.post(serverURL + "SearchTree" + "?table=" + globalVars.queryObj.table, {
                 configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, condition: cd
             }, function (data, status) {
                 // var jsonObject = JSON.parse(data);
@@ -426,8 +461,11 @@
         }
         var locateNode = function () {
             var table = encodeURI($(this).attr("data-tableid"));
-            $.post(serverURL+"LocateNode"+"?table=" + table, {
-                configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, condition: $(this).attr("data-parentnode")
+            $.post(serverURL + "LocateNode" + "?table=" + table, {
+                configFile: settings.configFile,
+                hasCheckbox: settings.hasCheckbox,
+                style: settings.style,
+                condition: $(this).attr("data-parentnode")
             }, function (data, status) {
                 // var jsonObject = JSON.parse(data);
                 for (var i = 0; i < jsonObject.length; i++) {
@@ -688,7 +726,7 @@
             var rowsPerPage = parseInt($(this).val());
             var totalRecords = parseInt(_this.find(".rt-pager-totalRecords").html());
             if (pageNumber * rowsPerPage > totalRecords) {
-                var x = ~ ~(totalRecords / rowsPerPage);
+                var x = ~~(totalRecords / rowsPerPage);
                 var y = totalRecords % rowsPerPage == 0 ? 0 : 1;
                 globalVars.queryObj.page = x + y;
             }
@@ -872,7 +910,7 @@
         }
         //导出为Excel表格函数
         var exportExcel = function () {
-            window.open(serverURL+"/GenerateExcel.aspx" + getQuery() + "&ConfigFile=" + settings.configFile);
+            window.open(serverURL + "/GenerateExcel.aspx" + getQuery() + "&ConfigFile=" + settings.configFile);
         }
         var nodeOnClick = function () {
             var elem = $(".rt-body").children(".rt-search-result");

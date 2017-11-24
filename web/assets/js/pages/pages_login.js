@@ -78,6 +78,10 @@ $.validator.setDefaults({
             success:function (data, textStatus, jqXHR) {
                 //已经是json对象无需解析
                 // var jsonObject = JSON.parse(data);
+                if (data.status==="fail"){
+                    alert(data.msg)
+                    return false
+                }
                 if(data.res.loginstatus===0){
                     if(Cookies.get('auth')!=undefined){
                         Cookies.remove('auth');
