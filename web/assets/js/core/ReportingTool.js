@@ -323,6 +323,11 @@
                 rowList: settings.rowList.toString()
             }, function (data, status) {
                 // var jsonObject = JSON.parse(data);
+                if (data.status === "fail") {
+                    alert(data.msg)
+                    return false
+                }
+                var jsonObject = data.res
                 if (settings.searchBar === true) {
                     if (jsonObject.search) {
                         if (settings.style === "table") {
@@ -374,6 +379,11 @@
                 rowList: settings.rowList.toString()
             }, function (data, status) {
                 // var jsonObject = JSON.parse(data);
+                if (data.status === "fail") {
+                    alert(data.msg)
+                    return false
+                }
+                var jsonObject = data.res
                 _this.find(".rt-body").html(jsonObject.body);
                 _this.find(".rt-condition").html(jsonObject.condition);
                 _this.find(".rt-selector").html(jsonObject.selector);
@@ -436,6 +446,11 @@
                         },
                         success: function (data, textStatus, jqXHR) {
                             // var jsonObject = JSON.parse(data);
+                            if (data.status === "fail") {
+                                alert(data.msg)
+                                return false
+                            }
+                            var jsonObject = data.res
                             childtree.append(jsonObject.body);
                             counter++;
                             if (counter === treesLength) {
@@ -455,6 +470,11 @@
             $.post(serverURL + "SearchTree" + "?table=" + globalVars.queryObj.table, {
                 configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, condition: cd
             }, function (data, status) {
+                if (data.status === "fail") {
+                    alert(data.msg)
+                    return false
+                }
+                var jsonObject = data.res
                 // var jsonObject = JSON.parse(data);
                 _this.find(".rt-body").html(jsonObject.body);
             });
@@ -468,6 +488,11 @@
                 condition: $(this).attr("data-parentnode")
             }, function (data, status) {
                 // var jsonObject = JSON.parse(data);
+                if (data.status === "fail") {
+                    alert(data.msg)
+                    return false
+                }
+                var jsonObject = data.res
                 for (var i = 0; i < jsonObject.length; i++) {
                     var obj = jsonObject[i], elem = null;
                     if (obj.parent != "ROOTNODE") {
