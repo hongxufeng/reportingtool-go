@@ -137,10 +137,24 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 		if selectormulti!=nil&&selectormulti.Value=="true"{
 			cc.HasSelectorMulti=true
 		}
+		searchadv := elemnt.SelectAttr("search-adv")
+		if searchadv!=nil&&searchadv.Value=="true"{
+			cc.ISSearchAdv=true
+		}
 		navname := elemnt.SelectAttr("navname")
 		if navname!=nil{
 			cc.HasNavname=true
 			cc.Navname=navname.Value
+		}
+		searchbtnicon := elemnt.SelectAttr("searchbtnicon")
+		if searchbtnicon!=nil{
+			cc.HasSearchBtnIcon=true
+			cc.SearchBtnIcon=searchbtnicon.Value
+		}
+		searchbtnfunc := elemnt.SelectAttr("search-btn-func")
+		if searchbtnfunc!=nil{
+			cc.HasSearchBtnFunc=true
+			cc.SearchBtnFunc=searchbtnfunc.Value
 		}
 		search4admin := elemnt.SelectAttr("search4admin")
 		if search4admin!=nil&&search4admin.Value=="true"{
@@ -235,7 +249,7 @@ func GetTableCount(param *Param) (count int,err error){
 	}
 	return
 }
-func (param *Param) GetTable() (res map[string]interface{},err error){
+func (param *Param) GetTable(req *service.HttpRequest) (res map[string]interface{},err error){
 	res=make(map[string]interface{}, 0)
 	count,err:=GetTableCount(param)
 	if err!=nil{
@@ -252,7 +266,7 @@ func (param *Param) GetTable() (res map[string]interface{},err error){
 		return
 	}
 	var searchbuf,bodybuf,selectorbuf,conditionbuf,rowbuf bytes.Buffer
-	err=GetTable(param,result,&bodybuf)
+	err=GetTable(req,param,result,&bodybuf,&searchbuf)
 	if err != nil {
 		return
 	}

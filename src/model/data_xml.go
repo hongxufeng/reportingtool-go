@@ -15,10 +15,15 @@ type ColumnConfig struct {
 	HasSearchType bool
 	HasSelectorMulti bool
 	HasTimetransfer bool
+	HasSearchBtnIcon bool
+	HasSearchBtnFunc bool
 	IsInPercentageform bool
 	IsInselector bool
 	Search4Admin bool
 	ISCheckBox bool
+	ISSearchAdv bool
+	SearchBtnIcon string
+	SearchBtnFunc string
 	BtnIcon string
 	BtnFunc string
 	ColumnName string
