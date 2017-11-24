@@ -26,7 +26,9 @@ func BuildTableHead(param *Param, rows *sql.Rows) string {
 		buf.WriteString("</th>")
 	}
 	columns, _ := rows.Columns()
-	for i, _ := range columns {
+	size:=len(columns)
+	fmt.Println(size)
+	for i:=0;i<size;i++ {
 		if param.ColConfigDict[i].Visibility == "none" {
 			continue;
 		}
@@ -54,8 +56,16 @@ func BuildTableHead(param *Param, rows *sql.Rows) string {
 		}
 		buf.WriteString("</th>")
 	}
+	for i:=size;i<size+2;i++{
+		if param.ColConfigDict[i].Tag=="buttons" {
+			buf.WriteString("<th name=\\\"操作\\\">")
+			buf.WriteString(param.ColConfigDict[i].Text)
+			buf.WriteString("</th>")
+		}
+	}
 	buf.WriteString("</tr>")
 	buf.WriteString("</thead>")
+	fmt.Println(buf.String())
 	return buf.String()
 }
 
@@ -126,6 +136,13 @@ func BuildTableBody(param *Param, rows *sql.Rows) string {
 		}
 		buf.WriteString("</tr>")
 	}
+	for i:=size;i<size+2;i++{
+		if param.ColConfigDict[i].Tag=="buttons" {
+			buf.WriteString("<th name=\\\"操作\\\">")
+			buf.WriteString("操作")
+			buf.WriteString("</th>")
+		}
+	}
 	buf.WriteString("</tbody>")
 	return buf.String()
 }
@@ -135,6 +152,7 @@ func GetTableBody(param *Param, rows *sql.Rows) string {
 	buf.WriteString("<table class=\\\"table table-condensed\\\">")
 	buf.WriteString(BuildTableHead(param, rows))
 	buf.WriteString(BuildTableBody(param, rows))
+	buf.WriteString("</table>")
 	return buf.String()
 }
 
