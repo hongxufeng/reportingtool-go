@@ -43,7 +43,7 @@ func (module *ReportModule) User_GetTable(req *service.HttpRequest, result map[s
 	if (err != nil) {
 		return
 	} else {
-		result["res"], err = param.GetTable()
+		result["res"], err = param.GetTable(req)
 	}
 	return
 }

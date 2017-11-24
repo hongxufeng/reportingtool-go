@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"utils/service"
 	"model"
-	"debug/elf"
 )
 
 func GetTableSearch(param *Param) string {
@@ -35,6 +34,7 @@ func BuildTableHead(req *service.HttpRequest,param *Param, rows *sql.Rows,bodybu
 			continue;
 		}
 		err=BuildSearchingBlock(req,&param.ColConfigDict[i],searchbuf)
+		//fmt.Println("searchbuf:",searchbuf.String())
 		if err!=nil {
 			return
 		}
