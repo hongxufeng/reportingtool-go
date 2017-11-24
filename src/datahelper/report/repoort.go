@@ -5,7 +5,6 @@ import (
 	"github.com/beevik/etree"
 	"fmt"
 	"datahelper/db"
-	"strings"
 	"utils/service"
 	"bytes"
 	"utils/function"

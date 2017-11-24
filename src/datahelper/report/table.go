@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"database/sql"
 	"strings"
+	"utils/function"
+	"fmt"
 )
 
 func GetTableSearch(param *Param) string {
@@ -64,6 +66,13 @@ func BuildTableBody(param *Param, rows *sql.Rows) string {
 
 	columns, _ := rows.Columns()
 	size := len(columns)
+	var s []interface{}
+	for i:=0;i<size;i++ {
+		var white =""
+		var p *string
+		p=&white
+		s=append(s,p)
+	}
 
 	for i := 0; i < size; i++ {
 		if param.ColConfigDict[i].ISCheckBox {
@@ -83,8 +92,9 @@ func BuildTableBody(param *Param, rows *sql.Rows) string {
 			buf.WriteString("</div>")
 			buf.WriteString("</td>")
 		}
-		var s [size]string
+		fmt.Println(s...)
 		rows.Scan(s...)
+		fmt.Println(s)
 		for i := 0; i < size; i++ {
 			if param.ColConfigDict[i].Visibility == "none" {
 				continue
@@ -95,7 +105,8 @@ func BuildTableBody(param *Param, rows *sql.Rows) string {
 			if param.ColConfigDict[i].Visibility == "hidden" {
 				buf.WriteString(" class=\\\"hiddenCol\\\"")
 			}
-			cell:=s[i]
+			cell:=function.ToString(s[i])
+			fmt.Println(cell)
 			buf.WriteString(" data-value=\\\"")
 			buf.WriteString(cell)
 			buf.WriteString("\\\">")

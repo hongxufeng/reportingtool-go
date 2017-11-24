@@ -94,7 +94,12 @@ func Uint32ToString(from uint32) (to string) {
 
 //把interface类型转换成string类型
 func ToString(v interface{}) string {
-	return fmt.Sprintf("%v", v)
+	switch value := v.(type) {
+	case *string:
+		return *value
+	default:
+		return fmt.Sprintf("%v", v)
+	}
 }
 
 func ToBool(v interface{}) (bool, error) {
