@@ -251,11 +251,16 @@ func (param *Param) GetTable() (res map[string]interface{},err error){
 	if err!=nil{
 		return
 	}
-	res["search"]=GetTableSearch(param)
-	res["body"]=GetTableBody(param,result)
-	res["selector"]=GetTableSelector(param)
-	res["condition"]=GetTableCondition(param)
-	res["row"]=GetTableRow(param)
+	var searchbuf,bodybuf,selectorbuf,conditionbuf,rowbuf bytes.Buffer
+	err=GetTable(param,result,&bodybuf)
+	if err != nil {
+		return
+	}
+	res["search"]=searchbuf.String()
+	res["body"]=bodybuf.String()
+	res["selector"]=selectorbuf.String()
+	res["condition"]=conditionbuf.String()
+	res["row"]=rowbuf.String()
 	return
 }
 func (param *Param) SearchTree() (res map[string]interface{},err error){
