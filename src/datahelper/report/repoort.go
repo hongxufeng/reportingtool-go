@@ -270,7 +270,7 @@ func (param *Param) GetTable(req *service.HttpRequest) (res map[string]interface
 		return
 	}
 	var searchbuf,bodybuf,selectorbuf,conditionbuf,rowbuf bytes.Buffer
-	err=GetTable(req,param,result,&bodybuf,&searchbuf)
+	err=GetTable(req,param,result,&bodybuf,&searchbuf,count)
 	if err != nil {
 		return
 	}

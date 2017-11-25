@@ -155,7 +155,7 @@ func BuildTableBody(param *Param, rows *sql.Rows,bodybuf *bytes.Buffer) (err err
 	return
 }
 
-func GetTable(req *service.HttpRequest,param *Param, rows *sql.Rows, bodybuf *bytes.Buffer,searchbuf *bytes.Buffer) (err error){
+func GetTable(req *service.HttpRequest,param *Param, rows *sql.Rows, bodybuf *bytes.Buffer,searchbuf *bytes.Buffer,count int) (err error){
 	bodybuf.WriteString("<table class=\"table table-condensed\">")
 	err=BuildTableHead(req,param, rows,bodybuf,searchbuf)
 	if err != nil {
@@ -165,7 +165,13 @@ func GetTable(req *service.HttpRequest,param *Param, rows *sql.Rows, bodybuf *by
 	if err != nil {
 		return
 	}
+
 	bodybuf.WriteString("</table>")
+
+	err=BuildTablePager(param,bodybuf,count,model.Style_Table)
+	if err != nil {
+		return
+	}
 	return
 }
 
