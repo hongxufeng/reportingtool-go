@@ -20,9 +20,9 @@ func BuildTableHead(req *service.HttpRequest,param *Param, rows *sql.Rows,bodybu
 	bodybuf.WriteString("<thead>")
 	bodybuf.WriteString("<tr>")
 	if param.Settings.HasCheckbox {
-		bodybuf.WriteString("<th class=\\\"rt-th-checkbox\\\" name=\\\"rt-th-checkbox\\\">")
-		bodybuf.WriteString("<div class=\\\"rt-checkboxWrapper\\\">")
-		bodybuf.WriteString("<input type=\\\"checkbox\\\" class=\\\"rt-checkbox\\\"/>")
+		bodybuf.WriteString("<th class=\"rt-th-checkbox\" name=\"rt-th-checkbox\">")
+		bodybuf.WriteString("<div class=\"rt-checkboxWrapper\">")
+		bodybuf.WriteString("<input type=\"checkbox\" class=\"rt-checkbox\"/>")
 		bodybuf.WriteString("</div>")
 		bodybuf.WriteString("</th>")
 	}
@@ -39,32 +39,32 @@ func BuildTableHead(req *service.HttpRequest,param *Param, rows *sql.Rows,bodybu
 			return
 		}
 		bodybuf.WriteString("<th ")
-		bodybuf.WriteString("class=\\\"")
+		bodybuf.WriteString("class=\"")
 		if param.ColConfigDict[i].Visibility == "hidden" {
 			bodybuf.WriteString("hiddenCol");
 		} else {
 			bodybuf.WriteString("rt-sort");
 		}
-		bodybuf.WriteString("\\\"")
-		bodybuf.WriteString(" name=\\\"")
+		bodybuf.WriteString("\"")
+		bodybuf.WriteString(" name=\"")
 		bodybuf.WriteString(param.ColConfigDict[i].Tag)
-		bodybuf.WriteString("\\\">")
+		bodybuf.WriteString("\">")
 		bodybuf.WriteString(param.ColConfigDict[i].Text)
 		order := strings.Split(param.Settings.Order, " ")
 		if len(order) > 1 && order[0] == param.ColConfigDict[i].Tag {
-			bodybuf.WriteString("<span class=\\\"glyphicon glyphicon-")
+			bodybuf.WriteString("<span class=\"glyphicon glyphicon-")
 			if strings.ToLower(order[1]) == "asc" {
 				bodybuf.WriteString("arrow-up")
 			} else {
 				bodybuf.WriteString("arrow-down")
 			}
-			bodybuf.WriteString("\\\"></span>")
+			bodybuf.WriteString("\"></span>")
 		}
 		bodybuf.WriteString("</th>")
 	}
 	for i:=size;i<size+2;i++{
 		if param.ColConfigDict[i].Tag=="buttons" {
-			bodybuf.WriteString("<th name=\\\"操作\\\">")
+			bodybuf.WriteString("<th name=\"操作\">")
 			bodybuf.WriteString("操作")
 			bodybuf.WriteString("</th>")
 		}
@@ -98,12 +98,12 @@ func BuildTableBody(param *Param, rows *sql.Rows,bodybuf *bytes.Buffer) (err err
 	for i := 0; rows.Next(); i++ {
 		bodybuf.WriteString("<tr>")
 		if param.Settings.HasCheckbox {
-			bodybuf.WriteString("<td class=\\\"rt-td-checkbox\\\" name=\\\"rt-td-checkbox\\\" data-value=\\\"")
+			bodybuf.WriteString("<td class=\"rt-td-checkbox\" name=\"rt-td-checkbox\" data-value=\"")
 			bodybuf.WriteString(checkvalue)
-			bodybuf.WriteString("\\\">")
-			bodybuf.WriteString("<input type=\\\"checkbox\\\"  class=\\\"rt-checkbox\\\" value=\\\"")
+			bodybuf.WriteString("\">")
+			bodybuf.WriteString("<input type=\"checkbox\"  class=\"rt-checkbox\" value=\"")
 			bodybuf.WriteString(checkvalue)
-			bodybuf.WriteString("\\\" />")
+			bodybuf.WriteString("\" />")
 			bodybuf.WriteString("</div>")
 			bodybuf.WriteString("</td>")
 		}
@@ -114,46 +114,49 @@ func BuildTableBody(param *Param, rows *sql.Rows,bodybuf *bytes.Buffer) (err err
 			if param.ColConfigDict[i].Visibility == "none" {
 				continue
 			}
-			bodybuf.WriteString("<td name=\\\"")
+			bodybuf.WriteString("<td name=\"")
 			bodybuf.WriteString(param.ColConfigDict[i].Tag)
-			bodybuf.WriteString("\\\">")
+			bodybuf.WriteString("\"")
 			if param.ColConfigDict[i].Visibility == "hidden" {
-				bodybuf.WriteString(" class=\\\"hiddenCol\\\"")
+				bodybuf.WriteString(" class=\"hiddenCol\"")
 			}
 			cell:=function.ToString(s[i])
 			fmt.Println(cell)
-			bodybuf.WriteString(" data-value=\\\"")
+			bodybuf.WriteString(" data-value=\"")
 			bodybuf.WriteString(cell)
-			bodybuf.WriteString("\\\">")
+			bodybuf.WriteString("\">")
 			if param.ColConfigDict[i].HasFormatter {
 				//反射查找相应函数
 				//cellValue = FormatCell(dataTable.Columns, row, colConfig.Formatter, colName, cellValue);
 			}
 			bodybuf.WriteString(cell)
 			if param.ColConfigDict[i].HasBtn {
-				bodybuf.WriteString("<span class=\\\"rt-cell-btn glyphicon glyphicon-")
+				bodybuf.WriteString("<span class=\"rt-cell-btn glyphicon glyphicon-")
 				bodybuf.WriteString(param.ColConfigDict[i].BtnIcon)
-				bodybuf.WriteString("\\\" onclick=\\\"")
+				bodybuf.WriteString("\" onclick=\"")
 				bodybuf.WriteString(param.ColConfigDict[i].BtnFunc)
-				bodybuf.WriteString("\\\"></span>")
+				bodybuf.WriteString("\"></span>")
 			}
 			bodybuf.WriteString("</td>")
+			if i==size-1 {
+				if param.ColConfigDict[i+1].Tag=="buttons" {
+						bodybuf.WriteString("<th name=\"操作\">")
+						bodybuf.WriteString(param.ColConfigDict[i+1].Text)
+						bodybuf.WriteString("</th>")
+				}else if param.ColConfigDict[i+2].Tag=="buttons" {
+					bodybuf.WriteString("<th name=\"操作\">")
+					bodybuf.WriteString(param.ColConfigDict[i+2].Text)
+					bodybuf.WriteString("</th>")}
+			}
 		}
 		bodybuf.WriteString("</tr>")
-	}
-	for i:=size;i<size+2;i++{
-		if param.ColConfigDict[i].Tag=="buttons" {
-			bodybuf.WriteString("<th name=\\\"操作\\\">")
-			bodybuf.WriteString(param.ColConfigDict[i].Text)
-			bodybuf.WriteString("</th>")
-		}
 	}
 	bodybuf.WriteString("</tbody>")
 	return
 }
 
 func GetTable(req *service.HttpRequest,param *Param, rows *sql.Rows, bodybuf *bytes.Buffer,searchbuf *bytes.Buffer) (err error){
-	bodybuf.WriteString("<table class=\\\"table table-condensed\\\">")
+	bodybuf.WriteString("<table class=\"table table-condensed\">")
 	err=BuildTableHead(req,param, rows,bodybuf,searchbuf)
 	if err != nil {
 		return
@@ -172,47 +175,47 @@ func BuildSearchingBlock(req *service.HttpRequest,columnconfig *model.ColumnConf
 	}
 	searchbuf.WriteString("<div")
 	if columnconfig.ISSearchAdv {
-		searchbuf.WriteString(" class=\\\"rt-search-adv\\\"")
+		searchbuf.WriteString(" class=\"rt-search-adv\"")
 	}
-	searchbuf.WriteString("><span class=\\\"rt-search-heading\\\">")
+	searchbuf.WriteString("><span class=\"rt-search-heading\">")
 	searchbuf.WriteString(columnconfig.Text)
 	searchbuf.WriteString("：</span>")
 	if columnconfig.SearchType=="range"||columnconfig.SearchType=="date"{
 		var start,end  string
 		_=req.GetParams(columnconfig.Tag+">=",&start,columnconfig.Tag+"<+",&end)
-		searchbuf.WriteString("<input type=\\\"text\\\" class=\\\"rt-search-txt form-control ")
+		searchbuf.WriteString("<input type=\"text\" class=\"rt-search-txt form-control ")
 		searchbuf.WriteString(columnconfig.SearchType)
-		searchbuf.WriteString("\\\" name=\\\"")
+		searchbuf.WriteString("\" name=\"")
 		searchbuf.WriteString(columnconfig.Tag)
-		searchbuf.WriteString("\\\" data-sign=\\\"%3e%3d\\\" value=\\\"")
+		searchbuf.WriteString("\" data-sign=\"%3e%3d\" value=\"")
 		searchbuf.WriteString(start)
-		searchbuf.WriteString("\\\"/>")
-		searchbuf.WriteString("<span class=\\\"search-span-minus\\\"> - </span>")
-		searchbuf.WriteString("<input type=\\\"text\\\" class=\\\"rt-search-txt form-control ")
+		searchbuf.WriteString("\"/>")
+		searchbuf.WriteString("<span class=\"search-span-minus\"> - </span>")
+		searchbuf.WriteString("<input type=\"text\" class=\"rt-search-txt form-control ")
 		searchbuf.WriteString(columnconfig.SearchType)
-		searchbuf.WriteString("\\\" name=\\\"")
+		searchbuf.WriteString("\" name=\"")
 		searchbuf.WriteString(columnconfig.Tag)
-		searchbuf.WriteString("\\\" data-sign=\\\"%3e%3d\\\" value=\\\"")
+		searchbuf.WriteString("\" data-sign=\"%3e%3d\" value=\"")
 		searchbuf.WriteString(end)
-		searchbuf.WriteString("\\\"/>")
+		searchbuf.WriteString("\"/>")
 	}else {
-		searchbuf.WriteString("<input type=\\\"text\\\" class=\\\"rt-search-txt form-control")
+		searchbuf.WriteString("<input type=\"text\" class=\"rt-search-txt form-control")
 		var value  string
 		_=req.GetParams(columnconfig.Tag,&value)
 		if len(value)>0{
 			_=req.GetParams(columnconfig.Tag+"~~",&value)
 		}
-		searchbuf.WriteString("\\\" name=\\\"")
+		searchbuf.WriteString("\" name=\"")
 		searchbuf.WriteString(columnconfig.Tag)
-		searchbuf.WriteString("\\\" data-sign=\\\"%7e%7e\\\" value=\\\"")
+		searchbuf.WriteString("\" data-sign=\"%7e%7e\" value=\"")
 		searchbuf.WriteString(value)
-		searchbuf.WriteString( "\\\"/>")
+		searchbuf.WriteString( "\"/>")
 		if columnconfig.HasSearchBtnFunc&&columnconfig.HasSearchBtnIcon{
-			searchbuf.WriteString("<span class=\\\"glyphicon glyphicon-")
+			searchbuf.WriteString("<span class=\"glyphicon glyphicon-")
 			searchbuf.WriteString(columnconfig.SearchBtnIcon)
-			searchbuf.WriteString(" rt-search-txt-btn\\\" onclick=\\\"")
+			searchbuf.WriteString(" rt-search-txt-btn\" onclick=\"")
 			searchbuf.WriteString(columnconfig.SearchBtnFunc)
-			searchbuf.WriteString("\\\"></span>")
+			searchbuf.WriteString("\"></span>")
 		}
 	}
 	searchbuf.WriteString("</div>")
