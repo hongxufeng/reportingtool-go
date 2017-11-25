@@ -36,7 +36,7 @@
             configFile: "",
             hasCheckbox: false,
             hasPager: true,
-            navBar: true,
+            navBar: false,
             nodeLinker: true,
             query: "",
             rowList: [15, 30, 60, 100],
