@@ -122,15 +122,29 @@ name="w_user_list"  这个 是要查询的数据库中的表
 
 defaultorder="uid desc" 默认查询顺序
 
+```go
 <nickname search-type="true">昵称</nickname>
 <uid  formatter="FeedbackGetNumber">用户ID</uid>
- <username search-type="true">用户名称</username>
- 
+<username search-type="true">用户名称</username>
+ ```
  以上三个是w_user_list的字段值，这个顺序，也是展示的顺序
+ ```go
+ <buttons>
+            &lt;span class="glyphicon glyphicon-folder-open" title="浏览" onclick="view(this,'OBJ_ID')">&lt;/span>
+            &lt;span class="glyphicon glyphicon-edit" title="编辑" onclick="edit(this,'OBJ_ID')">&lt;/span>
+            &lt;span class="glyphicon glyphicon-trash" title="删除" onclick="deleteThis(this,'OBJ_ID')">&lt;/span>
+        </buttons>
+ ```
+ 是操作的button   注意xml转义
  
- <buttons></buttons>是操作的button   注意xml转义
- 
- <pagerbuttons></pagerbuttons>  之后会在左下生成，可是增加用户，导出等按钮
+ ```go
+  <pagerbuttons>
+            &lt;span class="rt-pager-btn" onclick="create()">
+            &lt;span class="glyphicon glyphicon-plus" title="新增问卷">&lt;/span>添加
+            &lt;/span>
+        </pagerbuttons>
+ ```
+ 之后会在左下生成，可是增加用户，导出等按钮
  
  最后  放一张效果图
  ![](./show/earliest.png )
