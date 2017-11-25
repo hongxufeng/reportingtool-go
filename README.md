@@ -127,7 +127,7 @@ defaultorder="uid desc" 默认查询顺序
 <uid  formatter="FeedbackGetNumber">用户ID</uid>
 <username search-type="true">用户名称</username>
  ```
- 以上三个是w_user_list的字段值，这个顺序，也是展示的顺序
+ 以上三个是w_user_list的字段，这个顺序，也是展示的顺序,而这个数据结构只需在这里配置（也无需前端的再次定义），其他的都写好了
  ```go
  <buttons>
       &lt;span class="glyphicon glyphicon-folder-open" title="浏览" onclick="view(this,'OBJ_ID')">&lt;/span>
