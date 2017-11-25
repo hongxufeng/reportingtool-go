@@ -130,19 +130,19 @@ defaultorder="uid desc" 默认查询顺序
  以上三个是w_user_list的字段值，这个顺序，也是展示的顺序
  ```go
  <buttons>
-            &lt;span class="glyphicon glyphicon-folder-open" title="浏览" onclick="view(this,'OBJ_ID')">&lt;/span>
-            &lt;span class="glyphicon glyphicon-edit" title="编辑" onclick="edit(this,'OBJ_ID')">&lt;/span>
-            &lt;span class="glyphicon glyphicon-trash" title="删除" onclick="deleteThis(this,'OBJ_ID')">&lt;/span>
-        </buttons>
+      &lt;span class="glyphicon glyphicon-folder-open" title="浏览" onclick="view(this,'OBJ_ID')">&lt;/span>
+      &lt;span class="glyphicon glyphicon-edit" title="编辑" onclick="edit(this,'OBJ_ID')">&lt;/span>
+      &lt;span class="glyphicon glyphicon-trash" title="删除" onclick="deleteThis(this,'OBJ_ID')">&lt;/span>
+ </buttons>
  ```
  是操作的button   注意xml转义
  
  ```go
   <pagerbuttons>
-            &lt;span class="rt-pager-btn" onclick="create()">
-            &lt;span class="glyphicon glyphicon-plus" title="新增问卷">&lt;/span>添加
-            &lt;/span>
-        </pagerbuttons>
+      &lt;span class="rt-pager-btn" onclick="create()">
+      &lt;span class="glyphicon glyphicon-plus" title="新增问卷">&lt;/span>添加
+      &lt;/span>
+  </pagerbuttons>
  ```
  之后会在左下生成，可是增加用户，导出等按钮
  
