@@ -117,13 +117,19 @@ var serverURL="http://localhost:8080/ReportingTool"
 </tables>
 ```
 id="用户表" 是js请求的tableID 
+
 name="w_user_list"  这个 是要查询的数据库中的表
+
 defaultorder="uid desc" 默认查询顺序
+
 <nickname search-type="true">昵称</nickname>
 <uid  formatter="FeedbackGetNumber">用户ID</uid>
  <username search-type="true">用户名称</username>
+ 
  以上三个是w_user_list的字段值，这个顺序，也是展示的顺序
+ 
  <buttons></buttons>是操作的button   注意xml转义
+ 
  <pagerbuttons></pagerbuttons>  之后会在左下生成，可是增加用户，导出等按钮
  
  最后  放一张效果图
