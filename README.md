@@ -92,3 +92,39 @@ var serverURL="http://localhost:8080/ReportingTool"
 7.使用redis做缓存数据库，像账户验证的密码，登陆失败的次数等等，不能每次验证登录cookie都查mysql吧，还是决定使用redis，减少与关系数据库的交互，增加速度。
 
 8.如果说一个后台系统没多少人登录，也不值得任何攻击，如此细致的考虑，安全验证、redis等等是完全没必要的，加之golang的天生并发特性，所以这种写法非常适合高并发的场景网站，做后台确实大材小用，但不得不说，谁保证以后的项目没有这种考虑。
+
+## SHOW
+现阶段XML配置说明
+```go
+<?xml version="1.0" encoding="utf-8" ?>
+<tables>
+    <table id="用户表"
+           name="w_user_list" defaultorder="uid desc">
+        <nickname search-type="true">昵称</nickname>
+        <uid  formatter="FeedbackGetNumber">用户ID</uid>
+        <username search-type="true">用户名称</username>
+        <buttons>
+            &lt;span class="glyphicon glyphicon-folder-open" title="浏览" onclick="view(this,'OBJ_ID')">&lt;/span>
+            &lt;span class="glyphicon glyphicon-edit" title="编辑" onclick="edit(this,'OBJ_ID')">&lt;/span>
+            &lt;span class="glyphicon glyphicon-trash" title="删除" onclick="deleteThis(this,'OBJ_ID')">&lt;/span>
+        </buttons>
+        <pagerbuttons>
+            &lt;span class="rt-pager-btn" onclick="create()">
+            &lt;span class="glyphicon glyphicon-plus" title="新增问卷">&lt;/span>添加
+            &lt;/span>
+        </pagerbuttons>
+    </table>
+</tables>
+```
+id="用户表" 是js请求的tableID 
+name="w_user_list"  这个 是要查询的数据库中的表
+defaultorder="uid desc" 默认查询顺序
+<nickname search-type="true">昵称</nickname>
+<uid  formatter="FeedbackGetNumber">用户ID</uid>
+ <username search-type="true">用户名称</username>
+ 以上三个是w_user_list的字段值，这个顺序，也是展示的顺序
+ <buttons></buttons>是操作的button   注意xml转义
+ <pagerbuttons></pagerbuttons>  之后会在左下生成，可是增加用户，导出等按钮
+ 
+ 最后  放一张效果图
+ ![](./show/earliest.png )
