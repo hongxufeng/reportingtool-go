@@ -2,8 +2,9 @@
 <tables>
     <table id="用户表"
            name="w_user_list" defaultorder="uid desc">
-        <username search-type="true">name</username>
-        <uid  formatter="FeedbackGetNumber">uid</uid>
+        <nickname search-type="true">昵称</nickname>
+        <uid  formatter="FeedbackGetNumber">用户ID</uid>
+        <username search-type="true">用户名称</username>
         <buttons>
             &lt;span class="glyphicon glyphicon-folder-open" title="浏览" onclick="view(this,'OBJ_ID')">&lt;/span>
             &lt;span class="glyphicon glyphicon-edit" title="编辑" onclick="edit(this,'OBJ_ID')">&lt;/span>

@@ -17,7 +17,7 @@
 .rt-search-go{margin-left:4px;}
 .rt-search>div>div{display:inline-block;margin:0px 0px 16px 12px;}
 .rt-search>div>.rt-search-adv{display:none;}
-.rt-search-txt-btn{position:absolute;right:12px;top:8px;cursor:pointer;}
+div>.rt-search-txt-btn.glyphicon{position:absolute;right:12px;top:8px;cursor:pointer;}
 .search-span-minus{padding:0px 1px;}
 /*searchBar-tree*/
 .rt-treeSearcher-div{float:right;}
@@ -40,9 +40,25 @@ table [data-table]{color:#337AB7;font-weight:bold;cursor:pointer;}
 [name=操作]>span{margin:0px 5px;}
 /*td*/
 .rt-body tbody>tr>td{position:relative;}
+.rt-body tbody>tr>td>span[onclick]{color:#337AB7;cursor:pointer;}
+.rt-body tbody>tr>td[name="操作"]>span{color:#444444;cursor:pointer;}
 .rt-cell-btn{position:absolute;right:12px;top:15px;}
 .rt-body tbody td>input[type="text"]{text-align:center;width:100%;border:1px solid #D3D3D3}
 td .glyphicon{cursor:pointer;}
+
+[name="操作"] > .glyphicon {
+    transition: width 0.8s, height 0.8s;
+    -moz-transition: width 0.8s, height 0.8s, -moz-transform 0.8s; /* Firefox 4 */
+    -webkit-transition: width 0.8s, height 0.8s, -webkit-transform 0.8s; /* Safari and Chrome */
+    -o-transition: width 0.8s, height 0.8s, -o-transform 0.8s; /* Opera */
+}
+[name="操作"] > .glyphicon:hover {
+    transform: rotate(360deg);
+    -moz-transform: rotate(360deg); /* Firefox 4 */
+    -webkit-transform: rotate(360deg); /* Safari and Chrome */
+    -o-transform: rotate(360deg); /* Opera */
+}
+
 /*nav*/
 .rt-nav.breadcrumb{background-color:#FFFFFF;border-left:4px solid lightskyblue;border-bottom-width:0px;margin:0 0 18px 0;padding:0 0 0 9px;min-height:22px;}
 .rt-nav.breadcrumb a{color:#555555;font-size:15px;font-weight:bold;}
