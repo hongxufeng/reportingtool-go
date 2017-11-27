@@ -11,12 +11,14 @@ import (
 )
 
 func GetTable(req *service.HttpRequest, param *Param, rows *sql.Rows, bodybuf *bytes.Buffer, searchbuf *bytes.Buffer, rowbuf *bytes.Buffer, count int) (err error) {
+	columns, _ := rows.Columns()
+	size := len(columns)
 	bodybuf.WriteString("<table class=\"table table-condensed\">")
-	err = BuildTableHead(req, param, rows, bodybuf, searchbuf)
+	err = BuildTableHead(req, param, size, bodybuf, searchbuf)
 	if err != nil {
 		return
 	}
-	err = BuildTableBody(param, rows, bodybuf)
+	err = BuildTableBody(param, rows,size, bodybuf)
 	if err != nil {
 		return
 	}
@@ -27,7 +29,7 @@ func GetTable(req *service.HttpRequest, param *Param, rows *sql.Rows, bodybuf *b
 	if err != nil {
 		return
 	}
-	err = BuildNullRow(param, rows, rowbuf)
+	err = BuildNullRow(param, size, rowbuf)
 	if err != nil {
 		return
 	}
@@ -87,7 +89,7 @@ func BuildSearchingBlock(req *service.HttpRequest, columnconfig *model.ColumnCon
 	return
 }
 
-func BuildTableHead(req *service.HttpRequest, param *Param, rows *sql.Rows, bodybuf *bytes.Buffer, searchbuf *bytes.Buffer) (err error) {
+func BuildTableHead(req *service.HttpRequest, param *Param, size int, bodybuf *bytes.Buffer, searchbuf *bytes.Buffer) (err error) {
 	bodybuf.WriteString("<thead>")
 	bodybuf.WriteString("<tr>")
 	if param.Settings.HasCheckbox {
@@ -97,8 +99,6 @@ func BuildTableHead(req *service.HttpRequest, param *Param, rows *sql.Rows, body
 		bodybuf.WriteString("</div>")
 		bodybuf.WriteString("</th>")
 	}
-	columns, _ := rows.Columns()
-	size := len(columns)
 	fmt.Println("size:",size)
 	for i := 0; i < size; i++ {
 		if param.ColConfigDict[i].Visibility == "none" {
@@ -146,13 +146,10 @@ func BuildTableHead(req *service.HttpRequest, param *Param, rows *sql.Rows, body
 	return
 }
 
-func BuildTableBody(param *Param, rows *sql.Rows, bodybuf *bytes.Buffer) (err error) {
+func BuildTableBody(param *Param, rows *sql.Rows,size int, bodybuf *bytes.Buffer) (err error) {
 	var checkvalue string
 	bodybuf.WriteString("<tbody>")
 
-	columns, _ := rows.Columns()
-	size := len(columns)
-	fmt.Println("size:",size)
 	var s []interface{}
 	for i := 0; i < size; i++ {
 		var white = ""
@@ -229,11 +226,7 @@ func BuildTableBody(param *Param, rows *sql.Rows, bodybuf *bytes.Buffer) (err er
 	return
 }
 
-func BuildNullRow(param *Param, rows *sql.Rows, rowbuf *bytes.Buffer) (err error) {
-	columns, _ := rows.Columns()
-	size := len(columns)
-	fmt.Println("size:",size)
-
+func BuildNullRow(param *Param, size int, rowbuf *bytes.Buffer) (err error) {
 	rowbuf.WriteString("<tr>")
 	if param.Settings.HasCheckbox {
 		rowbuf.WriteString("<td class=\"rt-td-checkbox\" name=\"rt-td-checkbox\" data-value=\"\">")
