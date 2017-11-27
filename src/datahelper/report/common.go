@@ -5,7 +5,73 @@ import (
 	"model"
 	"utils/function"
 	"strings"
+	"utils/service"
+	"fmt"
+	"datahelper/db"
 )
+
+
+func BuildQuerySQL(param *Param) (string,error){
+	var buf bytes.Buffer
+	buf.WriteString("select ")
+	var size = len(param.ColConfigDict)
+	if size==0{
+		return buf.String(),service.NewError(service.ERR_XML_ATTRIBUTE_LACK,"您至少需要配置一项XML中的列属性啊！")
+	}
+	for i:=0; i<size;i++ {
+		if param.ColConfigDict[i].Tag=="buttons"||param.ColConfigDict[i].Tag=="pagerbuttons"{
+			continue
+		}
+		if i!=0{
+			buf.WriteString(",")
+		}
+		buf.WriteString(param.ColConfigDict[i].Tag)
+	}
+	buf.WriteString(" from ")
+	if param.TableConfig.HasAdminName&&param.Power==0 {
+		buf.WriteString(param.TableConfig.Name)
+	}else {
+		buf.WriteString(param.TableConfig.Name)
+	}
+	//AppendWhere
+	if param.Settings.Order!=""{
+		buf.WriteString(" order by ")
+		buf.WriteString(param.Settings.Order)
+	}else if param.TableConfig.HasDefaultOrder{
+		buf.WriteString(" order by ")
+		buf.WriteString(param.TableConfig.DefaultOrder)
+	}
+	buf.WriteString(" limit ")
+	buf.WriteString(function.IntToString(param.Settings.Rows*(param.Settings.Page-1)))
+	buf.WriteString(",")
+	buf.WriteString(function.IntToString(param.Settings.Rows*param.Settings.Page-1))
+	if param.TableConfig.HasPower&&param.Power>=param.TableConfig.Power {
+		return buf.String(),service.NewError(service.ERR_POWER_DENIED,"您的用户权限不足啊！")
+	}
+	return buf.String(),nil
+}
+
+func GetTableCount(param *Param) (count int,err error){
+	var buf bytes.Buffer
+	buf.WriteString("select count(*) from ")
+	if param.TableConfig.HasAdminName&&param.Power==0 {
+		buf.WriteString(param.TableConfig.Name)
+	}else {
+		buf.WriteString(param.TableConfig.Name)
+	}
+	fmt.Println(buf.String())
+	result,err:=db.Query(buf.String())
+	if err!=nil{
+		return
+	}
+	if result.Next(){
+		err=result.Scan(&count)
+	}else {
+		err=service.NewError(service.ERR_MYSQL)
+	}
+	return
+}
+
 
 func BuildTablePager(param *Param,bodybuf *bytes.Buffer,count int,style string) (err error) {
 	var x int
@@ -72,4 +138,8 @@ func BuildTablePager(param *Param,bodybuf *bytes.Buffer,count int,style string) 
 	}
 	bodybuf.WriteString("</div>")
 	return
+}
+
+func BuildSelectorBar(selectorbuf *bytes.Buffer,conditionbuf *bytes.Buffer)  (err error){
+	return  nil
 }

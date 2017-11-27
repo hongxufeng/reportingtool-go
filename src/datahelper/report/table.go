@@ -10,7 +10,7 @@ import (
 	"model"
 )
 
-func GetTable(req *service.HttpRequest, param *Param, rows *sql.Rows, bodybuf *bytes.Buffer, searchbuf *bytes.Buffer, count int) (err error) {
+func GetTable(req *service.HttpRequest, param *Param, rows *sql.Rows, bodybuf *bytes.Buffer, searchbuf *bytes.Buffer, rowbuf *bytes.Buffer, count int) (err error) {
 	bodybuf.WriteString("<table class=\"table table-condensed\">")
 	err = BuildTableHead(req, param, rows, bodybuf, searchbuf)
 	if err != nil {
@@ -27,7 +27,7 @@ func GetTable(req *service.HttpRequest, param *Param, rows *sql.Rows, bodybuf *b
 	if err != nil {
 		return
 	}
-	err = BuildNullRow(param, rows, bodybuf)
+	err = BuildNullRow(param, rows, rowbuf)
 	if err != nil {
 		return
 	}
@@ -99,7 +99,7 @@ func BuildTableHead(req *service.HttpRequest, param *Param, rows *sql.Rows, body
 	}
 	columns, _ := rows.Columns()
 	size := len(columns)
-	fmt.Println(size)
+	fmt.Println("size:",size)
 	for i := 0; i < size; i++ {
 		if param.ColConfigDict[i].Visibility == "none" {
 			continue;
@@ -152,6 +152,7 @@ func BuildTableBody(param *Param, rows *sql.Rows, bodybuf *bytes.Buffer) (err er
 
 	columns, _ := rows.Columns()
 	size := len(columns)
+	fmt.Println("size:",size)
 	var s []interface{}
 	for i := 0; i < size; i++ {
 		var white = ""
@@ -231,6 +232,7 @@ func BuildTableBody(param *Param, rows *sql.Rows, bodybuf *bytes.Buffer) (err er
 func BuildNullRow(param *Param, rows *sql.Rows, rowbuf *bytes.Buffer) (err error) {
 	columns, _ := rows.Columns()
 	size := len(columns)
+	fmt.Println("size:",size)
 
 	rowbuf.WriteString("<tr>")
 	if param.Settings.HasCheckbox {

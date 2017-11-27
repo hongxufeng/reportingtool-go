@@ -192,67 +192,6 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 	return
 }
 
-func BuildQuerySQL(param *Param) (string,error){
-	var buf bytes.Buffer
-	buf.WriteString("select ")
-	var size = len(param.ColConfigDict)
-	if size==0{
-		return buf.String(),service.NewError(service.ERR_XML_ATTRIBUTE_LACK,"您至少需要配置一项XML中的列属性啊！")
-	}
-	for i:=0; i<size;i++ {
-		if param.ColConfigDict[i].Tag=="buttons"||param.ColConfigDict[i].Tag=="pagerbuttons"{
-			continue
-		}
-		if i!=0{
-			buf.WriteString(",")
-		}
-		buf.WriteString(param.ColConfigDict[i].Tag)
-	}
-	buf.WriteString(" from ")
-	if param.TableConfig.HasAdminName&&param.Power==0 {
-		buf.WriteString(param.TableConfig.Name)
-	}else {
-		buf.WriteString(param.TableConfig.Name)
-	}
-	//AppendWhere
-	if param.Settings.Order!=""{
-		buf.WriteString(" order by ")
-		buf.WriteString(param.Settings.Order)
-	}else if param.TableConfig.HasDefaultOrder{
-		buf.WriteString(" order by ")
-		buf.WriteString(param.TableConfig.DefaultOrder)
-	}
-	buf.WriteString(" limit ")
-	buf.WriteString(function.IntToString(param.Settings.Rows*(param.Settings.Page-1)))
-	buf.WriteString(",")
-	buf.WriteString(function.IntToString(param.Settings.Rows*param.Settings.Page-1))
-	if param.TableConfig.HasPower&&param.Power>=param.TableConfig.Power {
-		return buf.String(),service.NewError(service.ERR_POWER_DENIED,"您的用户权限不足啊！")
-	}
-	return buf.String(),nil
-}
-
-func GetTableCount(param *Param) (count int,err error){
-	var buf bytes.Buffer
-	buf.WriteString("select count(*) from ")
-	if param.TableConfig.HasAdminName&&param.Power==0 {
-		buf.WriteString(param.TableConfig.Name)
-	}else {
-		buf.WriteString(param.TableConfig.Name)
-	}
-	fmt.Println(buf.String())
-	result,err:=db.Query(buf.String())
-	if err!=nil{
-		return
-	}
-	if result.Next(){
-		err=result.Scan(&count)
-	}else {
-		err=service.NewError(service.ERR_MYSQL)
-	}
-	return
-}
-
 func (param *Param) GetTable(req *service.HttpRequest) (res map[string]interface{},err error){
 	res=make(map[string]interface{}, 0)
 	count,err:=GetTableCount(param)
@@ -270,9 +209,15 @@ func (param *Param) GetTable(req *service.HttpRequest) (res map[string]interface
 		return
 	}
 	var searchbuf,bodybuf,selectorbuf,conditionbuf,rowbuf bytes.Buffer
-	err=GetTable(req,param,result,&bodybuf,&searchbuf,count)
+	err=GetTable(req,param,result,&bodybuf,&searchbuf,&rowbuf,count)
 	if err != nil {
 		return
+	}
+	if param.Settings.Style==model.Style_Table{
+		err=BuildSelectorBar(&selectorbuf,&conditionbuf)
+		if err != nil {
+			return
+		}
 	}
 	res["search"]=searchbuf.String()
 	res["body"]=bodybuf.String()

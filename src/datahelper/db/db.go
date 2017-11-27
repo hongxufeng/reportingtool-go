@@ -16,6 +16,7 @@ const (
 	CACHE_USER_INFO = "W_Redis_Cache_User_Info_Byte"
 	CACHE_USER_LOGIN_ERROR="W_Redis_Cache_User_Login_Error_Cnt"
 	CACHE_USER_LOGIN_FORBID="W_Redis_Cache_User_Login_Forbid_Bool"
+	CACHE_TABLE_SELECTOR_BAR="W_Redis_Cache_Table_Selector_Bar_String"
 )
 
 func Init(config *config.Config) (err error) {
