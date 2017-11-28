@@ -183,6 +183,9 @@ func BuildTableBody(param *Param, rows *sql.Rows,size int, bodybuf *bytes.Buffer
 			if param.ColConfigDict[i].Visibility == "none" {
 				continue
 			}
+			if param.ColConfigDict[i].HasPower&&param.Power>=param.ColConfigDict[i].Power{
+				continue
+			}
 			bodybuf.WriteString("<td name=\"")
 			bodybuf.WriteString(param.ColConfigDict[i].Tag)
 			bodybuf.WriteString("\"")

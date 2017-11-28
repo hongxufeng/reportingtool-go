@@ -42,11 +42,11 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 		}else{
 			tableconfig.Name=name.Value
 		}
-		adminname := table.SelectAttr("adminname")
-		if adminname!=nil{
-			tableconfig.HasAdminName=true
-			tableconfig.AdminName=adminname.Value
-		}
+		//adminname := table.SelectAttr("adminname")
+		//if adminname!=nil{
+		//	tableconfig.HasAdminName=true
+		//	tableconfig.AdminName=adminname.Value
+		//}
 		power := table.SelectAttr("power")
 		if power!=nil{
 			tableconfig.HasPower=true
@@ -89,6 +89,11 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 		if defaultvalue!=nil{
 			cc.HasDefaultValue=true
 			cc.DefaultValue=defaultvalue.Value
+		}
+		power := elemnt.SelectAttr("power")
+		if power!=nil{
+			cc.HasPower=true
+			cc.Power,_=function.StringToUint8(power.Value)
 		}
 		formatter := elemnt.SelectAttr("formatter")
 		if formatter!=nil{

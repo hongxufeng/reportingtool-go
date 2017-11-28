@@ -28,11 +28,8 @@ func BuildQuerySQL(param *Param) (string,error){
 		buf.WriteString(param.ColConfigDict[i].Tag)
 	}
 	buf.WriteString(" from ")
-	if param.TableConfig.HasAdminName&&param.Power==0 {
-		buf.WriteString(param.TableConfig.Name)
-	}else {
-		buf.WriteString(param.TableConfig.Name)
-	}
+	buf.WriteString(param.TableConfig.Name)
+
 	//AppendWhere
 	if param.Settings.Order!=""{
 		buf.WriteString(" order by ")
@@ -54,11 +51,8 @@ func BuildQuerySQL(param *Param) (string,error){
 func GetTableCount(param *Param) (count int,err error){
 	var buf bytes.Buffer
 	buf.WriteString("select count(*) from ")
-	if param.TableConfig.HasAdminName&&param.Power==0 {
-		buf.WriteString(param.TableConfig.Name)
-	}else {
-		buf.WriteString(param.TableConfig.Name)
-	}
+	buf.WriteString(param.TableConfig.Name)
+
 	fmt.Println(buf.String())
 	result,err:=db.Query(buf.String())
 	if err!=nil{
@@ -141,5 +135,6 @@ func BuildTablePager(param *Param,bodybuf *bytes.Buffer,count int,style string) 
 }
 
 func BuildSelectorBar(selectorbuf *bytes.Buffer,conditionbuf *bytes.Buffer)  (err error){
+	beingdb.GetSelectorBarCache()
 	return  nil
 }

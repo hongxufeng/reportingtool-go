@@ -22,6 +22,8 @@ type ColumnConfig struct {
 	Search4Admin bool
 	ISCheckBox bool
 	ISSearchAdv bool
+	HasPower bool
+	Power uint8
 	SearchBtnIcon string
 	SearchBtnFunc string
 	BtnIcon string
@@ -42,7 +44,7 @@ type ColumnConfig struct {
 	SelectorFunc string
 	SelectorText string
 	Visibility string
-	Passedcol []string
+	//Passedcol []string
 }
 type TableConfig struct {
 	Name string
@@ -50,8 +52,8 @@ type TableConfig struct {
 	HasDefaultOrder bool
 	Excel string//生成excel
 	HasExcel bool
-	AdminName string
-	HasAdminName bool
+	//AdminName string
+	//HasAdminName bool
 	Power uint8
 	HasPower bool
 }
