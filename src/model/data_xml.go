@@ -11,7 +11,7 @@ type ColumnConfig struct {
 	//HasLinkTo bool
 	HasNavname bool
 	HasPrecision bool
-	HasRegex bool
+	//HasRegex bool
 	HasSearchType bool
 	HasSelectorMulti bool
 	HasTimetransfer bool
@@ -37,12 +37,12 @@ type ColumnConfig struct {
 	Navname string
 	Timetransfer string
 	Precision string
-	RegexPattern string
-	RegexReplacement string
+	//RegexPattern string
+	//RegexReplacement string
 	SearchType string
 	Selector string
-	SelectorFunc string
-	SelectorText string
+	//SelectorFunc string
+	//SelectorText string
 	Visibility string
 	//Passedcol []string
 }

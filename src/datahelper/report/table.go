@@ -10,9 +10,7 @@ import (
 	"model"
 )
 
-func GetTable(req *service.HttpRequest, param *Param, rows *sql.Rows, bodybuf *bytes.Buffer, searchbuf *bytes.Buffer, rowbuf *bytes.Buffer, count int) (err error) {
-	columns, _ := rows.Columns()
-	size := len(columns)
+func GetTable(req *service.HttpRequest, param *Param, rows *sql.Rows,size int, bodybuf *bytes.Buffer, searchbuf *bytes.Buffer, rowbuf *bytes.Buffer, count int) (err error) {
 	bodybuf.WriteString("<table class=\"table table-condensed\">")
 	err = BuildTableHead(req, param, size, bodybuf, searchbuf)
 	if err != nil {

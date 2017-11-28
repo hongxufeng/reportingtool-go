@@ -48,9 +48,11 @@ func BuildQuerySQL(param *Param) (string,error){
 	return buf.String(),nil
 }
 
-func GetTableCount(param *Param) (count int,err error){
+func GetTableCount(param *Param,fields string) (count int,err error){
 	var buf bytes.Buffer
-	buf.WriteString("select count(*) from ")
+	buf.WriteString("select count(")
+	buf.WriteString(fields)
+	buf.WriteString(") from ")
 	buf.WriteString(param.TableConfig.Name)
 
 	fmt.Println(buf.String())
@@ -134,7 +136,13 @@ func BuildTablePager(param *Param,bodybuf *bytes.Buffer,count int,style string) 
 	return
 }
 
-func BuildSelectorBar(selectorbuf *bytes.Buffer,conditionbuf *bytes.Buffer)  (err error){
-	beingdb.GetSelectorBarCache()
+func BuildSelectorBar(param *Param,size int,selectorbuf *bytes.Buffer,conditionbuf *bytes.Buffer)  (err error){
+	for i:=0; i<size;i++  {
+		if param.ColConfigDict[i].IsInselector&&param.ColConfigDict[i].Selector=="true"{
+			being,html:=db.GetSelectorBarCache(param.TableConfig.Name,param.ColConfigDict[i].Tag)
+			count,err:=GetTableCount(param,"DISTINCT "+param.ColConfigDict[i].Tag)
+		}
+	}
+
 	return  nil
 }

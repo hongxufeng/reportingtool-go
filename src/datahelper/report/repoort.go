@@ -101,9 +101,8 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 			cc.Formatter=formatter.Value
 		}
 		selector := elemnt.SelectAttr("selector")
-		if selector!=nil{
+		if selector!=nil&&selector.Value=="true"{
 			cc.IsInselector=true
-			cc.Selector=selector.Value
 		}
 		formatterr := elemnt.SelectAttr("formatter-r")
 		if formatterr!=nil{
@@ -115,15 +114,15 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 			cc.HasSearchType=true
 			cc.SearchType=searchtype.Value
 		}
-		selectorfunc := elemnt.SelectAttr("selector-func")
-		if selectorfunc!=nil{
-			cc.IsInselector=true
-			cc.SelectorFunc=selectorfunc.Value
-		}
-		selectortext := elemnt.SelectAttr("selector-text")
-		if selectortext!=nil{
-			cc.SelectorText=selectortext.Value
-		}
+		//selectorfunc := elemnt.SelectAttr("selector-func")
+		//if selectorfunc!=nil{
+		//	cc.IsInselector=true
+		//	cc.SelectorFunc=selectorfunc.Value
+		//}
+		//selectortext := elemnt.SelectAttr("selector-text")
+		//if selectortext!=nil{
+		//	cc.SelectorText=selectortext.Value
+		//}
 		//linkto := elemnt.SelectAttr("linkto")
 		//passedcol := elemnt.SelectAttr("passedcol")
 		//if linkto!=nil&&passedcol!=nil{
@@ -199,7 +198,7 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 
 func (param *Param) GetTable(req *service.HttpRequest) (res map[string]interface{},err error){
 	res=make(map[string]interface{}, 0)
-	count,err:=GetTableCount(param)
+	count,err:=GetTableCount(param,"*")
 	if err!=nil{
 		return
 	}
@@ -213,13 +212,15 @@ func (param *Param) GetTable(req *service.HttpRequest) (res map[string]interface
 	if err!=nil{
 		return
 	}
+	columns, _ := result.Columns()
+	size := len(columns)
 	var searchbuf,bodybuf,selectorbuf,conditionbuf,rowbuf bytes.Buffer
-	err=GetTable(req,param,result,&bodybuf,&searchbuf,&rowbuf,count)
+	err=GetTable(req,param,result,size,&bodybuf,&searchbuf,&rowbuf,count)
 	if err != nil {
 		return
 	}
 	if param.Settings.Style==model.Style_Table{
-		err=BuildSelectorBar(&selectorbuf,&conditionbuf)
+		err=BuildSelectorBar(param,size,&selectorbuf,&conditionbuf)
 		if err != nil {
 			return
 		}
