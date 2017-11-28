@@ -67,7 +67,7 @@ func BuildSearchingBlock(req *service.HttpRequest, columnconfig *model.ColumnCon
 		searchbuf.WriteString("<input type=\"text\" class=\"rt-search-txt form-control")
 		var value string
 		_ = req.GetParams(columnconfig.Tag, &value)
-		if len(value) > 0 {
+		if len(value) == 0 {
 			_ = req.GetParams(columnconfig.Tag+"~~", &value)
 		}
 		searchbuf.WriteString("\" name=\"")

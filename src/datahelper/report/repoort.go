@@ -178,10 +178,10 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 		if visibility!=nil{
 			cc.Visibility=visibility.Value
 		}
-		percentageform := elemnt.SelectAttr("percentageform")
-		if percentageform!=nil&&percentageform.Value=="true"{
-			cc.IsInPercentageform=true
-		}
+		//percentageform := elemnt.SelectAttr("percentageform")
+		//if percentageform!=nil&&percentageform.Value=="true"{
+		//	cc.IsInPercentageform=true
+		//}
 		ColConfigDict=append(ColConfigDict, cc)
 	}
 	if len(ColConfigDict)==0{
@@ -203,7 +203,7 @@ func (param *Param) GetTable(req *service.HttpRequest) (res map[string]interface
 		return
 	}
 	fmt.Println(count)
-	query,err:=BuildQuerySQL(param)
+	query,err:=BuildQuerySQL(req,param)
 	if err!=nil{
 		return
 	}

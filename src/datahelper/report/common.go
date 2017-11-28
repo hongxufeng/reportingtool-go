@@ -10,8 +10,34 @@ import (
 	"datahelper/db"
 )
 
+func AppendWhere(req *service.HttpRequest,param *Param,buf *bytes.Buffer)  {
+	hasWhere := false
+	for _,colconfig:=range param.ColConfigDict{
+		var value string
+		_=req.GetParams(colconfig.Tag,&value)
+		if len(value) == 0 {
+			_ = req.GetParams(colconfig.Tag+"~~", &value)
+			if len(value)==0{
+				continue
+			}
+		}
+		if hasWhere==false{
+			hasWhere=true
+			buf.WriteString(" where ")
+		}
+		buf.WriteString(colconfig.Tag)
+		buf.WriteString("=")
+		buf.WriteString("(")
+		buf.WriteString(strings.Join(strings.Split(value,",")," or "))
+		buf.WriteString(")")
+		buf.WriteString(" and ")
+	}
+	if hasWhere{
+		buf.Truncate(buf.Len()-5)
+	}
+}
 
-func BuildQuerySQL(param *Param) (string,error){
+func BuildQuerySQL(req *service.HttpRequest,param *Param) (string,error){
 	var buf bytes.Buffer
 	buf.WriteString("select ")
 	var size = len(param.ColConfigDict)
@@ -30,7 +56,7 @@ func BuildQuerySQL(param *Param) (string,error){
 	buf.WriteString(" from ")
 	buf.WriteString(param.TableConfig.Name)
 
-	//AppendWhere
+	AppendWhere(req,param,&buf)
 	if param.Settings.Order!=""{
 		buf.WriteString(" order by ")
 		buf.WriteString(param.Settings.Order)
@@ -138,10 +164,12 @@ func BuildTablePager(param *Param,bodybuf *bytes.Buffer,count int,style string) 
 
 func BuildSelectorBar(param *Param,size int,selectorbuf *bytes.Buffer,conditionbuf *bytes.Buffer)  (err error){
 	for i:=0; i<size;i++  {
-		if param.ColConfigDict[i].IsInselector&&param.ColConfigDict[i].Selector=="true"{
-			being,html:=db.GetSelectorBarCache(param.TableConfig.Name,param.ColConfigDict[i].Tag)
-			count,err:=GetTableCount(param,"DISTINCT "+param.ColConfigDict[i].Tag)
+		if !param.ColConfigDict[i].IsInselector{
+			continue
 		}
+		//being,html:=db.GetSelectorBarCache(param.TableConfig.Name,param.ColConfigDict[i].Tag)
+		//count,err:=GetTableCount(param,"DISTINCT "+param.ColConfigDict[i].Tag)
+
 	}
 
 	return  nil

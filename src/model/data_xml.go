@@ -17,7 +17,7 @@ type ColumnConfig struct {
 	HasTimetransfer bool
 	HasSearchBtnIcon bool
 	HasSearchBtnFunc bool
-	IsInPercentageform bool
+	//IsInPercentageform bool
 	IsInselector bool
 	Search4Admin bool
 	ISCheckBox bool
