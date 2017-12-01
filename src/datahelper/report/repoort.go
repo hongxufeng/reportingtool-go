@@ -220,7 +220,7 @@ func (param *Param) GetTable(req *service.HttpRequest) (res map[string]interface
 		return
 	}
 	if param.Settings.Style==model.Style_Table{
-		err=BuildSelectorBar(param,size,&selectorbuf,&conditionbuf)
+		err=BuildSelectorBar(req,param,size,&selectorbuf,&conditionbuf)
 		if err != nil {
 			return
 		}

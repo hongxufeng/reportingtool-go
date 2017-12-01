@@ -167,7 +167,7 @@ func BuildTablePager(param *Param,bodybuf *bytes.Buffer,count int,style string) 
 	return
 }
 
-func BuildSelectorBar(param *Param,size int,selectorbuf *bytes.Buffer,conditionbuf *bytes.Buffer)  (err error){
+func BuildSelectorBar(req *service.HttpRequest,param *Param,size int,selectorbuf *bytes.Buffer,conditionbuf *bytes.Buffer)  (err error){
 	for i:=0; i<size;i++  {
 		selectordata:=make(map[string]string, 0)
 		if !param.ColConfigDict[i].IsInselector{
@@ -194,13 +194,66 @@ func BuildSelectorBar(param *Param,size int,selectorbuf *bytes.Buffer,conditionb
 					return e
 				}
 				fmt.Println(value)
-				selectordata[function.IntToString(j)]=value
+				selectordata[value]=value
 				e:=db.HSetSelectorBarCache(param.TableConfig.Name,param.ColConfigDict[i].Tag,function.IntToString(j),value)
 				if e!=nil{
 					return e
 				}
 			}
 		}
+		var value string
+		e:=req.GetParams(param.ColConfigDict[i].Tag,&value)
+		if(e==nil){
+			if value==""{
+				continue
+			}
+			originValue:=strings.Split(value,"|")
+			var valueText []string
+			for _,v:=range originValue {
+				sd,ok:=selectordata[v];
+				if !ok{
+					continue
+				}
+				valueText=append(valueText, sd)
+			}
+			conditionbuf.WriteString("<div data-value=\"")
+			conditionbuf.WriteString(param.ColConfigDict[i].Tag)
+			conditionbuf.WriteString("\">")
+			conditionbuf.WriteString(param.ColConfigDict[i].Text)
+			conditionbuf.WriteString(strings.Join(valueText,"、"))
+			conditionbuf.WriteString("<span class=\"glyphicon glyphicon-remove rt-condition-remove\"></div>")
+			conditionbuf.WriteString("</div>")
+			continue
+		}
+		selectorbuf.WriteString("<div class=\"rt-selector-folder\">")
+		selectorbuf.WriteString("<div class=\"rt-selector-key\" data-value=\"")
+		selectorbuf.WriteString(param.ColConfigDict[i].Tag)
+		selectorbuf.WriteString("\">")
+		selectorbuf.WriteString(param.ColConfigDict[i].Text)
+		selectorbuf.WriteString("：</div>")
+		selectorbuf.WriteString("<div class=\"rt-selector-value\">")
+		selectorbuf.WriteString("<ul class=\"rt-selector-list\">")
+		for _,v:=range selectordata{
+			selectorbuf.WriteString("<li data-value=\"")
+			selectorbuf.WriteString(v)
+			selectorbuf.WriteString("\"><span class=\"rt-selector-list-text\"><span class=\"glyphicon glyphicon-unchecked\"></span>")
+			selectorbuf.WriteString(v)
+			selectorbuf.WriteString("</span></li>")
+		}
+		selectorbuf.WriteString("</ul>")
+		selectorbuf.WriteString("</div>")
+		if param.ColConfigDict[i].HasSelectorMulti{
+			selectorbuf.WriteString("<div class=\"rt-multiselect-btns\">")
+			selectorbuf.WriteString("<button class=\"btn btn-primary btn-xs rt-multiselect-ok\">确&nbsp;&nbsp;定</button><button class=\"btn btn-default btn-xs rt-multiselect-cancel\">取&nbsp;&nbsp;消</button>")
+			selectorbuf.WriteString("</div>")
+		}
+		selectorbuf.WriteString("<div class=\"rt-selector-btns\">")
+		selectorbuf.WriteString("<span class=\"rt-selector-selectmore\"><span class\"rt-selectmore-txt\">更多</span><span class=\"glyphicon glyphicon-chevron-down\"></span></span>")
+		if param.ColConfigDict[i].HasSelectorMulti{
+			selectorbuf.WriteString("<span class=\"rt-selector-multiselect\">多选<span class=\"glyphicon glyphicon-plus\"></span></span>")
+		}
+		selectorbuf.WriteString("</div>")
+		selectorbuf.WriteString("</div>")
 	}
 	return  nil
 }
