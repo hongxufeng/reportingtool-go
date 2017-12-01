@@ -79,7 +79,7 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 		dateformat := elemnt.SelectAttr("dateformat")
 		if dateformat!=nil{
 			cc.HasDateformat=true
-			cc.Dateformat=dateformat.Value
+			cc.DateFormat=dateformat.Value
 		}
 		checkbox := elemnt.SelectAttr("checkbox")
 		if checkbox!=nil&&checkbox.Value=="true"{
@@ -102,7 +102,7 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 		}
 		selector := elemnt.SelectAttr("selector")
 		if selector!=nil&&selector.Value=="true"{
-			cc.IsInselector=true
+			cc.IsInSelector=true
 		}
 		formatterr := elemnt.SelectAttr("formatter-r")
 		if formatterr!=nil{
@@ -143,12 +143,12 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 		}
 		searchadv := elemnt.SelectAttr("search-adv")
 		if searchadv!=nil&&searchadv.Value=="true"{
-			cc.ISSearchAdv=true
+			cc.IsSearchAdv=true
 		}
 		navname := elemnt.SelectAttr("navname")
 		if navname!=nil{
-			cc.HasNavname=true
-			cc.Navname=navname.Value
+			cc.HasNavName=true
+			cc.NavName=navname.Value
 		}
 		searchbtnicon := elemnt.SelectAttr("searchbtnicon")
 		if searchbtnicon!=nil{
@@ -167,7 +167,7 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 		timetransfer := elemnt.SelectAttr("timetransfer")
 		if timetransfer!=nil{
 			cc.HasTimetransfer=true
-			cc.Timetransfer=timetransfer.Value
+			cc.TimeTransfer=timetransfer.Value
 		}
 		precision := elemnt.SelectAttr("precision")
 		if precision!=nil{

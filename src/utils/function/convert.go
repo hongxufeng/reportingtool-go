@@ -333,6 +333,72 @@ func Join(v interface{}, sep string) (string, error) {
 	}
 }
 
+//截取字符串 start 起点下标 length 需要截取的长度
+func Substr(str string, start int, length int) string {
+	rs := []rune(str)
+	rl := len(rs)
+	end := 0
+
+	if start < 0 {
+		start = rl - 1 + start
+	}
+	end = start + length
+
+	if start > end {
+		start, end = end, start
+	}
+
+	if start < 0 {
+		start = 0
+	}
+	if start > rl {
+		start = rl
+	}
+	if end < 0 {
+		end = 0
+	}
+	if end > rl {
+		end = rl
+	}
+
+	return string(rs[start:end])
+}
+
+//截取字符串 start 起点下标 length 需要截取的长度
+func SubstrS(str string, start int) string {
+	rs := []rune(str)
+	rl := len(rs)
+
+	if start < 0 {
+		start = rl - 1 + start
+	}
+
+	if start < 0 {
+		start = 0
+	}
+	if start > rl {
+		start = rl
+	}
+
+	return string(rs[start:rl])
+}
+
+//截取字符串 start 起点下标 end 终点下标(不包括)
+func SubstrSE(str string, start int, end int) (string, error) {
+	rs := []rune(str)
+	length := len(rs)
+
+	if start < 0 || start > length {
+		return str,errors.New("start is wrong")
+	}
+
+	if end < 0 || end > length {
+		return str,errors.New("end is wrong")
+	}
+
+	return string(rs[start:end]),nil
+}
+
 //结构->MAP
 func Struct2Map(obj interface{}) map[string]interface{} {
 	t := reflect.TypeOf(obj)

@@ -8,8 +8,52 @@ import (
 	"utils/service"
 	"fmt"
 	"datahelper/db"
+	"time"
 )
 
+func Format(colConfig *model.ColumnConfig,cellValue string)  string {
+	if cellValue==""{
+		return ""
+	}
+	var formattedCell string
+	if colConfig.HasDateformat{
+		time,e:=time.Parse(colConfig.DateFormat,cellValue)
+		if e==nil{
+			formattedCell=time.String()
+		}else {
+			formattedCell=cellValue
+		}
+	}else if colConfig.HasTimeTransfer{
+		switch colConfig.TimeTransfer {
+		case "second":
+			val,e:=function.StringToInt(cellValue)
+			if e==nil{
+				formattedCell=function.IntToString(val/(24 * 60 * 60))+"日"+function.IntToString((val - (val / (24 * 60 * 60)) * 60 * 60 * 24) / 3600)+"时"+function.IntToString((val - (val / (60 * 60)) * 60 * 60) / 60)+"分"+function.IntToString(val - (val / 60) * 60)+"秒"
+			}else {
+				formattedCell=cellValue
+			}
+			break
+		default:
+			formattedCell = cellValue
+			break
+		}
+	}else {
+		formattedCell = cellValue;
+	}
+	if colConfig.HasFormatterR {
+		formattedCell = ReplacePlaceHolder(colConfig.FormatterR, formattedCell);
+	}
+	return  formattedCell
+}
+
+func ReplacePlaceHolder(inStr string,cellValue string)  string {
+	outStr:= inStr
+	for i,j:=strings.Index(inStr,"$$:"),strings.Index(inStr,":$$");i>-1; i,j=strings.Index(function.SubstrS(inStr,i+1),"$$:"),strings.Index(function.SubstrS(inStr,j+1),":$$") {
+		
+	}
+	//for i := inStr.IndexOf("$$:"), j := inStr.IndexOf(":$$"); i > -1; i = inStr.IndexOf("$$:", i + 1), j = inStr.IndexOf(":$$", j + 1))
+	return outStr
+}
 func AppendWhere(req *service.HttpRequest,param *Param,buf *bytes.Buffer)  {
 	hasWhere := false
 	for _,colconfig:=range param.ColConfigDict{

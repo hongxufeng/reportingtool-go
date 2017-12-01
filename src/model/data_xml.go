@@ -9,19 +9,19 @@ type ColumnConfig struct {
 	HasFormatter bool
 	HasFormatterR bool
 	//HasLinkTo bool
-	HasNavname bool
+	HasNavName bool
 	HasPrecision bool
 	//HasRegex bool
 	HasSearchType bool
 	HasSelectorMulti bool
-	HasTimetransfer bool
+	HasTimeTransfer bool
 	HasSearchBtnIcon bool
 	HasSearchBtnFunc bool
 	//IsInPercentageform bool
-	IsInselector bool
+	IsInSelector bool
 	Search4Admin bool
 	ISCheckBox bool
-	ISSearchAdv bool
+	IsSearchAdv bool
 	HasPower bool
 	Power uint8
 	SearchBtnIcon string
@@ -29,13 +29,13 @@ type ColumnConfig struct {
 	BtnIcon string
 	BtnFunc string
 	ColumnName string
-	Dateformat string
+	DateFormat string
 	DefaultValue string
 	Formatter string
 	FormatterR string
 	//LinkTo string
-	Navname string
-	Timetransfer string
+	NavName string
+	TimeTransfer string
 	Precision string
 	//RegexPattern string
 	//RegexReplacement string
