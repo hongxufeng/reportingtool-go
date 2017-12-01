@@ -102,6 +102,13 @@ func ToString(v interface{}) string {
 	}
 }
 
+func PArrayToSArray(v []interface{})  (p []string)  {
+	for _,k:=range v {
+		p=append(p, ToString(k))
+	}
+	return
+}
+
 func ToBool(v interface{}) (bool, error) {
 	switch value := v.(type) {
 	case bool:
@@ -230,6 +237,12 @@ func ToStringSlice(v interface{}) ([]string, error) {
 		r := make([]string, 0, len(slice))
 		for _, item := range slice {
 			r = append(r, fmt.Sprintf("%v", item))
+		}
+		return r, nil
+	case []*string:
+		r := make([]string, 0, len(slice))
+		for _, item := range slice {
+			r = append(r, fmt.Sprintf("%v", *item))
 		}
 		return r, nil
 	default:

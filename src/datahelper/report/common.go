@@ -74,15 +74,20 @@ func BuildQuerySQL(req *service.HttpRequest,param *Param) (string,error){
 	return buf.String(),nil
 }
 
-func GetTableCount(param *Param,fields string) (count int,err error){
+func GetSelectQuery(param *Param,fields string) (query string,err error){
 	var buf bytes.Buffer
-	buf.WriteString("select count(")
+	buf.WriteString("select ")
 	buf.WriteString(fields)
-	buf.WriteString(") from ")
+	buf.WriteString(" from ")
 	buf.WriteString(param.TableConfig.Name)
+	query=buf.String()
+	fmt.Println(query)
+	return
+}
 
-	fmt.Println(buf.String())
-	result,err:=db.Query(buf.String())
+func GetTableCount(param *Param,fields string) (count int,err error){
+	query,_:=GetSelectQuery(param,"count("+fields+")")
+	result,err:=db.Query(query)
 	if err!=nil{
 		return
 	}
@@ -167,7 +172,32 @@ func BuildSelectorBar(param *Param,size int,selectorbuf *bytes.Buffer,conditionb
 		if !param.ColConfigDict[i].IsInselector{
 			continue
 		}
-		//being,html:=db.GetSelectorBarCache(param.TableConfig.Name,param.ColConfigDict[i].Tag)
+		count,e:=GetTableCount(param,param.ColConfigDict[i].Tag)
+		if e!=nil{
+			return e
+		}
+		var s []interface{}
+		for i := 0; i < count; i++ {
+			var white = ""
+			var p *string
+			p = &white
+			s = append(s, p)
+		}
+		query,_:=GetSelectQuery(param,"distinct("+param.ColConfigDict[i].Tag+")")
+		result,e:=db.Query(query)
+		if e!=nil{
+			return e
+		}
+		if result.Next(){
+			if e=result.Scan(s...);e!=nil{
+				return e
+			}
+			fmt.Println(function.PArrayToSArray(s))
+
+			//db.SetSelectorBarCache(param.TableConfig.Name,param.ColConfigDict[i].Tag,)
+		}
+		//being,selectordata:=db.GetSelectorBarCache(param.TableConfig.Name,param.ColConfigDict[i].Tag)
+
 		//count,err:=GetTableCount(param,"DISTINCT "+param.ColConfigDict[i].Tag)
 
 	}

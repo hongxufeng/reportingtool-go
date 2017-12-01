@@ -175,7 +175,10 @@ func BuildTableBody(param *Param, rows *sql.Rows,size int, bodybuf *bytes.Buffer
 			bodybuf.WriteString("</td>")
 		}
 		fmt.Println(s...)
-		rows.Scan(s...)
+		err=rows.Scan(s...)
+		if err!=nil{
+			return
+		}
 		fmt.Println(s)
 		for i := 0; i < size; i++ {
 			if param.ColConfigDict[i].Visibility == "none" {
