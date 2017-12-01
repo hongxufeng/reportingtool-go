@@ -214,7 +214,7 @@ func BuildTablePager(param *Param,bodybuf *bytes.Buffer,count int,style string) 
 func BuildSelectorBar(req *service.HttpRequest,param *Param,size int,selectorbuf *bytes.Buffer,conditionbuf *bytes.Buffer)  (err error){
 	for i:=0; i<size;i++  {
 		selectordata:=make(map[string]string, 0)
-		if !param.ColConfigDict[i].IsInselector{
+		if !param.ColConfigDict[i].IsInSelector{
 			continue
 		}
 		being,selectordata:=db.HGetSelectorBarCache(param.TableConfig.Name,param.ColConfigDict[i].Tag)

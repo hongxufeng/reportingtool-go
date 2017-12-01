@@ -39,7 +39,7 @@ func BuildSearchingBlock(req *service.HttpRequest, columnconfig *model.ColumnCon
 		return
 	}
 	searchbuf.WriteString("<div")
-	if columnconfig.ISSearchAdv {
+	if columnconfig.IsSearchAdv {
 		searchbuf.WriteString(" class=\"rt-search-adv\"")
 	}
 	searchbuf.WriteString("><span class=\"rt-search-heading\">")

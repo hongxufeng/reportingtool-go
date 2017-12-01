@@ -166,7 +166,7 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 		}
 		timetransfer := elemnt.SelectAttr("timetransfer")
 		if timetransfer!=nil{
-			cc.HasTimetransfer=true
+			cc.HasTimeTransfer=true
 			cc.TimeTransfer=timetransfer.Value
 		}
 		precision := elemnt.SelectAttr("precision")
