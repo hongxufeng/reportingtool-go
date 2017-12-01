@@ -162,7 +162,7 @@ func BuildTableBody(param *Param, rows *sql.Rows,size int, bodybuf *bytes.Buffer
 			break
 		}
 	}
-	for i := 0; rows.Next(); i++ {
+	for rows.Next() {
 		bodybuf.WriteString("<tr>")
 		if param.Settings.HasCheckbox {
 			bodybuf.WriteString("<td class=\"rt-td-checkbox\" name=\"rt-td-checkbox\" data-value=\"")
@@ -180,6 +180,7 @@ func BuildTableBody(param *Param, rows *sql.Rows,size int, bodybuf *bytes.Buffer
 			return
 		}
 		fmt.Println(s)
+		fmt.Println(function.PArrayToSArray(s))
 		for i := 0; i < size; i++ {
 			if param.ColConfigDict[i].Visibility == "none" {
 				continue

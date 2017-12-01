@@ -169,38 +169,38 @@ func BuildTablePager(param *Param,bodybuf *bytes.Buffer,count int,style string) 
 
 func BuildSelectorBar(param *Param,size int,selectorbuf *bytes.Buffer,conditionbuf *bytes.Buffer)  (err error){
 	for i:=0; i<size;i++  {
+		selectordata:=make(map[string]string, 0)
 		if !param.ColConfigDict[i].IsInselector{
 			continue
 		}
-		count,e:=GetTableCount(param,param.ColConfigDict[i].Tag)
-		if e!=nil{
-			return e
-		}
-		var s []interface{}
-		for i := 0; i < count; i++ {
-			var white = ""
-			var p *string
-			p = &white
-			s = append(s, p)
-		}
-		query,_:=GetSelectQuery(param,"distinct("+param.ColConfigDict[i].Tag+")")
-		result,e:=db.Query(query)
-		if e!=nil{
-			return e
-		}
-		if result.Next(){
-			if e=result.Scan(s...);e!=nil{
+		being,selectordata:=db.HGetSelectorBarCache(param.TableConfig.Name,param.ColConfigDict[i].Tag)
+		if being==true{
+			fmt.Println(being,selectordata)
+		}else {
+			e:=db.SetSelectorBarCacheDuration(param.TableConfig.Name,param.ColConfigDict[i].Tag)
+			if e!=nil{
+				return  e
+			}
+			fmt.Println("nothing")
+			query,_:=GetSelectQuery(param,"distinct("+param.ColConfigDict[i].Tag+")")
+			result,e:=db.Query(query)
+			if e!=nil{
 				return e
 			}
-			fmt.Println(function.PArrayToSArray(s))
-
-			//db.SetSelectorBarCache(param.TableConfig.Name,param.ColConfigDict[i].Tag,)
+			for j:=0;result.Next();j++{
+				var value string
+				if e=result.Scan(&value);e!=nil{
+					fmt.Println("BuildSelectorBar:",e.Error())
+					return e
+				}
+				fmt.Println(value)
+				selectordata[function.IntToString(j)]=value
+				e:=db.HSetSelectorBarCache(param.TableConfig.Name,param.ColConfigDict[i].Tag,function.IntToString(j),value)
+				if e!=nil{
+					return e
+				}
+			}
 		}
-		//being,selectordata:=db.GetSelectorBarCache(param.TableConfig.Name,param.ColConfigDict[i].Tag)
-
-		//count,err:=GetTableCount(param,"DISTINCT "+param.ColConfigDict[i].Tag)
-
 	}
-
 	return  nil
 }
