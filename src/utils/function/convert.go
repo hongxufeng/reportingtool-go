@@ -387,6 +387,7 @@ func SubstrS(str string, start int) string {
 func SubstrSE(str string, start int, end int) (string, error) {
 	rs := []rune(str)
 	length := len(rs)
+	fmt.Println(length)
 
 	if start < 0 || start > length {
 		return str,errors.New("start is wrong")

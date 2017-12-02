@@ -195,7 +195,7 @@ func BuildTableBody(param *Param, rows *sql.Rows,size int, bodybuf *bytes.Buffer
 				bodybuf.WriteString(" class=\"hiddenCol\"")
 			}
 			cell := function.ToString(s[i])
-			//cell=format(cell)
+			cell=Format(&param.ColConfigDict[i],cell)
 			fmt.Println(cell)
 			bodybuf.WriteString(" data-value=\"")
 			bodybuf.WriteString(cell)
