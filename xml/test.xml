@@ -2,7 +2,7 @@
 <tables>
     <table id="用户表"
            name="w_user_list" defaultorder="uid desc">
-        <nickname search-type="true" >昵称</nickname>
+        <nickname search-type="true" formatter="PutInText">昵称</nickname>
         <uid  selector="true">用户ID</uid>
         <username search-type="true" formatter-r="我即是$$::$$">用户名称</username>
         <buttons>
