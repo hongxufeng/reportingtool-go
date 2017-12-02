@@ -51,6 +51,7 @@ td .glyphicon{cursor:pointer;}
     -moz-transition: width 0.8s, height 0.8s, -moz-transform 0.8s; /* Firefox 4 */
     -webkit-transition: width 0.8s, height 0.8s, -webkit-transform 0.8s; /* Safari and Chrome */
     -o-transition: width 0.8s, height 0.8s, -o-transform 0.8s; /* Opera */
+    cursor: pointer;
 }
 [name="操作"] > .glyphicon:hover {
     transform: rotate(360deg);
