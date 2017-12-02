@@ -49,7 +49,18 @@ func Format(colConfig *model.ColumnConfig,cellValue string)  string {
 func ReplacePlaceHolder(inStr string,cellValue string)  string {
 	outStr:= inStr
 	for i,j:=strings.Index(inStr,"$$:"),strings.Index(inStr,":$$");i>-1; i,j=strings.Index(function.SubstrS(inStr,i+1),"$$:"),strings.Index(function.SubstrS(inStr,j+1),":$$") {
-		
+		startPos := i + 3
+		endPos := j
+		colName,_:= function.SubstrSE(inStr,startPos, endPos)
+		if colName==""{
+			if cellValue==""{
+				outStr=strings.Replace(outStr,"$$::$$", "",-1)
+			}else {
+				outStr=strings.Replace(outStr,"$$::$$", cellValue,-1)
+			}
+		}else {
+			outStr=strings.Replace(outStr,"$$:"+colName+":$$",cellValue,-1)
+		}
 	}
 	//for i := inStr.IndexOf("$$:"), j := inStr.IndexOf(":$$"); i > -1; i = inStr.IndexOf("$$:", i + 1), j = inStr.IndexOf(":$$", j + 1))
 	return outStr

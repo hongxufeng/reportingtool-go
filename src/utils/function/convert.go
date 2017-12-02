@@ -421,7 +421,7 @@ func Struct2Map(obj interface{}) map[string]interface{} {
 func Struct2Map2(obj interface{}) map[string]interface{} {
 	t := reflect.TypeOf(obj)
 	if t.Kind() != reflect.Struct {
-		return nil
+	return nil
 	}
 	v := reflect.ValueOf(obj)
 	var data = make(map[string]interface{})

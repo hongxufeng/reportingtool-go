@@ -4,7 +4,7 @@
            name="w_user_list" defaultorder="uid desc">
         <nickname search-type="true" >昵称</nickname>
         <uid  selector="true">用户ID</uid>
-        <username search-type="true" >用户名称</username>
+        <username search-type="true" formatter-r="我即是$$::$$">用户名称</username>
         <buttons>
             &lt;span class="glyphicon glyphicon-folder-open" title="浏览" onclick="view(this,'OBJ_ID')">&lt;/span>
             &lt;span class="glyphicon glyphicon-edit" title="编辑" onclick="edit(this,'OBJ_ID')">&lt;/span>
