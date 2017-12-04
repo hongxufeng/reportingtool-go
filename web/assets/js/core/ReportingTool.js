@@ -55,8 +55,8 @@
 
         this.html("<ol class=\"rt-nav breadcrumb\"></ol>\
                       <div class=\"rt-condition\"></div>\
-                      <div class=\"rt-search rt-" + settings.style + "\" style=\"display:none\"></div>\
                       <div class=\"rt-selector\"></div>\
+                      <div class=\"rt-search rt-" + settings.style + "\" style=\"display:none\"></div>\
                       <div class=\"rt-body rt-" + settings.style + "\"></div>");
 
         var tableSearcher = "<div class=\"rt-search-cdts\"></div>\

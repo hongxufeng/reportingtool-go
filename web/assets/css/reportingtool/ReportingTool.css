@@ -32,7 +32,7 @@ table [data-table]{color:#337AB7;font-weight:bold;cursor:pointer;}
 .rt-body tbody{background-color:#FFFFFF;}
 .rt-body th,.rt-body td{text-align:center !important;}
 .rt-body td{vertical-align:middle !important;}
-.rt-body th{border-right:1px solid #FFFFFF;font-weight:bold;padding:7px 12px 6px 12px;}
+.rt-body th{font-weight:bold;padding:7px 12px 6px 12px;}
 .rt-sort{cursor:pointer;}
 .rt-sort>.glyphicon{font-size:9px;margin-left:6px;color:lightskyblue}
 .rt-tr-onhover{background-color:#E1F1FF}
@@ -82,7 +82,7 @@ td .glyphicon{cursor:pointer;}
 .rt-colPager-next{position:absolute;top:13px;right:-16px;cursor:pointer;z-index:1;}
 /*selector*/
 .rt-selector{margin-bottom:36px;}
-.rt-selector-folder{border-bottom:1px solid #DDDDDD;padding-top:10px;position:relative;}
+.rt-selector-folder{border:1px solid #DDDDDD;padding-top:10px;position:relative;}
 .rt-selector-key{float:left;margin-left:10px;width:100px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .rt-selector-value{margin-right:140px;}
 .rt-selector-list{list-style:none;height:30px;overflow:hidden;margin:0;padding:0;}
@@ -100,7 +100,7 @@ td .glyphicon{cursor:pointer;}
 .rt-multiselect-btns{text-align:center;display:none;margin:6px 0px 12px 0px;}
 .rt-multiselect-btns>button{margin:0px 8px;display:none;}
 /*condition*/
-.rt-condition{border-top:1px solid #DDDDDD;padding-top:16px;margin-bottom:16px;}
+.rt-condition{border:1px solid #DDDDDD;padding-top:16px;margin-bottom:16px;}
 .rt-condition>div{display:inline-block;border:1px solid #DDDDDD;padding:2px 4px;margin-right:12px;}
 .rt-condition-remove{margin-left:6px;font-size:12px;cursor:pointer;}
 /*rt-node*/
