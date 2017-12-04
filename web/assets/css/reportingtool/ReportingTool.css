@@ -9,7 +9,7 @@
 .rt-search-txt.date,.rt-search-txt.range{width:76.5px}
 .rt-search-cdts{padding-right:138px;-moz-box-sizing:border-box;box-sizing:border-box;}
 .rt-search-cdts>div{position:relative;}
-.rt-search{border:1px solid #DDDDDD;border-radius:4px;position:relative;padding:16px 0px 0px 0px;margin-bottom:24px;}
+.rt-search{border:1px solid #DDDDDD;border-radius:4px;position:relative;padding:16px 0px 0px 0px;margin-bottom:16px;}
 .rt-search.rt-rect{background-color:#F9F9FB}
 .rt-search-btns{position:absolute;top:21px;right:5px;width:118px;}
 .rt-search-btns>span{cursor:pointer;}
@@ -81,13 +81,13 @@ td .glyphicon{cursor:pointer;}
 .rt-colPager-prev{position:absolute;top:13px;left:-16px;cursor:pointer;z-index:1;}
 .rt-colPager-next{position:absolute;top:13px;right:-16px;cursor:pointer;z-index:1;}
 /*selector*/
-.rt-selector{margin-bottom:36px;}
+.rt-selector{margin-bottom:16px;}
 .rt-selector-folder{border:1px solid #DDDDDD;padding-top:10px;position:relative;}
-.rt-selector-key{float:left;margin-left:10px;width:100px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.rt-selector-key{float:left;margin-left:16px;width:95px;max-width:95px;overflow:hidden;text-align:right;text-overflow:ellipsis;white-space:nowrap;}
 .rt-selector-value{margin-right:140px;}
 .rt-selector-list{list-style:none;height:30px;overflow:hidden;margin:0;padding:0;}
 .rt-selector-list>li{float:left;height:26px;width:120px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin:0px 5px 5px 0px;}
-.rt-selector-list>li>span{cursor:pointer;margin-left:4px;}
+.rt-selector-list>li>span{cursor:pointer;text-align: center}
 .rt-selector-list-text>.glyphicon{margin-right:4px;display:none;}
 .rt-selector-list-text:hover{color:#00A0DC;}
 .rt-selector-btns{position:absolute;top:10px;right:10px;width:120px;}
@@ -100,8 +100,8 @@ td .glyphicon{cursor:pointer;}
 .rt-multiselect-btns{text-align:center;display:none;margin:6px 0px 12px 0px;}
 .rt-multiselect-btns>button{margin:0px 8px;display:none;}
 /*condition*/
-.rt-condition{border:1px solid #DDDDDD;margin:16px;}
-.rt-condition>div{display:inline-block;border:1px solid #DDDDDD;padding:2px 4px;margin-right:12px;}
+.rt-condition{border:1px solid #DDDDDD;margin-bottom:16px;}
+.rt-condition>div{display:inline-block;border:1px solid #DDDDDD;padding:2px 4px;margin:12px;}
 .rt-condition-remove{margin-left:6px;font-size:12px;cursor:pointer;}
 /*rt-node*/
 .rt-node-cols,.rt-node-btns{display:inline-block;}

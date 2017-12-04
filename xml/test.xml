@@ -3,7 +3,7 @@
     <table id="用户表"
            name="w_user_list" defaultorder="uid desc">
         <nickname search-type="true" >昵称</nickname>
-        <uid  selector="true" formatter="PutInText">用户ID</uid>
+        <uid  selector="true" formatter="PutInText" selector-multi="true">用户ID</uid>
         <username search-type="true" formatter-r="我即是$$::$$">用户名称</username>
         <buttons>
             &lt;span class="glyphicon glyphicon-folder-open" title="浏览" onclick="view(this,'OBJ_ID')">&lt;/span>
