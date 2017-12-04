@@ -22,7 +22,9 @@ func HGetSelectorBarCache(table string,selectorfeild string)  (being bool,select
 		being=false
 	} else if err != nil {
 		being=false
-	} else {
+	} else if len(selectordata)==0{
+		being=false
+	}else {
 		being=true
 	}
 	return

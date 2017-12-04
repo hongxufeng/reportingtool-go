@@ -86,9 +86,9 @@ td .glyphicon{cursor:pointer;}
 .rt-selector-key{float:left;margin-left:16px;width:95px;max-width:95px;overflow:hidden;text-align:right;text-overflow:ellipsis;white-space:nowrap;}
 .rt-selector-value{margin-right:140px;}
 .rt-selector-list{list-style:none;height:30px;overflow:hidden;margin:0;padding:0;}
-.rt-selector-list>li{float:left;height:26px;width:120px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin:0px 5px 5px 0px;}
-.rt-selector-list>li>span{cursor:pointer;text-align: center}
-.rt-selector-list-text>.glyphicon{margin-right:4px;display:none;}
+.rt-selector-list>li{float:left;height:26px;width:120px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin:0px 5px 5px 0px;text-align: center;}
+.rt-selector-list>li>span{cursor:pointer;}
+.rt-selector-list-text>.glyphicon{margin-right:4px;display:none;text-align: center}
 .rt-selector-list-text:hover{color:#00A0DC;}
 .rt-selector-btns{position:absolute;top:10px;right:10px;width:120px;}
 .rt-selector-btns>span{cursor:pointer;}
