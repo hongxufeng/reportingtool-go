@@ -41,8 +41,8 @@ type ColumnConfig struct {
 	//RegexReplacement string
 	SearchType string
 	Selector string
-	//SelectorFunc string
-	//SelectorText string
+	SelectorFunc string
+	SelectorText string
 	Visibility string
 	//Passedcol []string
 }
