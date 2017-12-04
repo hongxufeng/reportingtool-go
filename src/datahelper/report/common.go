@@ -78,9 +78,16 @@ func AppendWhere(req *service.HttpRequest, param *Param, buf *bytes.Buffer) {
 			if i!=0{
 				buf.WriteString(" or ")
 			}
+			_,ok:=function.StringToInt(v)
 			buf.WriteString(colconfig.Tag)
 			buf.WriteString("=")
-			buf.WriteString(v)
+			if ok==nil{
+				buf.WriteString(v)
+			}else {
+				buf.WriteString("\"")
+				buf.WriteString(v)
+				buf.WriteString("\"")
+			}
 		}
 		buf.WriteString(")")
 		buf.WriteString(" and ")
