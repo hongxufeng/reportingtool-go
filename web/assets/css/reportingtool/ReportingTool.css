@@ -100,7 +100,7 @@ td .glyphicon{cursor:pointer;}
 .rt-multiselect-btns{text-align:center;display:none;margin:6px 0px 12px 0px;}
 .rt-multiselect-btns>button{margin:0px 8px;display:none;}
 /*condition*/
-.rt-condition{border:1px solid #DDDDDD;padding-top:16px;margin-bottom:16px;}
+.rt-condition{border:1px solid #DDDDDD;margin:16px;}
 .rt-condition>div{display:inline-block;border:1px solid #DDDDDD;padding:2px 4px;margin-right:12px;}
 .rt-condition-remove{margin-left:6px;font-size:12px;cursor:pointer;}
 /*rt-node*/
