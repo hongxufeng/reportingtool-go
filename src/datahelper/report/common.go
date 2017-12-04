@@ -72,10 +72,16 @@ func AppendWhere(req *service.HttpRequest, param *Param, buf *bytes.Buffer) {
 			hasWhere = true
 			buf.WriteString(" where ")
 		}
-		buf.WriteString(colconfig.Tag)
-		buf.WriteString("=")
 		buf.WriteString("(")
-		buf.WriteString(strings.Join(strings.Split(value, ","), " or "))
+		queryList:=strings.Split(value, "|")
+		for i,v:=range queryList {
+			if i!=0{
+				buf.WriteString(" or ")
+			}
+			buf.WriteString(colconfig.Tag)
+			buf.WriteString("=")
+			buf.WriteString(v)
+		}
 		buf.WriteString(")")
 		buf.WriteString(" and ")
 	}
