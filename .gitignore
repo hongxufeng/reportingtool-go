@@ -1,1 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
+
+pkg
+configself.yaml
+src/github
+src/gopkg.in
+reportingtool.exe
