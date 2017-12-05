@@ -3,23 +3,23 @@ package report
 import (
 	"bytes"
 	"database/sql"
+	"datahelper/cellformatter"
+	"errors"
+	"fmt"
+	"model"
+	"reflect"
 	"strings"
 	"utils/function"
-	"fmt"
 	"utils/service"
-	"model"
-	"datahelper/cellformatter"
-	"reflect"
-	"errors"
 )
 
-func GetTable(req *service.HttpRequest, param *Param, rows *sql.Rows,size int, bodybuf *bytes.Buffer, searchbuf *bytes.Buffer, rowbuf *bytes.Buffer, count int) (err error) {
+func GetTable(req *service.HttpRequest, param *Param, rows *sql.Rows, size int, bodybuf *bytes.Buffer, searchbuf *bytes.Buffer, rowbuf *bytes.Buffer, count int) (err error) {
 	bodybuf.WriteString("<table class=\"table table-condensed\">")
 	err = BuildTableHead(req, param, size, bodybuf, searchbuf)
 	if err != nil {
 		return
 	}
-	err = BuildTableBody(param, rows,size, bodybuf)
+	err = BuildTableBody(param, rows, size, bodybuf)
 	if err != nil {
 		return
 	}
@@ -100,10 +100,10 @@ func BuildTableHead(req *service.HttpRequest, param *Param, size int, bodybuf *b
 		bodybuf.WriteString("</div>")
 		bodybuf.WriteString("</th>")
 	}
-	fmt.Println("size:",size)
+	fmt.Println("size:", size)
 	for i := 0; i < size; i++ {
 		if param.ColConfigDict[i].Visibility == "none" {
-			continue;
+			continue
 		}
 		err = BuildSearchingBlock(req, &param.ColConfigDict[i], searchbuf)
 		//fmt.Println("searchbuf:",searchbuf.String())
@@ -113,9 +113,9 @@ func BuildTableHead(req *service.HttpRequest, param *Param, size int, bodybuf *b
 		bodybuf.WriteString("<th ")
 		bodybuf.WriteString("class=\"")
 		if param.ColConfigDict[i].Visibility == "hidden" {
-			bodybuf.WriteString("hiddenCol");
+			bodybuf.WriteString("hiddenCol")
 		} else {
-			bodybuf.WriteString("rt-sort");
+			bodybuf.WriteString("rt-sort")
 		}
 		bodybuf.WriteString("\"")
 		bodybuf.WriteString(" name=\"")
@@ -147,10 +147,10 @@ func BuildTableHead(req *service.HttpRequest, param *Param, size int, bodybuf *b
 	return
 }
 
-func BuildTableBody(param *Param, rows *sql.Rows,size int, bodybuf *bytes.Buffer) (err error) {
+func BuildTableBody(param *Param, rows *sql.Rows, size int, bodybuf *bytes.Buffer) (err error) {
 	var checkvalue string
 	var formatter cellformatter.CellFormatter
-	fv:=reflect.ValueOf(&formatter)
+	fv := reflect.ValueOf(&formatter)
 	bodybuf.WriteString("<tbody>")
 
 	var s []interface{}
@@ -180,8 +180,8 @@ func BuildTableBody(param *Param, rows *sql.Rows,size int, bodybuf *bytes.Buffer
 			bodybuf.WriteString("</td>")
 		}
 		fmt.Println(s...)
-		err=rows.Scan(s...)
-		if err!=nil{
+		err = rows.Scan(s...)
+		if err != nil {
 			return
 		}
 		fmt.Println(s)
@@ -190,7 +190,7 @@ func BuildTableBody(param *Param, rows *sql.Rows,size int, bodybuf *bytes.Buffer
 			if param.ColConfigDict[i].Visibility == "none" {
 				continue
 			}
-			if param.ColConfigDict[i].HasPower&&param.Power>=param.ColConfigDict[i].Power{
+			if param.ColConfigDict[i].HasPower && param.Power >= param.ColConfigDict[i].Power {
 				continue
 			}
 			bodybuf.WriteString("<td name=\"")
@@ -200,20 +200,20 @@ func BuildTableBody(param *Param, rows *sql.Rows,size int, bodybuf *bytes.Buffer
 				bodybuf.WriteString(" class=\"hiddenCol\"")
 			}
 			cell := function.ToString(s[i])
-			cell=Format(&param.ColConfigDict[i],cell)
+			cell = Format(&param.ColConfigDict[i], cell)
 			fmt.Println(cell)
 			bodybuf.WriteString(" data-value=\"")
 			bodybuf.WriteString(cell)
 			bodybuf.WriteString("\">")
 			if param.ColConfigDict[i].HasFormatter {
 				//反射查找相应函数
-				method:=fv.MethodByName(param.ColConfigDict[i].Formatter)
-				values:=method.Call([]reflect.Value{reflect.ValueOf(param.ColConfigDict[i]), reflect.ValueOf(cell)})
+				method := fv.MethodByName(param.ColConfigDict[i].Formatter)
+				values := method.Call([]reflect.Value{reflect.ValueOf(param.ColConfigDict[i]), reflect.ValueOf(cell)})
 				fmt.Println(values)
 				if len(values) != 1 {
-					err=errors.New(fmt.Sprintf("method %s return value is not 1.",param.ColConfigDict[i].Formatter ))
+					err = errors.New(fmt.Sprintf("method %s return value is not 1.", param.ColConfigDict[i].Formatter))
 				}
-				cell=values[0].String()
+				cell = values[0].String()
 				//cellValue = FormatCell(dataTable.Columns, row, colConfig.Formatter, colName, cellValue);
 			}
 			bodybuf.WriteString(cell)
@@ -245,7 +245,7 @@ func BuildTableBody(param *Param, rows *sql.Rows,size int, bodybuf *bytes.Buffer
 
 func BuildNullRow(param *Param, size int, rowbuf *bytes.Buffer) (err error) {
 	var formatter cellformatter.CellFormatter
-	fv:=reflect.ValueOf(&formatter)
+	fv := reflect.ValueOf(&formatter)
 	rowbuf.WriteString("<tr>")
 	if param.Settings.HasCheckbox {
 		rowbuf.WriteString("<td class=\"rt-td-checkbox\" name=\"rt-td-checkbox\" data-value=\"\">")
@@ -265,8 +265,8 @@ func BuildNullRow(param *Param, size int, rowbuf *bytes.Buffer) (err error) {
 			rowbuf.WriteString(" class=\"hiddenCol\"")
 		}
 		cell := function.ToString(param.ColConfigDict[i].Text)
-		if param.ColConfigDict[i].HasDefaultValue{
-			cell=param.ColConfigDict[i].DefaultValue
+		if param.ColConfigDict[i].HasDefaultValue {
+			cell = param.ColConfigDict[i].DefaultValue
 		}
 		fmt.Println(cell)
 		rowbuf.WriteString(" data-value=\"")
@@ -274,13 +274,13 @@ func BuildNullRow(param *Param, size int, rowbuf *bytes.Buffer) (err error) {
 		rowbuf.WriteString("\">")
 		if param.ColConfigDict[i].HasFormatter {
 			//反射查找相应函数
-			method:=fv.MethodByName(param.ColConfigDict[i].Formatter)
-			values:=method.Call([]reflect.Value{reflect.ValueOf(param.ColConfigDict[i]), reflect.ValueOf(cell)})
+			method := fv.MethodByName(param.ColConfigDict[i].Formatter)
+			values := method.Call([]reflect.Value{reflect.ValueOf(param.ColConfigDict[i]), reflect.ValueOf(cell)})
 			fmt.Println(values)
 			if len(values) != 1 {
-				err=errors.New(fmt.Sprintf("method %s return value is not 1.",param.ColConfigDict[i].Formatter ))
+				err = errors.New(fmt.Sprintf("method %s return value is not 1.", param.ColConfigDict[i].Formatter))
 			}
-			cell=values[0].String()
+			cell = values[0].String()
 			//cellValue = FormatCell(dataTable.Columns, row, colConfig.Formatter, colName, cellValue);
 		}
 		rowbuf.WriteString(cell)

@@ -2,13 +2,13 @@ package report
 
 import (
 	"bytes"
-	"model"
-	"utils/function"
-	"strings"
-	"utils/service"
-	"fmt"
 	"datahelper/db"
+	"fmt"
+	"model"
+	"strings"
 	"time"
+	"utils/function"
+	"utils/service"
 )
 
 func Format(colConfig *model.ColumnConfig, cellValue string) string {
@@ -38,11 +38,11 @@ func Format(colConfig *model.ColumnConfig, cellValue string) string {
 			break
 		}
 	} else {
-		formattedCell = cellValue;
+		formattedCell = cellValue
 	}
 	fmt.Println(colConfig.HasFormatterR)
 	if colConfig.HasFormatterR {
-		formattedCell = ReplacePlaceHolder(colConfig.FormatterR, formattedCell);
+		formattedCell = ReplacePlaceHolder(colConfig.FormatterR, formattedCell)
 	}
 	return formattedCell
 }
@@ -73,17 +73,17 @@ func AppendWhere(req *service.HttpRequest, param *Param, buf *bytes.Buffer) {
 			buf.WriteString(" where ")
 		}
 		buf.WriteString("(")
-		queryList:=strings.Split(value, "|")
-		for i,v:=range queryList {
-			if i!=0{
+		queryList := strings.Split(value, "|")
+		for i, v := range queryList {
+			if i != 0 {
 				buf.WriteString(" or ")
 			}
-			_,ok:=function.StringToInt(v)
+			_, ok := function.StringToInt(v)
 			buf.WriteString(colconfig.Tag)
 			buf.WriteString("=")
-			if ok==nil{
+			if ok == nil {
 				buf.WriteString(v)
-			}else {
+			} else {
 				buf.WriteString("\"")
 				buf.WriteString(v)
 				buf.WriteString("\"")
@@ -262,14 +262,14 @@ func BuildSelectorBar(req *service.HttpRequest, param *Param, size int, selector
 		}
 		var value string
 		e := req.GetParams(param.ColConfigDict[i].Tag, &value)
-		if (e == nil) {
+		if e == nil {
 			if value == "" {
 				continue
 			}
 			originValue := strings.Split(value, "|")
 			var valueText []string
 			for _, v := range originValue {
-				sd, ok := selectordata[v];
+				sd, ok := selectordata[v]
 				if !ok {
 					continue
 				}
