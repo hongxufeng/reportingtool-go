@@ -13,7 +13,7 @@
 })();
 
 (function ($) {
-    var serverURL = "user/report/"
+    var serverURL = "user/report/";
 
     var cachedRows = {};
     var nullRows = {};
@@ -89,7 +89,7 @@
                 }
             }
             return (false);
-        }
+        };
         var getQueryVariable = function (variable) {
             var query = window.location.search.substring(1);
             var vars = query.split("&");
@@ -100,7 +100,7 @@
                 }
             }
             return (false);
-        }
+        };
 
         globalVars.pageTitle = $("title").html();
 
@@ -123,7 +123,7 @@
             else {
                 return location.search;
             }
-        }
+        };
         var load = function (elem) {
             var queryStr = getQuery();
             if (queryStr.indexOf("page") === -1) {
@@ -156,7 +156,7 @@
                     postData(elem);
                 }
             }
-        }
+        };
         var format = function () {
             var condition = $(".rt-condition");
             if (!condition.find("div").length) {
@@ -172,7 +172,7 @@
             else {
                 selector.css("display", "block");
             }
-        }
+        };
         var postData = function (elem) {
             var postOpts = {
                 async: settings.asyncLoad,
@@ -184,12 +184,12 @@
                     style: settings.style,
                     rowList: settings.rowList.toString()
                 },
-                success: function (data, textStatus, jqXHR) {
+                success: function (data) {
                     if (data.status === "fail") {
-                        alert(data.msg)
-                        return false
+                        alert(data.msg);
+                        return false;
                     }
-                    var jsonObject = data.res
+                    var jsonObject = data.res;
                     if (settings.searchBar === true) {
                         var rtSearch = _this.find(".rt-search");
                         if (settings.style != "tree") {
@@ -283,19 +283,19 @@
                         $(".rt-search-cdts").find("[name=\"" + key + "\"]").closest("div").css("display", "none");
                     });
                     globalVars.tableID = $(_this).attr("id") || Math.floor(Math.random() * (10000000 - 0)) + 0;
-                    cachedRows[globalVars.tableID] = {}
+                    cachedRows[globalVars.tableID] = {};
                     nullRows[globalVars.tableID] = jsonObject.row;
                     if (!jsonObject.exception) {
                         settings.complete();
                     }
                 },
                 error: function () {
-                    alert("您未搭建服务器哦！")
-                    return false
+                    alert("您未搭建服务器哦！");
+                    return false;
                 }
-            }
+            };
             $.ajax(postOpts);
-        }
+        };
         var getTable = function () {
             var elem = this;
             globalVars.queryObj.table = encodeURI($(this).attr("data-table"));
@@ -306,7 +306,7 @@
                 History.replaceState(null, globalVars.pageTitle, "?" + $(this).attr("data-passedcol"));
             }
             load(elem);
-        }
+        };
         var getTableByNav = function () {
             var elem = this;
             var url = $(this).attr("data-url");
@@ -321,21 +321,21 @@
                 hasCheckbox: settings.hasCheckbox,
                 style: settings.style,
                 rowList: settings.rowList.toString()
-            }, function (data, status) {
+            }, function (data) {
                 // var jsonObject = JSON.parse(data);
                 if (data.status === "fail") {
-                    alert(data.msg)
-                    return false
+                    alert(data.msg);
+                    return false;
                 }
-                var jsonObject = data.res
+                var jsonObject = data.res;
                 if (settings.searchBar === true) {
                     if (jsonObject.search) {
                         if (settings.style === "table") {
                             var rtSearch = _this.find(".rt-search");
                             rtSearch.html(tableSearcher);
                             rtSearch.find(".rt-search-cdts").html(jsonObject.search);
+                            rtSearch.css("display", "block");
                         }
-                        rtSearch.css("display", "block");
                     }
                 }
                 _this.find(".rt-condition").html(jsonObject.condition);
@@ -353,7 +353,7 @@
                 }
                 format();
             });
-        }
+        };
         var buildQueryStr = function () {
             var queryStr = "", value = "";
             for (var q in globalVars.queryObj) {
@@ -364,7 +364,7 @@
                 queryStr += "&" + q + "=" + value;
             }
             return "?" + queryStr.substring(1);
-        }
+        };
         var refresh = function () {
             if (settings.query) {
                 settings.query = buildQueryStr();
@@ -377,13 +377,13 @@
                 hasCheckbox: settings.hasCheckbox,
                 style: settings.style,
                 rowList: settings.rowList.toString()
-            }, function (data, status) {
+            }, function (data) {
                 // var jsonObject = JSON.parse(data);
                 if (data.status === "fail") {
-                    alert(data.msg)
-                    return false
+                    alert(data.msg);
+                    return false;
                 }
-                var jsonObject = data.res
+                var jsonObject = data.res;
                 _this.find(".rt-body").html(jsonObject.body);
                 _this.find(".rt-condition").html(jsonObject.condition);
                 _this.find(".rt-selector").html(jsonObject.selector);
@@ -401,7 +401,7 @@
                     if (cachedRows[globalVars.tableID][checkbox.val()]) {
                         checkbox[0].checked = true;
                         $(this).addClass("checked");
-                        $(this).closest("tr").addClass("rt-tr-selected")
+                        $(this).closest("tr").addClass("rt-tr-selected");
                     }
                 });
                 var hasCheckbox = _this.find("td .rt-checkbox").length;
@@ -412,7 +412,7 @@
                 }
                 format();
             });
-        }
+        };
         var expandNode = function () {
             var parentNode = $(this).parent();
             var arrow = parentNode.children(".glyphicon-triangle-right");
@@ -433,9 +433,23 @@
                         });
                     }
                     childtree.slideDown("fast");
-                }
+                };
                 var trees = JSON.parse(parentNode.children(".rt-node-cols").attr("data-childtree"));
                 var treesLength = Object.keys(trees).length, counter = 0;
+                var successfunc=function (data) {
+                    // var jsonObject = JSON.parse(data);
+                    if (data.status === "fail") {
+                        alert(data.msg);
+                        return false;
+                    }
+                    var jsonObject = data.res;
+                    childtree.append(jsonObject.body);
+                    counter++;
+                    if (counter === treesLength) {
+                        slideDown();
+                        arrow.addClass("down");
+                    }
+                };
                 for (var t in trees) {
                     $.ajax({
                         async: false,
@@ -444,24 +458,11 @@
                         data: {
                             configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style
                         },
-                        success: function (data, textStatus, jqXHR) {
-                            // var jsonObject = JSON.parse(data);
-                            if (data.status === "fail") {
-                                alert(data.msg)
-                                return false
-                            }
-                            var jsonObject = data.res
-                            childtree.append(jsonObject.body);
-                            counter++;
-                            if (counter === treesLength) {
-                                slideDown();
-                                arrow.addClass("down");
-                            }
-                        }
+                        success: successfunc
                     });
                 }
             }
-        }
+        };
         var searchTree = function () {
             var cd = $(".rt-treeSearcher-txt").val();
             if (!cd) {
@@ -469,16 +470,16 @@
             }
             $.post(serverURL + "SearchTree" + "?table=" + globalVars.queryObj.table, {
                 configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, condition: cd
-            }, function (data, status) {
+            }, function (data) {
                 if (data.status === "fail") {
-                    alert(data.msg)
-                    return false
+                    alert(data.msg);
+                    return false;
                 }
-                var jsonObject = data.res
+                var jsonObject = data.res;
                 // var jsonObject = JSON.parse(data);
                 _this.find(".rt-body").html(jsonObject.body);
             });
-        }
+        };
         var locateNode = function () {
             var table = encodeURI($(this).attr("data-tableid"));
             $.post(serverURL + "LocateNode" + "?table=" + table, {
@@ -486,13 +487,13 @@
                 hasCheckbox: settings.hasCheckbox,
                 style: settings.style,
                 condition: $(this).attr("data-parentnode")
-            }, function (data, status) {
+            }, function (data) {
                 // var jsonObject = JSON.parse(data);
                 if (data.status === "fail") {
-                    alert(data.msg)
-                    return false
+                    alert(data.msg);
+                    return false;
                 }
-                var jsonObject = data.res
+                var jsonObject = data.res;
                 for (var i = 0; i < jsonObject.length; i++) {
                     var obj = jsonObject[i], elem = null;
                     if (obj.parent != "ROOTNODE") {
@@ -508,7 +509,7 @@
                 }
                 var a = jsonObject;
             });
-        }
+        };
         var search = function () {
             $(".rt-search-txt").each(function () {
                 var value = $.trim($(this).val());
@@ -528,22 +529,22 @@
             }
             settings.searchComplete();
             return false;
-        }
+        };
         var startSearching = function () {
             setTimeout(search, 1);
-        }
+        };
         var clean = function () {
             $(".rt-search-txt").each(function () {
                 $(this).val("");
             });
             search();
             return false;
-        }
+        };
         var showAdvSearch = function () {
             if ($(this).hasClass("adv-shown")) {
                 $(".rt-search-adv").css("display", "none");
                 $(this).find(".rt-search-showadv-txt").html("更多");
-                $(this).find(".glyphicon-chevron-down").removeClass("upsidwn")
+                $(this).find(".glyphicon-chevron-down").removeClass("upsidwn");
                 $(this).removeClass("adv-shown");
             }
             else {
@@ -553,12 +554,12 @@
                     if (!conditionBlock.find("[data-value=\"" + attrValue + "\"]").length) {
                         $(this).css("display", "inline-block");
                     }
-                })
+                });
                 $(this).find(".rt-search-showadv-txt").html("收起");
-                $(this).find(".glyphicon-chevron-down").addClass("upsidwn")
+                $(this).find(".glyphicon-chevron-down").addClass("upsidwn");
                 $(this).addClass("adv-shown");
             }
-        }
+        };
         var sort = function () {
             var sortIcon = $(this).find(".glyphicon");
             if (sortIcon.length && sortIcon.hasClass("glyphicon-arrow-up")) {
@@ -573,22 +574,22 @@
             else {
                 location.href = location.pathname + buildQueryStr();
             }
-        }
+        };
         var selectmore = function () {
             var list = $(this).parent().siblings(".rt-selector-value").find(".rt-selector-list");
             if ($(this).hasClass("selectmore-all")) {
                 list.css("height", "30px");
                 $(this).find(".rt-selectmore-txt").html("更多");
-                $(this).find(".glyphicon-chevron-down").removeClass("upsidwn")
+                $(this).find(".glyphicon-chevron-down").removeClass("upsidwn");
                 $(this).removeClass("selectmore-all");
             }
             else {
                 list.css("height", "auto");
                 $(this).find(".rt-selectmore-txt").html("收起");
-                $(this).find(".glyphicon-chevron-down").addClass("upsidwn")
+                $(this).find(".glyphicon-chevron-down").addClass("upsidwn");
                 $(this).addClass("selectmore-all");
             }
-        }
+        };
         var cancelMultiselect = function () {
             $(".rt-multiselect-btns").css("display", "none");
             $(".rt-selector-list-text>.glyphicon").css("display", "none");
@@ -596,7 +597,7 @@
             $(".rt-multiselect-checked").removeClass("rt-multiselect-checked");
             $(".rt-selector-list-text>.glyphicon-check").removeClass("glyphicon-check").addClass("glyphicon-unchecked");
             $(this).parent().siblings(".rt-selector-btns").find(".rt-selector-multiselect").removeClass("rt-multiselect-true");
-        }
+        };
         var multiselect = function () {
             cancelMultiselect();
             var elem = $(this).parent().siblings(".rt-selector-value");
@@ -611,7 +612,7 @@
             btns.css("display", "block");
             btns.find(".rt-multiselect-cancel").css("display", "inline-block");
             $(this).addClass("rt-multiselect-true");
-        }
+        };
         var submitCondition = function (key) {
             var conditions = [];
             $(".rt-selector-key[data-value=\"" + key + "\"]").siblings(".rt-selector-value").find(".rt-multiselect-checked").each(function () {
@@ -626,11 +627,11 @@
                 location.href = location.pathname + buildQueryStr();
             }
             $(".rt-search-cdts").find("[name=\"" + key + "\"]").closest("div").css("display", "none");
-        }
+        };
         var submitMultiselect = function () {
             var key = $(this).parent().siblings(".rt-selector-key").attr("data-value");
             submitCondition(key);
-        }
+        };
         var selectCondition = function () {
             var elem = $(this).closest(".rt-selector-value");
             var multiselect = elem.siblings(".rt-selector-btns").find(".rt-selector-multiselect");
@@ -659,7 +660,7 @@
                     elem.siblings(".rt-multiselect-btns").find(".rt-multiselect-ok").css("display", "none");
                 }
             }
-        }
+        };
         var removeCondition = function () {
             var key = $(this).parent().attr("data-value");
             var txt = $(".rt-search-cdts").find("[name=\"" + key + "\"]");
@@ -678,12 +679,12 @@
             else {
                 location.href = location.pathname + buildQueryStr();
             }
-        }
+        };
         var updateCellValue = function () {
             var value = $(this).val();
             $(this).attr("value", value);
             $(this).parent().attr("data-value", value);
-        }
+        };
         var firstPage = function () {
             globalVars.queryObj.page = 1;
             if (settings.query || settings.asyncRefresh) {
@@ -692,7 +693,7 @@
             else {
                 location.href = location.pathname + buildQueryStr();
             }
-        }
+        };
         var prevPage = function () {
             var pageNumber = Number(_this.find(".rt-pager-page").val());
             if (pageNumber > 1) {
@@ -704,7 +705,7 @@
                     location.href = location.pathname + buildQueryStr();
                 }
             }
-        }
+        };
         var nextPage = function () {
             var pageNumber = Number(_this.find(".rt-pager-page").val());
             var totalPage = Number(_this.find(".rt-pager-totalPages").html());
@@ -717,7 +718,7 @@
                     location.href = location.pathname + buildQueryStr();
                 }
             }
-        }
+        };
         var lastPage = function () {
             globalVars.queryObj.page = _this.find(".rt-pager-totalPages").html();
             if (settings.query || settings.asyncRefresh) {
@@ -726,7 +727,7 @@
             else {
                 location.href = location.pathname + buildQueryStr();
             }
-        }
+        };
         var page_Keypress = function () {
             if (event.keyCode === 13) {
                 var pageNumber = parseInt(_this.find(".rt-pager-page").val());
@@ -735,7 +736,7 @@
                     pageNumber = 1;
                 }
                 else if (pageNumber > totalPage) {
-                    pageNumber = totalPage
+                    pageNumber = totalPage;
                 }
                 globalVars.queryObj.page = pageNumber;
                 if (settings.query || settings.asyncRefresh) {
@@ -745,7 +746,7 @@
                     location.href = location.pathname + buildQueryStr();
                 }
             }
-        }
+        };
         var rowList_Change = function () {
             var pageNumber = parseInt(_this.find(".rt-pager-page").val());
             var rowsPerPage = parseInt($(this).val());
@@ -762,11 +763,11 @@
             else {
                 location.href = location.pathname + buildQueryStr();
             }
-        }
+        };
         var prevCols = function () {
             var pageNumber = Number(_this.find(".rt-colPager-page").val());
             if (pageNumber > 1) {
-                globalVars.queryObj.colpage = pageNumber - 1
+                globalVars.queryObj.colpage = pageNumber - 1;
                 if (settings.query || settings.asyncRefresh) {
                     refresh();
                 }
@@ -774,12 +775,12 @@
                     location.href = location.pathname + buildQueryStr();
                 }
             }
-        }
+        };
         var nextCols = function () {
             var pageNumber = Number(_this.find(".rt-colPager-page").val());
             var totalPage = Number(_this.find(".rt-colPager-totalColPages").val());
             if (pageNumber < totalPage) {
-                globalVars.queryObj.colpage = pageNumber + 1
+                globalVars.queryObj.colpage = pageNumber + 1;
                 if (settings.query || settings.asyncRefresh) {
                     refresh();
                 }
@@ -787,13 +788,13 @@
                     location.href = location.pathname + buildQueryStr();
                 }
             }
-        }
+        };
         var trOnMouseover = function () {
             $(this).addClass("rt-tr-onhover");
-        }
+        };
         var trOnMouseout = function () {
             $(this).removeClass("rt-tr-onhover");
-        }
+        };
         var trOnClick = function () {
             var elem = $(this).find(".rt-td-checkbox");
             if (elem.length) {
@@ -857,7 +858,7 @@
                     }
                 }
             }
-        }
+        };
         var toggleAll = function () {
             var allCheckbox = _this.find("td .rt-checkboxWrapper");
             var hasChecked = $(this).hasClass("checked");
@@ -892,10 +893,10 @@
                     }
                 });
             }
-        }
+        };
         var checkParent = function (checkbox) {
             var tree = checkbox.closest(".rt-childtree");
-            var node = tree.children(".rt-node")
+            var node = tree.children(".rt-node");
             var allSiblings = node.children(".rt-checkboxWrapper");
             var checkedSiblings = node.children(".rt-checkboxWrapper.checked");
             if (allSiblings.length && allSiblings.length === checkedSiblings.length) {
@@ -904,7 +905,7 @@
                 parentCheckbox.find(".rt-checkbox")[0].checked = true;
                 checkParent(parentCheckbox);
             }
-        }
+        };
         var checkNode = function () {
             var childCheckbox = $(this).parent().find(".rt-checkboxWrapper"), event = null;
             if (!$(this).hasClass("checked")) {
@@ -932,31 +933,31 @@
                 event = $.Event("nodeOnUncheck");
             }
             $(this).trigger(event);
-        }
+        };
         //导出为Excel表格函数
         var exportExcel = function () {
             window.open(serverURL + "/GenerateExcel.aspx" + getQuery() + "&ConfigFile=" + settings.configFile);
-        }
+        };
         var nodeOnClick = function () {
             var elem = $(".rt-body").children(".rt-search-result");
             if (!elem.length) {
                 var event = $.Event("nodeOnClick");
                 $(this).trigger(event);
             }
-        }
+        };
 
         load();
-    }
+    };
 
     $.fn.rtGetCheckedRows = function () {
         var elemID = $(this).attr("id");
         return cachedRows[elemID];
-    }
+    };
 
     $.fn.rtGetAllRowStr = function () {
         var allRows = [];
         $(this).find("tbody").children("tr").each(function () {
-            var row = {}
+            var row = {};
             $(this).children("td").each(function () {
                 var col = $(this).attr("name");
                 if (col !== "rt-td-checkbox" && col !== "操作") {
@@ -966,11 +967,11 @@
             allRows.push(JSON.stringify(row));
         });
         return allRows;
-    }
+    };
 
     $.fn.rtAppendNewRow = function () {
         var elemID = $(this).attr("id");
         $(this).find("tbody").append(nullRows[elemID]);
-    }
+    };
 
 }(jQuery));

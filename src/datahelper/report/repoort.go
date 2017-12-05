@@ -114,15 +114,15 @@ func New(uid uint32,settings model.Settings) (param *Param,err error){
 			cc.HasSearchType=true
 			cc.SearchType=searchtype.Value
 		}
-		//selectorfunc := elemnt.SelectAttr("selector-func")
-		//if selectorfunc!=nil{
-		//	cc.IsInselector=true
-		//	cc.SelectorFunc=selectorfunc.Value
-		//}
-		//selectortext := elemnt.SelectAttr("selector-text")
-		//if selectortext!=nil{
-		//	cc.SelectorText=selectortext.Value
-		//}
+		selectorfunc := elemnt.SelectAttr("selector-func")
+		if selectorfunc!=nil{
+			cc.IsInSelector=true
+			cc.SelectorFunc=selectorfunc.Value
+		}
+		selectortext := elemnt.SelectAttr("selector-text")
+		if selectortext!=nil{
+			cc.SelectorText=selectortext.Value
+		}
 		//linkto := elemnt.SelectAttr("linkto")
 		//passedcol := elemnt.SelectAttr("passedcol")
 		//if linkto!=nil&&passedcol!=nil{

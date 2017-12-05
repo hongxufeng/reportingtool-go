@@ -1,0 +1,7 @@
+environment: DEV
+address:
+  ip: 0.0.0.0
+  port: :8081
+log: C:\mygo\reportingtool\log
+mysql: root:Sulei111@tcp(rm-2ze3in8d9p149sin4o.mysql.rds.aliyuncs.com:3306)/yy
+redis: redis://:@47.93.18.92:7000/
