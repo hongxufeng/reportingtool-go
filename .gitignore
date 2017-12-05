@@ -2,6 +2,6 @@
 
 pkg
 configself.yaml
-src/github
+src/github.com
 src/gopkg.in
 reportingtool.exe
