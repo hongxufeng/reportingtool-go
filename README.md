@@ -65,7 +65,8 @@ redis: redis://:qwerty@localhost:6379/1
 修改服务器请求地址 在assets/js/core/ReportingTool.js的16行
 var serverURL="http://localhost:8080/ReportingTool"
 
-
+被墙第三方包下载方法https://www.golangtc.com/download/package
+当然可以翻墙，即使我也是这么做的
 ## Note
 1.由于涉及前后端交互，如果不涉及账号密码，会造成后端参数解析问题等等
 思前向后  决定加入用户登录功能   以求go后端框架  完整  不需要再次改动
