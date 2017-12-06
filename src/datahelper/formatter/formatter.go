@@ -1,4 +1,4 @@
-package cellformatter
+package formatter
 
 import (
 	"bytes"
@@ -7,10 +7,10 @@ import (
 
 type CellFormatter struct{}
 
-func (*CellFormatter) PutInText(config model.ColumnConfig, cellValue string) string {
+func (*CellFormatter) PutInText(config model.ColumnConfig, cellValue string) (string, error) {
 	var buf bytes.Buffer
 	buf.WriteString("<input type=\"text\" class=\"rt-celltext\" value=\"")
 	buf.WriteString(cellValue)
 	buf.WriteString("\">")
-	return buf.String()
+	return buf.String(), nil
 }

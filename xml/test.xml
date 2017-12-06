@@ -5,7 +5,7 @@
         <nickname search-type="true" >昵称</nickname>
         <uid  >用户ID</uid>
         <username search-type="true" formatter-r="我即是$$::$$" selector="true" formatter="PutInText" selector-multi="true">用户名称</username>
-        <power >权限</power>
+        <power selector-func="GetDefinitionData" selector-func-agrs="0,管理员,1,Geust">权限</power>
         <buttons>
             &lt;span class="glyphicon glyphicon-folder-open" title="浏览" onclick="view(this,'OBJ_ID')">&lt;/span>
             &lt;span class="glyphicon glyphicon-edit" title="编辑" onclick="edit(this,'OBJ_ID')">&lt;/span>

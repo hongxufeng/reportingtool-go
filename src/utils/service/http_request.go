@@ -282,7 +282,7 @@ func (hr *HttpRequest) PostFileInfo(param string) (bytes []byte, filename string
 
 func (hr *HttpRequest) GetParams(params ...interface{}) error {
 	if len(params)%2 != 0 {
-		return errors.New("params count must be odd")
+		return errors.New("params count must be even")
 	}
 	for i := 0; i < len(params); i += 2 {
 		key := function.ToString(params[i])
@@ -458,8 +458,8 @@ func (hr *HttpRequest) ParseEncodeUrl(params ...interface{}) error {
 	}
 	for i := 0; i < len(params); i += 2 {
 		key := function.ToString(params[i])
-		if vs := hr.UrlEncodedBody[key]; len(vs)>0 {
-			v:=vs[0]
+		if vs := hr.UrlEncodedBody[key]; len(vs) > 0 {
+			v := vs[0]
 			var e error
 			switch ref := params[i+1].(type) {
 			case *string:

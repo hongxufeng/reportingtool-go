@@ -3,8 +3,11 @@ package report
 import (
 	"bytes"
 	"datahelper/db"
+	"datahelper/definition"
+	"errors"
 	"fmt"
 	"model"
+	"reflect"
 	"strings"
 	"time"
 	"utils/function"
@@ -227,36 +230,59 @@ func BuildTablePager(param *Param, bodybuf *bytes.Buffer, count int, style strin
 }
 
 func BuildSelectorBar(req *service.HttpRequest, param *Param, size int, selectorbuf *bytes.Buffer, conditionbuf *bytes.Buffer) (err error) {
+	var selectordata map[string]string
+	var definitionData definition.DefinitionData
+	dd := reflect.ValueOf(&definitionData)
 	for i := 0; i < size; i++ {
-		selectordata := make(map[string]string, 0)
+		selectordata = make(map[string]string, 0)
 		if !param.ColConfigDict[i].IsInSelector {
 			continue
 		}
-		being, selectordata := db.HGetSelectorBarCache(param.TableConfig.Name, param.ColConfigDict[i].Tag)
-		if being == true {
-			fmt.Println(being, selectordata)
-		} else {
-			e := db.SetSelectorBarCacheDuration(param.TableConfig.Name, param.ColConfigDict[i].Tag)
-			if e != nil {
-				return e
+		if param.ColConfigDict[i].HasSelectorFunc == true {
+			method := dd.MethodByName(param.ColConfigDict[i].SelectorFunc)
+			values := method.Call([]reflect.Value{reflect.ValueOf(param.ColConfigDict[i].SelectorFuncAgrs)})
+			fmt.Println(values)
+			if len(values) != 2 {
+				err = errors.New(fmt.Sprintf("method %s return value is not 2.", param.ColConfigDict[i].SelectorFunc))
 			}
-			fmt.Println("nothing")
-			query, _ := GetSelectQuery(param, "distinct("+param.ColConfigDict[i].Tag+")")
-			result, e := db.Query(query)
-			if e != nil {
-				return e
-			}
-			for j := 0; result.Next(); j++ {
-				var value string
-				if e = result.Scan(&value); e != nil {
-					fmt.Println("BuildSelectorBar:", e.Error())
-					return e
+			switch x := values[1].Interface().(type) {
+			case nil:
+				switch y := values[0].Interface().(type) {
+				case nil:
+					return errors.New(fmt.Sprintf("method %s second return value is nil.", param.ColConfigDict[i].SelectorFunc))
+				default:
+					selectordata = y.(map[string]string)
 				}
-				fmt.Println(value)
-				selectordata[value] = value
-				e := db.HSetSelectorBarCache(param.TableConfig.Name, param.ColConfigDict[i].Tag, function.IntToString(j), value)
+			default:
+				return x.(error)
+			}
+		} else {
+			being, selectordata := db.HGetSelectorBarCache(param.TableConfig.Name, param.ColConfigDict[i].Tag)
+			if being == true {
+				fmt.Println(being, selectordata)
+			} else {
+				e := db.SetSelectorBarCacheDuration(param.TableConfig.Name, param.ColConfigDict[i].Tag)
 				if e != nil {
 					return e
+				}
+				fmt.Println("nothing")
+				query, _ := GetSelectQuery(param, "distinct("+param.ColConfigDict[i].Tag+")")
+				result, e := db.Query(query)
+				if e != nil {
+					return e
+				}
+				for j := 0; result.Next(); j++ {
+					var value string
+					if e = result.Scan(&value); e != nil {
+						fmt.Println("BuildSelectorBar:", e.Error())
+						return e
+					}
+					fmt.Println(value)
+					selectordata[value] = value
+					e := db.HSetSelectorBarCache(param.TableConfig.Name, param.ColConfigDict[i].Tag, value, value)
+					if e != nil {
+						return e
+					}
 				}
 			}
 		}
@@ -276,7 +302,11 @@ func BuildSelectorBar(req *service.HttpRequest, param *Param, size int, selector
 				valueText = append(valueText, sd)
 			}
 			conditionbuf.WriteString("<div data-value=\"")
-			conditionbuf.WriteString(param.ColConfigDict[i].Tag)
+			if param.ColConfigDict[i].HasSelectorText {
+				conditionbuf.WriteString(param.ColConfigDict[i].SelectorText)
+			} else {
+				conditionbuf.WriteString(param.ColConfigDict[i].Tag)
+			}
 			conditionbuf.WriteString("\">")
 			conditionbuf.WriteString(param.ColConfigDict[i].Text)
 			conditionbuf.WriteString(strings.Join(valueText, "、"))
@@ -292,9 +322,9 @@ func BuildSelectorBar(req *service.HttpRequest, param *Param, size int, selector
 		selectorbuf.WriteString("：</div>")
 		selectorbuf.WriteString("<div class=\"rt-selector-value\">")
 		selectorbuf.WriteString("<ul class=\"rt-selector-list\">")
-		for _, v := range selectordata {
+		for k, v := range selectordata {
 			selectorbuf.WriteString("<li data-value=\"")
-			selectorbuf.WriteString(v)
+			selectorbuf.WriteString(k)
 			selectorbuf.WriteString("\"><span class=\"rt-selector-list-text\"><span class=\"glyphicon glyphicon-unchecked\"></span>")
 			selectorbuf.WriteString(v)
 			selectorbuf.WriteString("</span></li>")

@@ -3,7 +3,7 @@ package report
 import (
 	"bytes"
 	"database/sql"
-	"datahelper/cellformatter"
+	"datahelper/formatter"
 	"errors"
 	"fmt"
 	"model"
@@ -149,7 +149,7 @@ func BuildTableHead(req *service.HttpRequest, param *Param, size int, bodybuf *b
 
 func BuildTableBody(param *Param, rows *sql.Rows, size int, bodybuf *bytes.Buffer) (err error) {
 	var checkvalue string
-	var formatter cellformatter.CellFormatter
+	var formatter formatter.CellFormatter
 	fv := reflect.ValueOf(&formatter)
 	bodybuf.WriteString("<tbody>")
 
@@ -210,10 +210,15 @@ func BuildTableBody(param *Param, rows *sql.Rows, size int, bodybuf *bytes.Buffe
 				method := fv.MethodByName(param.ColConfigDict[i].Formatter)
 				values := method.Call([]reflect.Value{reflect.ValueOf(param.ColConfigDict[i]), reflect.ValueOf(cell)})
 				fmt.Println(values)
-				if len(values) != 1 {
-					err = errors.New(fmt.Sprintf("method %s return value is not 1.", param.ColConfigDict[i].Formatter))
+				if len(values) != 2 {
+					err = errors.New(fmt.Sprintf("method %s return value is not 2.", param.ColConfigDict[i].Formatter))
 				}
-				cell = values[0].String()
+				switch x := values[1].Interface().(type) {
+				case nil:
+					cell = values[0].String()
+				default:
+					return x.(error)
+				}
 				//cellValue = FormatCell(dataTable.Columns, row, colConfig.Formatter, colName, cellValue);
 			}
 			bodybuf.WriteString(cell)
@@ -244,7 +249,7 @@ func BuildTableBody(param *Param, rows *sql.Rows, size int, bodybuf *bytes.Buffe
 }
 
 func BuildNullRow(param *Param, size int, rowbuf *bytes.Buffer) (err error) {
-	var formatter cellformatter.CellFormatter
+	var formatter formatter.CellFormatter
 	fv := reflect.ValueOf(&formatter)
 	rowbuf.WriteString("<tr>")
 	if param.Settings.HasCheckbox {
@@ -277,10 +282,15 @@ func BuildNullRow(param *Param, size int, rowbuf *bytes.Buffer) (err error) {
 			method := fv.MethodByName(param.ColConfigDict[i].Formatter)
 			values := method.Call([]reflect.Value{reflect.ValueOf(param.ColConfigDict[i]), reflect.ValueOf(cell)})
 			fmt.Println(values)
-			if len(values) != 1 {
-				err = errors.New(fmt.Sprintf("method %s return value is not 1.", param.ColConfigDict[i].Formatter))
+			if len(values) != 2 {
+				err = errors.New(fmt.Sprintf("method %s return value is not 2.", param.ColConfigDict[i].Formatter))
 			}
-			cell = values[0].String()
+			switch x := values[1].Interface().(type) {
+			case nil:
+				cell = values[0].String()
+			default:
+				return x.(error)
+			}
 			//cellValue = FormatCell(dataTable.Columns, row, colConfig.Formatter, colName, cellValue);
 		}
 		rowbuf.WriteString(cell)

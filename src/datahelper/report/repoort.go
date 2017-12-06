@@ -115,13 +115,17 @@ func New(uid uint32, settings model.Settings) (param *Param, err error) {
 			cc.HasSearchType = true
 			cc.SearchType = searchtype.Value
 		}
+		selectorfuncagrs := elemnt.SelectAttr("selector-func-agrs")
 		selectorfunc := elemnt.SelectAttr("selector-func")
-		if selectorfunc != nil {
+		if selectorfunc != nil && selectorfuncagrs != nil {
 			cc.IsInSelector = true
+			cc.HasSelectorFunc = true
 			cc.SelectorFunc = selectorfunc.Value
+			cc.SelectorFuncAgrs = selectorfuncagrs.Value
 		}
 		selectortext := elemnt.SelectAttr("selector-text")
 		if selectortext != nil {
+			cc.HasSelectorText = true
 			cc.SelectorText = selectortext.Value
 		}
 		//linkto := elemnt.SelectAttr("linkto")
