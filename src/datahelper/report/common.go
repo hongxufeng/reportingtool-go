@@ -282,9 +282,10 @@ func BuildSelectorBar(req *service.HttpRequest, param *Param, size int, selector
 				return x.(error)
 			}
 		} else {
-			being, selectordata := db.HGetSelectorBarCache(param.TableConfig.Name, param.ColConfigDict[i].Tag)
+			being, sd := db.HGetSelectorBarCache(param.TableConfig.Name, param.ColConfigDict[i].Tag)
 			if being == true {
-				fmt.Println(being, selectordata)
+				fmt.Println(being, sd)
+				selectordata = sd
 			} else {
 				e := db.SetSelectorBarCacheDuration(param.TableConfig.Name, param.ColConfigDict[i].Tag)
 				if e != nil {
