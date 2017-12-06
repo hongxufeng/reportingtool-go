@@ -5,9 +5,9 @@ import (
 	"strings"
 )
 
-type DefinitionData struct{}
+type Definition struct{}
 
-func (*DefinitionData) GetDefinitionData(param string) (map[string]string, error) {
+func (*Definition) GetDefinitionData(param string) (map[string]string, error) {
 	definitionData := make(map[string]string)
 	data := strings.Split(param, ",")
 	if len(data)%2 != 0 {

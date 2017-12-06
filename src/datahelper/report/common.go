@@ -14,40 +14,65 @@ import (
 	"utils/service"
 )
 
-func Format(colConfig *model.ColumnConfig, cellValue string) string {
+func Format(colConfig *model.ColumnConfig, cellValue string) (string, error) {
 	if cellValue == "" {
-		return ""
+		return "", nil
 	}
-	var formattedCell string
+	var definitionData definition.Definition
+	define := reflect.ValueOf(&definitionData)
+	if colConfig.HasFormatter {
+		//反射查找相应函数
+		method := define.MethodByName(colConfig.Formatter)
+		values := method.Call([]reflect.Value{reflect.ValueOf(*colConfig), reflect.ValueOf(cellValue)})
+		fmt.Println(values)
+		if len(values) != 2 {
+			return cellValue, errors.New(fmt.Sprintf("method %s return value is not 2.", colConfig.Formatter))
+		}
+		switch x := values[1].Interface().(type) {
+		case nil:
+			cellValue = values[0].String()
+		default:
+			return cellValue, x.(error)
+		}
+	} else if colConfig.HasSelectorFunc {
+		method := define.MethodByName(colConfig.SelectorFunc)
+		values := method.Call([]reflect.Value{reflect.ValueOf(colConfig.SelectorFuncAgrs)})
+		fmt.Println(values)
+		if len(values) != 2 {
+			return cellValue, errors.New(fmt.Sprintf("method %s return value is not 2.", colConfig.SelectorFunc))
+		}
+		switch x := values[1].Interface().(type) {
+		case nil:
+			switch y := values[0].Interface().(type) {
+			default:
+				selectordata := y.(map[string]string)
+				fmt.Println(selectordata)
+				cellValue = selectordata[cellValue]
+			}
+		default:
+			return cellValue, x.(error)
+		}
+	}
 	if colConfig.HasDateformat {
 		time, e := time.Parse(colConfig.DateFormat, cellValue)
 		if e == nil {
-			formattedCell = time.String()
-		} else {
-			formattedCell = cellValue
+			cellValue = time.String()
 		}
 	} else if colConfig.HasTimeTransfer {
 		switch colConfig.TimeTransfer {
 		case "second":
 			val, e := function.StringToInt(cellValue)
 			if e == nil {
-				formattedCell = function.IntToString(val/(24*60*60)) + "日" + function.IntToString((val-(val/(24*60*60))*60*60*24)/3600) + "时" + function.IntToString((val-(val/(60*60))*60*60)/60) + "分" + function.IntToString(val-(val/60)*60) + "秒"
-			} else {
-				formattedCell = cellValue
+				cellValue = function.IntToString(val/(24*60*60)) + "日" + function.IntToString((val-(val/(24*60*60))*60*60*24)/3600) + "时" + function.IntToString((val-(val/(60*60))*60*60)/60) + "分" + function.IntToString(val-(val/60)*60) + "秒"
 			}
 			break
-		default:
-			formattedCell = cellValue
-			break
 		}
-	} else {
-		formattedCell = cellValue
 	}
 	fmt.Println(colConfig.HasFormatterR)
 	if colConfig.HasFormatterR {
-		formattedCell = ReplacePlaceHolder(colConfig.FormatterR, formattedCell)
+		cellValue = ReplacePlaceHolder(colConfig.FormatterR, cellValue)
 	}
-	return formattedCell
+	return cellValue, nil
 }
 
 func ReplacePlaceHolder(inStr string, cellValue string) string {
@@ -231,15 +256,15 @@ func BuildTablePager(param *Param, bodybuf *bytes.Buffer, count int, style strin
 
 func BuildSelectorBar(req *service.HttpRequest, param *Param, size int, selectorbuf *bytes.Buffer, conditionbuf *bytes.Buffer) (err error) {
 	var selectordata map[string]string
-	var definitionData definition.DefinitionData
-	dd := reflect.ValueOf(&definitionData)
+	var definitionData definition.Definition
+	define := reflect.ValueOf(&definitionData)
 	for i := 0; i < size; i++ {
 		selectordata = make(map[string]string, 0)
 		if !param.ColConfigDict[i].IsInSelector {
 			continue
 		}
 		if param.ColConfigDict[i].HasSelectorFunc == true {
-			method := dd.MethodByName(param.ColConfigDict[i].SelectorFunc)
+			method := define.MethodByName(param.ColConfigDict[i].SelectorFunc)
 			values := method.Call([]reflect.Value{reflect.ValueOf(param.ColConfigDict[i].SelectorFuncAgrs)})
 			fmt.Println(values)
 			if len(values) != 2 {

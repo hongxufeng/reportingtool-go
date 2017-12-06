@@ -3,7 +3,7 @@ package report
 import (
 	"bytes"
 	"database/sql"
-	"datahelper/formatter"
+	"datahelper/definition"
 	"errors"
 	"fmt"
 	"model"
@@ -149,8 +149,6 @@ func BuildTableHead(req *service.HttpRequest, param *Param, size int, bodybuf *b
 
 func BuildTableBody(param *Param, rows *sql.Rows, size int, bodybuf *bytes.Buffer) (err error) {
 	var checkvalue string
-	var formatter formatter.CellFormatter
-	fv := reflect.ValueOf(&formatter)
 	bodybuf.WriteString("<tbody>")
 
 	var s []interface{}
@@ -200,27 +198,11 @@ func BuildTableBody(param *Param, rows *sql.Rows, size int, bodybuf *bytes.Buffe
 				bodybuf.WriteString(" class=\"hiddenCol\"")
 			}
 			cell := function.ToString(s[i])
-			cell = Format(&param.ColConfigDict[i], cell)
 			fmt.Println(cell)
 			bodybuf.WriteString(" data-value=\"")
 			bodybuf.WriteString(cell)
 			bodybuf.WriteString("\">")
-			if param.ColConfigDict[i].HasFormatter {
-				//反射查找相应函数
-				method := fv.MethodByName(param.ColConfigDict[i].Formatter)
-				values := method.Call([]reflect.Value{reflect.ValueOf(param.ColConfigDict[i]), reflect.ValueOf(cell)})
-				fmt.Println(values)
-				if len(values) != 2 {
-					err = errors.New(fmt.Sprintf("method %s return value is not 2.", param.ColConfigDict[i].Formatter))
-				}
-				switch x := values[1].Interface().(type) {
-				case nil:
-					cell = values[0].String()
-				default:
-					return x.(error)
-				}
-				//cellValue = FormatCell(dataTable.Columns, row, colConfig.Formatter, colName, cellValue);
-			}
+			cell, _ = Format(&param.ColConfigDict[i], cell)
 			bodybuf.WriteString(cell)
 			if param.ColConfigDict[i].HasBtn {
 				bodybuf.WriteString("<span class=\"rt-cell-btn glyphicon glyphicon-")
@@ -249,8 +231,8 @@ func BuildTableBody(param *Param, rows *sql.Rows, size int, bodybuf *bytes.Buffe
 }
 
 func BuildNullRow(param *Param, size int, rowbuf *bytes.Buffer) (err error) {
-	var formatter formatter.CellFormatter
-	fv := reflect.ValueOf(&formatter)
+	var definitionData definition.Definition
+	define := reflect.ValueOf(&definitionData)
 	rowbuf.WriteString("<tr>")
 	if param.Settings.HasCheckbox {
 		rowbuf.WriteString("<td class=\"rt-td-checkbox\" name=\"rt-td-checkbox\" data-value=\"\">")
@@ -279,7 +261,7 @@ func BuildNullRow(param *Param, size int, rowbuf *bytes.Buffer) (err error) {
 		rowbuf.WriteString("\">")
 		if param.ColConfigDict[i].HasFormatter {
 			//反射查找相应函数
-			method := fv.MethodByName(param.ColConfigDict[i].Formatter)
+			method := define.MethodByName(param.ColConfigDict[i].Formatter)
 			values := method.Call([]reflect.Value{reflect.ValueOf(param.ColConfigDict[i]), reflect.ValueOf(cell)})
 			fmt.Println(values)
 			if len(values) != 2 {
