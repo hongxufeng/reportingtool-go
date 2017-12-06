@@ -5,3 +5,4 @@ configself.yaml
 src/github.com
 src/gopkg.in
 reportingtool.exe
+log
