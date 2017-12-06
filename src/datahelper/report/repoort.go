@@ -123,11 +123,11 @@ func New(uid uint32, settings model.Settings) (param *Param, err error) {
 			cc.SelectorFunc = selectorfunc.Value
 			cc.SelectorFuncAgrs = selectorfuncagrs.Value
 		}
-		selectortext := elemnt.SelectAttr("selector-text")
-		if selectortext != nil {
-			cc.HasSelectorText = true
-			cc.SelectorText = selectortext.Value
-		}
+		// selectortext := elemnt.SelectAttr("selector-text")
+		// if selectortext != nil {
+		// 	cc.HasSelectorText = true
+		// 	cc.SelectorText = selectortext.Value
+		// }
 		//linkto := elemnt.SelectAttr("linkto")
 		//passedcol := elemnt.SelectAttr("passedcol")
 		//if linkto!=nil&&passedcol!=nil{

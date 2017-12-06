@@ -328,13 +328,11 @@ func BuildSelectorBar(req *service.HttpRequest, param *Param, size int, selector
 				valueText = append(valueText, sd)
 			}
 			conditionbuf.WriteString("<div data-value=\"")
-			if param.ColConfigDict[i].HasSelectorText {
-				conditionbuf.WriteString(param.ColConfigDict[i].SelectorText)
-			} else {
-				conditionbuf.WriteString(param.ColConfigDict[i].Tag)
-			}
+
+			conditionbuf.WriteString(param.ColConfigDict[i].Tag)
 			conditionbuf.WriteString("\">")
 			conditionbuf.WriteString(param.ColConfigDict[i].Text)
+			conditionbuf.WriteString(" : ")
 			conditionbuf.WriteString(strings.Join(valueText, "、"))
 			conditionbuf.WriteString("<span class=\"glyphicon glyphicon-remove rt-condition-remove\"></div>")
 			conditionbuf.WriteString("</div>")
