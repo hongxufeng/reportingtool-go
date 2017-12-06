@@ -18,6 +18,25 @@ func Format(colConfig *model.ColumnConfig, cellValue string) (string, error) {
 	if cellValue == "" {
 		return "", nil
 	}
+	if colConfig.HasDateformat {
+		time, e := time.Parse(colConfig.DateFormat, cellValue)
+		if e == nil {
+			cellValue = time.String()
+		}
+	} else if colConfig.HasTimeTransfer {
+		switch colConfig.TimeTransfer {
+		case "second":
+			val, e := function.StringToInt(cellValue)
+			if e == nil {
+				cellValue = function.IntToString(val/(24*60*60)) + "日" + function.IntToString((val-(val/(24*60*60))*60*60*24)/3600) + "时" + function.IntToString((val-(val/(60*60))*60*60)/60) + "分" + function.IntToString(val-(val/60)*60) + "秒"
+			}
+			break
+		}
+	}
+	fmt.Println(colConfig.HasFormatterR)
+	if colConfig.HasFormatterR {
+		cellValue = ReplacePlaceHolder(colConfig.FormatterR, cellValue)
+	}
 	var definitionData definition.Definition
 	define := reflect.ValueOf(&definitionData)
 	if colConfig.HasFormatter {
@@ -52,25 +71,6 @@ func Format(colConfig *model.ColumnConfig, cellValue string) (string, error) {
 		default:
 			return cellValue, x.(error)
 		}
-	}
-	if colConfig.HasDateformat {
-		time, e := time.Parse(colConfig.DateFormat, cellValue)
-		if e == nil {
-			cellValue = time.String()
-		}
-	} else if colConfig.HasTimeTransfer {
-		switch colConfig.TimeTransfer {
-		case "second":
-			val, e := function.StringToInt(cellValue)
-			if e == nil {
-				cellValue = function.IntToString(val/(24*60*60)) + "日" + function.IntToString((val-(val/(24*60*60))*60*60*24)/3600) + "时" + function.IntToString((val-(val/(60*60))*60*60)/60) + "分" + function.IntToString(val-(val/60)*60) + "秒"
-			}
-			break
-		}
-	}
-	fmt.Println(colConfig.HasFormatterR)
-	if colConfig.HasFormatterR {
-		cellValue = ReplacePlaceHolder(colConfig.FormatterR, cellValue)
 	}
 	return cellValue, nil
 }
