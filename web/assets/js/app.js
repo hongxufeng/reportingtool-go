@@ -531,8 +531,8 @@ var App = function() {
                     jQuery('#css-main')
                         .after('<link rel="stylesheet" id="css-theme" href="' + $theme + '">');
                 }
-                Cookies.set('theme', $theme, { expires: 90 });
             }
+            Cookies.set('theme', $theme, { expires: 90 });
 
             $cssTheme = jQuery('#css-theme');
         });
@@ -1041,7 +1041,7 @@ var App = function() {
 
     var themeInit = function() {
         var theme = Cookies.get('theme');
-        if (theme !== undefined) {
+        if (theme !== undefined && theme !== 'default') {
             jQuery('[data-toggle="theme"][data-theme="' + theme + '"]')
                 .parent('li')
                 .addClass('active');
