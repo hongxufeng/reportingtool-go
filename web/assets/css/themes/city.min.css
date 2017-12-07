@@ -468,11 +468,6 @@ div.tagsinput span.tag {
     color: #ff6b6b;
 }
 
-.rt-condition-remove {
-    color: #ff6b6b;
-}
-
-.rt-selector-selectmore .glyphicon-chevron-down,
-.rt-search-showadv .glyphicon-chevron-down {
+.rt-glyphicon-color {
     color: #ff6b6b;
 }

@@ -13,6 +13,10 @@
     width: 72%;
 }
 
+.rt-glyphicon-color {
+    color: #5c90d2;
+}
+
 
 /*searchBar*/
 
@@ -455,7 +459,6 @@ td .glyphicon {
 
 .rt-selector-selectmore .glyphicon-chevron-down,
 .rt-search-showadv .glyphicon-chevron-down {
-    color: #5c90d2;
     transition: all 200ms ease;
     -webkit-transition: all 200ms ease;
     -moz-transition: all 200ms ease;
@@ -506,7 +509,6 @@ td .glyphicon {
     margin-left: 6px;
     font-size: 12px;
     cursor: pointer;
-    color: #5c90d2;
 }
 
 

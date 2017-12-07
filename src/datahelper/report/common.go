@@ -333,7 +333,7 @@ func BuildSelectorBar(req *service.HttpRequest, param *Param, size int, selector
 			conditionbuf.WriteString(param.ColConfigDict[i].Text)
 			conditionbuf.WriteString(" : ")
 			conditionbuf.WriteString(strings.Join(valueText, "、"))
-			conditionbuf.WriteString("<span class=\"glyphicon glyphicon-remove rt-condition-remove\"></div>")
+			conditionbuf.WriteString("<span class=\"glyphicon glyphicon-remove rt-glyphicon-color rt-condition-remove\"></div>")
 			conditionbuf.WriteString("</div>")
 			continue
 		}
@@ -360,9 +360,9 @@ func BuildSelectorBar(req *service.HttpRequest, param *Param, size int, selector
 			selectorbuf.WriteString("</div>")
 		}
 		selectorbuf.WriteString("<div class=\"rt-selector-btns\">")
-		selectorbuf.WriteString("<span class=\"rt-selector-selectmore\"><span class\"rt-selectmore-txt\">更多</span><span class=\"glyphicon glyphicon-chevron-down\"></span></span>")
+		selectorbuf.WriteString("<span class=\"rt-selector-selectmore\"><span class\"rt-selectmore-txt\">更多</span><span class=\"glyphicon glyphicon-chevron-down rt-glyphicon-color\"></span></span>")
 		if param.ColConfigDict[i].HasSelectorMulti {
-			selectorbuf.WriteString("<span class=\"rt-selector-multiselect\">多选<span class=\"glyphicon glyphicon-plus\"></span></span>")
+			selectorbuf.WriteString("<span class=\"rt-selector-multiselect\">多选<span class=\"glyphicon glyphicon-plus rt-glyphicon-color\"></span></span>")
 		}
 		selectorbuf.WriteString("</div>")
 		selectorbuf.WriteString("</div>")

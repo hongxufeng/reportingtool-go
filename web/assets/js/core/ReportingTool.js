@@ -1,4 +1,4 @@
-﻿(function () {
+﻿(function() {
     var js = $('[src="assets/js/core/ReportingTool.js"]');
     js.before("<script src='assets/js/core/jquery.history.js' type='text/javascript'></script>");
     js.before("<script src='assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js' type='text/javascript'></script>");
@@ -12,27 +12,27 @@
     }
 })();
 
-(function ($) {
+(function($) {
     var serverURL = "user/report/";
 
     var cachedRows = {};
     var nullRows = {};
 
-    $.fn.rt = function (options) {
+    $.fn.rt = function(options) {
 
-        var _this = this, globalVars = {
-            tableID: "",
-            pageTitle: "",
-            initUrl: "",
-            url: "",
-            queryObj: {table: "", page: 1, rows: 15, colpage: 1}
-        };
+        var _this = this,
+            globalVars = {
+                tableID: "",
+                pageTitle: "",
+                initUrl: "",
+                url: "",
+                queryObj: { table: "", page: 1, rows: 15, colpage: 1 }
+            };
 
         var settings = $.extend({
             asyncLoad: false,
             asyncRefresh: $.support.opacity,
-            complete: function () {
-            },
+            complete: function() {},
             configFile: "",
             hasCheckbox: false,
             hasPager: true,
@@ -42,12 +42,9 @@
             rowList: [15, 30, 60, 100],
             saveState: true,
             searchBar: true,
-            searchBarOnShow: function () {
-            },
-            searchBarOnHide: function () {
-            },
-            searchComplete: function () {
-            },
+            searchBarOnShow: function() {},
+            searchBarOnHide: function() {},
+            searchComplete: function() {},
             striped: false,
             style: "table",
             table: "",
@@ -62,16 +59,16 @@
         var tableSearcher = "<div class=\"rt-search-cdts\"></div>\
                                     <div class=\"rt-search-btns\">\
                                         <span class=\"rt-search-showadv\">\
-                                            <span class=\"rt-search-showadv-txt\">更多</span><span class=\"glyphicon glyphicon-chevron-down\"></span>\
+                                            <span class=\"rt-search-showadv-txt\">更多</span><span class=\"glyphicon glyphicon-chevron-down rt-glyphicon-color\"></span>\
                                         </span>\
                                         <span class=\"rt-search-go\">\
-                                            查询<span class=\"glyphicon glyphicon-search\"></span>\
+                                            查询<span class=\"glyphicon glyphicon-search rt-glyphicon-color\"></span>\
                                         </span>\
                                     </div>";
 
         var treeSearcher = "<div class=\"rt-treeSearcher-div\">\
                                        <input type=\"text\" class=\"rt-treeSearcher-txt\"/>\
-                                       <span class=\"glyphicon glyphicon-search rt-treeSearcher-btn\"></span>\
+                                       <span class=\"glyphicon glyphicon-search rt-treeSearcher-btn rt-glyphicon-color\"></span>\
                                    </div>";
 
         var css = $('head>[href*="/assets/css/reportingtool/ReportingTool.css"]');
@@ -79,7 +76,7 @@
             css.after("<link href='/assets/css/reportingtool/NodeLinker.css' rel='stylesheet' type='text/css' />");
         }
 
-        var getSettingsQueryVar = function (variable) {
+        var getSettingsQueryVar = function(variable) {
             var query = settings.query.substring(1);
             var vars = query.split("&");
             for (var i = 0; i < vars.length; i++) {
@@ -90,7 +87,7 @@
             }
             return (false);
         };
-        var getQueryVariable = function (variable) {
+        var getQueryVariable = function(variable) {
             var query = window.location.search.substring(1);
             var vars = query.split("&");
             for (var i = 0; i < vars.length; i++) {
@@ -107,30 +104,26 @@
         var table = "";
         if (table = getSettingsQueryVar("table")) {
             globalVars.queryObj.table = encodeURI(table);
-        }
-        else if (table = getQueryVariable("table")) {
+        } else if (table = getQueryVariable("table")) {
             globalVars.queryObj.table = encodeURI(table);
-        }
-        else {
+        } else {
             globalVars.queryObj.table = encodeURI(settings.table);
         }
         globalVars.queryObj.rows = settings.rowList[0];
 
-        var getQuery = function () {
+        var getQuery = function() {
             if (settings.query) {
                 return settings.query;
-            }
-            else {
+            } else {
                 return location.search;
             }
         };
-        var load = function (elem) {
+        var load = function(elem) {
             var queryStr = getQuery();
             if (queryStr.indexOf("page") === -1) {
                 if (queryStr === "") {
                     queryStr += "?";
-                }
-                else {
+                } else {
                     queryStr += "&";
                 }
                 queryStr += "page=" + globalVars.queryObj.page + "&rows=" + globalVars.queryObj.rows + "&colpage=" + globalVars.queryObj.colpage;
@@ -141,39 +134,34 @@
             if (settings.query) {
                 settings.query = queryStr;
                 postData(elem);
-            }
-            else if (settings.asyncRefresh) {
+            } else if (settings.asyncRefresh) {
                 History.replaceState(null, globalVars.pageTitle, queryStr);
                 postData(elem);
-            }
-            else {
+            } else {
                 var hr = getQueryVariable("hr");
                 if (!hr) {
                     queryStr += "&hr=true";
                     location.href = location.pathname + queryStr;
-                }
-                else {
+                } else {
                     postData(elem);
                 }
             }
         };
-        var format = function () {
+        var format = function() {
             var condition = $(".rt-condition");
             if (!condition.find("div").length) {
                 condition.css("display", "none");
-            }
-            else {
+            } else {
                 condition.css("display", "block");
             }
             var selector = $(".rt-selector");
             if (!selector.find("div").length) {
                 selector.css("display", "none");
-            }
-            else {
+            } else {
                 selector.css("display", "block");
             }
         };
-        var postData = function (elem) {
+        var postData = function(elem) {
             var postOpts = {
                 async: settings.asyncLoad,
                 method: "POST",
@@ -184,7 +172,7 @@
                     style: settings.style,
                     rowList: settings.rowList.toString()
                 },
-                success: function (data) {
+                success: function(data) {
                     if (data.status === "fail") {
                         alert(data.msg);
                         return false;
@@ -197,22 +185,19 @@
                             rtSearch.find(".rt-search-cdts").html(jsonObject.search);
                             if (jsonObject.search) {
                                 rtSearch.css("display", "block");
-                            }
-                            else {
+                            } else {
                                 rtSearch.css("display", "none");
                             }
                         }
                     }
                     if (jsonObject.condition) {
                         _this.find(".rt-condition").html(jsonObject.condition);
-                    }
-                    else {
+                    } else {
                         _this.find(".rt-condition").css("display", "none");
                     }
                     if (jsonObject.selector) {
                         _this.find(".rt-selector").html(jsonObject.selector);
-                    }
-                    else {
+                    } else {
                         _this.find(".rt-selector").css("display", "none");
                     }
                     _this.find(".rt-body").html(jsonObject.body);
@@ -233,12 +218,10 @@
                         if (elem === undefined) {
                             nav.find("a").eq(0).attr("data-url", getQuery()).html(decodeURI(globalVars.queryObj.table));
                         }
-                    }
-                    else {
+                    } else {
                         if (settings.searchBar === true && settings.style === "tree") {
                             _this.find(".rt-nav>li").css("display", "none");
-                        }
-                        else {
+                        } else {
                             _this.find(".rt-nav").css("display", "none");
                         }
                     }
@@ -256,7 +239,7 @@
                     _this.on("click", ".rt-pager-export", exportExcel);
                     _this.on("keyup", ".rt-celltext", updateCellValue).on("change", ".rt-cellselect", updateCellValue);
                     _this.on("click", "[data-table]", getTable).on("click", ".rt-nav-a", getTableByNav);
-                    _this.on("click", ".rt-node>.glyphicon-triangle-right", expandNode);//.on("dblclick", "[data-childtree]", expandNode);
+                    _this.on("click", ".rt-node>.glyphicon-triangle-right", expandNode); //.on("dblclick", "[data-childtree]", expandNode);
                     _this.on("click", ".rt-treeSearcher-btn", searchTree).on("click", ".rt-search-result .rt-node-cols", locateNode);
                     _this.on("click", ".rt-node-cols", nodeOnClick);
                     _this.on("click", ".rt-node>.rt-checkboxWrapper", checkNode);
@@ -278,7 +261,7 @@
                         key = sign && key.substring(0, key.length - 6) + sign.toString().toLocaleLowerCase();
                         globalVars.queryObj[key || keyValuePair[0]] = keyValuePair[1];
                     }
-                    $(".rt-condition>div").each(function () {
+                    $(".rt-condition>div").each(function() {
                         var key = $(this).attr("data-value");
                         $(".rt-search-cdts").find("[name=\"" + key + "\"]").closest("div").css("display", "none");
                     });
@@ -289,31 +272,29 @@
                         settings.complete();
                     }
                 },
-                error: function () {
+                error: function() {
                     alert("您未搭建服务器哦！");
                     return false;
                 }
             };
             $.ajax(postOpts);
         };
-        var getTable = function () {
+        var getTable = function() {
             var elem = this;
             globalVars.queryObj.table = encodeURI($(this).attr("data-table"));
             if (settings.query) {
                 settings.query = "?" + $(this).attr("data-passedcol");
-            }
-            else {
+            } else {
                 History.replaceState(null, globalVars.pageTitle, "?" + $(this).attr("data-passedcol"));
             }
             load(elem);
         };
-        var getTableByNav = function () {
+        var getTableByNav = function() {
             var elem = this;
             var url = $(this).attr("data-url");
             if (settings.query) {
                 settings.query = url;
-            }
-            else {
+            } else {
                 History.replaceState(null, globalVars.pageTitle, url);
             }
             $.post(serverURL + "GetTable" + getQuery(), {
@@ -321,7 +302,7 @@
                 hasCheckbox: settings.hasCheckbox,
                 style: settings.style,
                 rowList: settings.rowList.toString()
-            }, function (data) {
+            }, function(data) {
                 // var jsonObject = JSON.parse(data);
                 if (data.status === "fail") {
                     alert(data.msg);
@@ -354,8 +335,9 @@
                 format();
             });
         };
-        var buildQueryStr = function () {
-            var queryStr = "", value = "";
+        var buildQueryStr = function() {
+            var queryStr = "",
+                value = "";
             for (var q in globalVars.queryObj) {
                 value = globalVars.queryObj[q];
                 if (value.toString().indexOf("%") === -1) {
@@ -365,11 +347,10 @@
             }
             return "?" + queryStr.substring(1);
         };
-        var refresh = function () {
+        var refresh = function() {
             if (settings.query) {
                 settings.query = buildQueryStr();
-            }
-            else {
+            } else {
                 History.replaceState(null, globalVars.pageTitle, buildQueryStr());
             }
             $.post(serverURL + "GetTable" + getQuery(), {
@@ -377,7 +358,7 @@
                 hasCheckbox: settings.hasCheckbox,
                 style: settings.style,
                 rowList: settings.rowList.toString()
-            }, function (data) {
+            }, function(data) {
                 // var jsonObject = JSON.parse(data);
                 if (data.status === "fail") {
                     alert(data.msg);
@@ -396,7 +377,7 @@
                 if (!jsonObject.exception) {
                     settings.complete();
                 }
-                $("td .rt-checkboxWrapper").each(function () {
+                $("td .rt-checkboxWrapper").each(function() {
                     var checkbox = $(this).find(".rt-checkbox");
                     if (cachedRows[globalVars.tableID][checkbox.val()]) {
                         checkbox[0].checked = true;
@@ -413,21 +394,20 @@
                 format();
             });
         };
-        var expandNode = function () {
+        var expandNode = function() {
             var parentNode = $(this).parent();
             var arrow = parentNode.children(".glyphicon-triangle-right");
             if (arrow.hasClass("down")) {
                 var childtree = parentNode.children(".rt-childtree");
                 childtree.slideUp("fast");
                 arrow.removeClass("down");
-            }
-            else {
+            } else {
                 parentNode.children(".rt-childtree").remove();
                 parentNode.append("<div class='rt-childtree' style='display:none'></div>");
                 var childtree = parentNode.children(".rt-childtree");
-                var slideDown = function () {
+                var slideDown = function() {
                     if (childtree.siblings(".rt-checkboxWrapper").hasClass("checked")) {
-                        childtree.find(".rt-checkboxWrapper").each(function () {
+                        childtree.find(".rt-checkboxWrapper").each(function() {
                             $(this).addClass("checked");
                             $(this).find(".rt-checkbox")[0].checked = true;
                         });
@@ -435,8 +415,9 @@
                     childtree.slideDown("fast");
                 };
                 var trees = JSON.parse(parentNode.children(".rt-node-cols").attr("data-childtree"));
-                var treesLength = Object.keys(trees).length, counter = 0;
-                var successfunc=function (data) {
+                var treesLength = Object.keys(trees).length,
+                    counter = 0;
+                var successfunc = function(data) {
                     // var jsonObject = JSON.parse(data);
                     if (data.status === "fail") {
                         alert(data.msg);
@@ -456,21 +437,26 @@
                         url: serverURL + "GetTable" + "?table=" + encodeURI(t) + "&" + trees[t],
                         method: "POST",
                         data: {
-                            configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style
+                            configFile: settings.configFile,
+                            hasCheckbox: settings.hasCheckbox,
+                            style: settings.style
                         },
                         success: successfunc
                     });
                 }
             }
         };
-        var searchTree = function () {
+        var searchTree = function() {
             var cd = $(".rt-treeSearcher-txt").val();
             if (!cd) {
                 return;
             }
             $.post(serverURL + "SearchTree" + "?table=" + globalVars.queryObj.table, {
-                configFile: settings.configFile, hasCheckbox: settings.hasCheckbox, style: settings.style, condition: cd
-            }, function (data) {
+                configFile: settings.configFile,
+                hasCheckbox: settings.hasCheckbox,
+                style: settings.style,
+                condition: cd
+            }, function(data) {
                 if (data.status === "fail") {
                     alert(data.msg);
                     return false;
@@ -480,14 +466,14 @@
                 _this.find(".rt-body").html(jsonObject.body);
             });
         };
-        var locateNode = function () {
+        var locateNode = function() {
             var table = encodeURI($(this).attr("data-tableid"));
             $.post(serverURL + "LocateNode" + "?table=" + table, {
                 configFile: settings.configFile,
                 hasCheckbox: settings.hasCheckbox,
                 style: settings.style,
                 condition: $(this).attr("data-parentnode")
-            }, function (data) {
+            }, function(data) {
                 // var jsonObject = JSON.parse(data);
                 if (data.status === "fail") {
                     alert(data.msg);
@@ -495,61 +481,59 @@
                 }
                 var jsonObject = data.res;
                 for (var i = 0; i < jsonObject.length; i++) {
-                    var obj = jsonObject[i], elem = null;
+                    var obj = jsonObject[i],
+                        elem = null;
                     if (obj.parent != "ROOTNODE") {
                         var selector = ".rt-node-cols[data-childtree='{" + obj.parent.replace(/"/g, "\"") + "}']";
                         var parent = _this.find(selector).parent();
                         parent.append("<div class=\"rt-childtree\"></div>");
                         parent.children(".rt-childtree").html(obj.elems);
                         parent.children(".glyphicon-triangle-right").addClass("down");
-                    }
-                    else {
+                    } else {
                         _this.find(".rt-body").html(obj.elems);
                     }
                 }
                 var a = jsonObject;
             });
         };
-        var search = function () {
-            $(".rt-search-txt").each(function () {
+        var search = function() {
+            $(".rt-search-txt").each(function() {
                 var value = $.trim($(this).val());
-                var name = $(this).attr("name"), sign = $(this).attr("data-sign");
+                var name = $(this).attr("name"),
+                    sign = $(this).attr("data-sign");
                 if (value) {
                     globalVars.queryObj[(name + sign)] = value;
-                }
-                else {
+                } else {
                     delete globalVars.queryObj[(name + sign)];
                 }
             });
             if (settings.query || settings.asyncRefresh) {
                 refresh();
-            }
-            else {
+            } else {
                 location.href = location.pathname + buildQueryStr();
             }
             settings.searchComplete();
             return false;
         };
-        var startSearching = function () {
+        var startSearching = function() {
             setTimeout(search, 1);
         };
-        var clean = function () {
-            $(".rt-search-txt").each(function () {
+        var clean = function() {
+            $(".rt-search-txt").each(function() {
                 $(this).val("");
             });
             search();
             return false;
         };
-        var showAdvSearch = function () {
+        var showAdvSearch = function() {
             if ($(this).hasClass("adv-shown")) {
                 $(".rt-search-adv").css("display", "none");
                 $(this).find(".rt-search-showadv-txt").html("更多");
                 $(this).find(".glyphicon-chevron-down").removeClass("upsidwn");
                 $(this).removeClass("adv-shown");
-            }
-            else {
+            } else {
                 var conditionBlock = $(".rt-condition");
-                $(".rt-search-adv").each(function () {
+                $(".rt-search-adv").each(function() {
                     var attrValue = $(this).find(".rt-search-txt").attr("name");
                     if (!conditionBlock.find("[data-value=\"" + attrValue + "\"]").length) {
                         $(this).css("display", "inline-block");
@@ -560,37 +544,34 @@
                 $(this).addClass("adv-shown");
             }
         };
-        var sort = function () {
+        var sort = function() {
             var sortIcon = $(this).find(".glyphicon");
             if (sortIcon.length && sortIcon.hasClass("glyphicon-arrow-up")) {
                 globalVars.queryObj.sort = $(this).attr("name") + "%20DESC";
-            }
-            else {
+            } else {
                 globalVars.queryObj.sort = $(this).attr("name") + "%20ASC";
             }
             if (settings.query || settings.asyncRefresh) {
                 refresh();
-            }
-            else {
+            } else {
                 location.href = location.pathname + buildQueryStr();
             }
         };
-        var selectmore = function () {
+        var selectmore = function() {
             var list = $(this).parent().siblings(".rt-selector-value").find(".rt-selector-list");
             if ($(this).hasClass("selectmore-all")) {
                 list.css("height", "30px");
                 $(this).find(".rt-selectmore-txt").html("更多");
                 $(this).find(".glyphicon-chevron-down").removeClass("upsidwn");
                 $(this).removeClass("selectmore-all");
-            }
-            else {
+            } else {
                 list.css("height", "auto");
                 $(this).find(".rt-selectmore-txt").html("收起");
                 $(this).find(".glyphicon-chevron-down").addClass("upsidwn");
                 $(this).addClass("selectmore-all");
             }
         };
-        var cancelMultiselect = function () {
+        var cancelMultiselect = function() {
             $(".rt-multiselect-btns").css("display", "none");
             $(".rt-selector-list-text>.glyphicon").css("display", "none");
             $(".rt-multiselect-btns>button").css("display", "none");
@@ -598,7 +579,7 @@
             $(".rt-selector-list-text>.glyphicon-check").removeClass("glyphicon-check").addClass("glyphicon-unchecked");
             $(this).parent().siblings(".rt-selector-btns").find(".rt-selector-multiselect").removeClass("rt-multiselect-true");
         };
-        var multiselect = function () {
+        var multiselect = function() {
             cancelMultiselect();
             var elem = $(this).parent().siblings(".rt-selector-value");
             var list = elem.find(".rt-selector-list");
@@ -613,26 +594,25 @@
             btns.find(".rt-multiselect-cancel").css("display", "inline-block");
             $(this).addClass("rt-multiselect-true");
         };
-        var submitCondition = function (key) {
+        var submitCondition = function(key) {
             var conditions = [];
-            $(".rt-selector-key[data-value=\"" + key + "\"]").siblings(".rt-selector-value").find(".rt-multiselect-checked").each(function () {
+            $(".rt-selector-key[data-value=\"" + key + "\"]").siblings(".rt-selector-value").find(".rt-multiselect-checked").each(function() {
                 conditions.push($(this).attr("data-value"));
             });
             var conditionStr = conditions.join("|");
             globalVars.queryObj[key] = conditionStr;
             if (settings.query || settings.asyncRefresh) {
                 refresh();
-            }
-            else {
+            } else {
                 location.href = location.pathname + buildQueryStr();
             }
             $(".rt-search-cdts").find("[name=\"" + key + "\"]").closest("div").css("display", "none");
         };
-        var submitMultiselect = function () {
+        var submitMultiselect = function() {
             var key = $(this).parent().siblings(".rt-selector-key").attr("data-value");
             submitCondition(key);
         };
-        var selectCondition = function () {
+        var selectCondition = function() {
             var elem = $(this).closest(".rt-selector-value");
             var multiselect = elem.siblings(".rt-selector-btns").find(".rt-selector-multiselect");
             if (!multiselect.hasClass("rt-multiselect-true")) {
@@ -640,114 +620,103 @@
                 $(this).parent().addClass("rt-multiselect-checked");
                 $(".rt-search-cdts").find("[name=\"" + key + "\"]").closest("div").css("display", "none");
                 submitCondition(key);
-            }
-            else {
+            } else {
                 var checkbox = $(this).find(".glyphicon");
                 if (checkbox.hasClass("glyphicon-unchecked")) {
                     checkbox.removeClass("glyphicon-unchecked");
                     checkbox.addClass("glyphicon-check");
                     $(this).parent().addClass("rt-multiselect-checked");
-                }
-                else {
+                } else {
                     checkbox.removeClass("glyphicon-check");
                     checkbox.addClass("glyphicon-unchecked");
                     $(this).parent().removeClass("rt-multiselect-checked");
                 }
                 if (elem.find(".rt-multiselect-checked").length) {
                     elem.siblings(".rt-multiselect-btns").find(".rt-multiselect-ok").css("display", "inline-block");
-                }
-                else {
+                } else {
                     elem.siblings(".rt-multiselect-btns").find(".rt-multiselect-ok").css("display", "none");
                 }
             }
         };
-        var removeCondition = function () {
+        var removeCondition = function() {
             var key = $(this).parent().attr("data-value");
             var txt = $(".rt-search-cdts").find("[name=\"" + key + "\"]");
             txt.val("");
             var searchDiv = txt.parent("div");
             if (!searchDiv.hasClass("rt-search-adv")) {
                 searchDiv.css("display", "inline-block");
-            }
-            else if (searchDiv.parent("div").siblings(".rt-search-btns").find(".rt-search-showadv").hasClass("adv-shown")) {
+            } else if (searchDiv.parent("div").siblings(".rt-search-btns").find(".rt-search-showadv").hasClass("adv-shown")) {
                 searchDiv.css("display", "inline-block");
             }
             delete globalVars.queryObj[key];
             if (settings.query || settings.asyncRefresh) {
                 refresh();
-            }
-            else {
+            } else {
                 location.href = location.pathname + buildQueryStr();
             }
         };
-        var updateCellValue = function () {
+        var updateCellValue = function() {
             var value = $(this).val();
             $(this).attr("value", value);
             $(this).parent().attr("data-value", value);
         };
-        var firstPage = function () {
+        var firstPage = function() {
             globalVars.queryObj.page = 1;
             if (settings.query || settings.asyncRefresh) {
                 refresh();
-            }
-            else {
+            } else {
                 location.href = location.pathname + buildQueryStr();
             }
         };
-        var prevPage = function () {
+        var prevPage = function() {
             var pageNumber = Number(_this.find(".rt-pager-page").val());
             if (pageNumber > 1) {
                 globalVars.queryObj.page = pageNumber - 1;
                 if (settings.query || settings.asyncRefresh) {
                     refresh();
-                }
-                else {
+                } else {
                     location.href = location.pathname + buildQueryStr();
                 }
             }
         };
-        var nextPage = function () {
+        var nextPage = function() {
             var pageNumber = Number(_this.find(".rt-pager-page").val());
             var totalPage = Number(_this.find(".rt-pager-totalPages").html());
             if (pageNumber < totalPage) {
                 globalVars.queryObj.page = pageNumber + 1;
                 if (settings.query || settings.asyncRefresh) {
                     refresh();
-                }
-                else {
+                } else {
                     location.href = location.pathname + buildQueryStr();
                 }
             }
         };
-        var lastPage = function () {
+        var lastPage = function() {
             globalVars.queryObj.page = _this.find(".rt-pager-totalPages").html();
             if (settings.query || settings.asyncRefresh) {
                 refresh();
-            }
-            else {
+            } else {
                 location.href = location.pathname + buildQueryStr();
             }
         };
-        var page_Keypress = function () {
+        var page_Keypress = function() {
             if (event.keyCode === 13) {
                 var pageNumber = parseInt(_this.find(".rt-pager-page").val());
                 var totalPage = Number(_this.find(".rt-pager-totalPages").html());
                 if (isNaN(pageNumber) || pageNumber < 1) {
                     pageNumber = 1;
-                }
-                else if (pageNumber > totalPage) {
+                } else if (pageNumber > totalPage) {
                     pageNumber = totalPage;
                 }
                 globalVars.queryObj.page = pageNumber;
                 if (settings.query || settings.asyncRefresh) {
                     refresh();
-                }
-                else {
+                } else {
                     location.href = location.pathname + buildQueryStr();
                 }
             }
         };
-        var rowList_Change = function () {
+        var rowList_Change = function() {
             var pageNumber = parseInt(_this.find(".rt-pager-page").val());
             var rowsPerPage = parseInt($(this).val());
             var totalRecords = parseInt(_this.find(".rt-pager-totalRecords").html());
@@ -759,43 +728,40 @@
             globalVars.queryObj.rows = rowsPerPage;
             if (settings.query || settings.asyncRefresh) {
                 refresh();
-            }
-            else {
+            } else {
                 location.href = location.pathname + buildQueryStr();
             }
         };
-        var prevCols = function () {
+        var prevCols = function() {
             var pageNumber = Number(_this.find(".rt-colPager-page").val());
             if (pageNumber > 1) {
                 globalVars.queryObj.colpage = pageNumber - 1;
                 if (settings.query || settings.asyncRefresh) {
                     refresh();
-                }
-                else {
+                } else {
                     location.href = location.pathname + buildQueryStr();
                 }
             }
         };
-        var nextCols = function () {
+        var nextCols = function() {
             var pageNumber = Number(_this.find(".rt-colPager-page").val());
             var totalPage = Number(_this.find(".rt-colPager-totalColPages").val());
             if (pageNumber < totalPage) {
                 globalVars.queryObj.colpage = pageNumber + 1;
                 if (settings.query || settings.asyncRefresh) {
                     refresh();
-                }
-                else {
+                } else {
                     location.href = location.pathname + buildQueryStr();
                 }
             }
         };
-        var trOnMouseover = function () {
+        var trOnMouseover = function() {
             $(this).addClass("rt-tr-onhover");
         };
-        var trOnMouseout = function () {
+        var trOnMouseout = function() {
             $(this).removeClass("rt-tr-onhover");
         };
-        var trOnClick = function () {
+        var trOnClick = function() {
             var elem = $(this).find(".rt-td-checkbox");
             if (elem.length) {
                 if ($(this).hasClass("rt-tr-selected")) {
@@ -810,8 +776,7 @@
                         thCheckbox.find(".rt-checkboxWrapper").removeClass("checked");
                         thCheckbox.find(".rt-checkbox")[0].checked = false;
                     }
-                }
-                else {
+                } else {
                     $(this).addClass("rt-tr-selected");
                     elem.find(".rt-checkboxWrapper").addClass("checked");
                     var checkbox = elem.find(".rt-checkbox");
@@ -821,7 +786,7 @@
                         if (!cachedRows[globalVars.tableID][rowid]) {
                             var rowObj = {};
                             var cells = $(this).find("td");
-                            cells.each(function () {
+                            cells.each(function() {
                                 rowObj[$(this).attr("name")] = $(this).attr("data-value");
                             });
                             cachedRows[globalVars.tableID][rowid] = rowObj;
@@ -833,15 +798,13 @@
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 var cells = $(this).find("td");
                 if ($(this).hasClass("rt-tr-selected")) {
                     $(this).removeClass("rt-tr-selected");
                     var rowid = cells.eq(0).attr("data-value");
                     delete cachedRows[globalVars.tableID][rowid];
-                }
-                else {
+                } else {
                     cachedRows[globalVars.tableID] = {};
                     var selected = _this.find(".rt-tr-selected");
                     if (selected.length) {
@@ -851,7 +814,7 @@
                     var rowid = cells.eq(0).attr("data-value");
                     if (!cachedRows[globalVars.tableID][rowid]) {
                         var rowObj = {};
-                        cells.each(function () {
+                        cells.each(function() {
                             rowObj[$(this).attr("name")] = $(this).attr("data-value");
                         });
                         cachedRows[globalVars.tableID][rowid] = rowObj;
@@ -859,7 +822,7 @@
                 }
             }
         };
-        var toggleAll = function () {
+        var toggleAll = function() {
             var allCheckbox = _this.find("td .rt-checkboxWrapper");
             var hasChecked = $(this).hasClass("checked");
             if (hasChecked) {
@@ -867,26 +830,25 @@
                 $(this).find(".rt-checkbox")[0].checked = false;
                 _this.find(".rt-tr-selected").removeClass("rt-tr-selected");
                 allCheckbox.removeClass("checked");
-                allCheckbox.each(function () {
+                allCheckbox.each(function() {
                     var checkbox = $(this).find(".rt-checkbox");
                     checkbox[0].checked = false;
                     var rowID = checkbox.val();
                     delete cachedRows[globalVars.tableID][rowID];
                 });
-            }
-            else {
+            } else {
                 $(this).addClass("checked");
                 $(this).find(".rt-checkbox")[0].checked = true;
                 _this.find("tbody tr").addClass("rt-tr-selected");
                 allCheckbox.addClass("checked");
-                allCheckbox.each(function () {
+                allCheckbox.each(function() {
                     var checkbox = $(this).find(".rt-checkbox");
                     checkbox[0].checked = true;
                     var rowid = checkbox.val();
                     if (!cachedRows[globalVars.tableID][rowid]) {
                         var rowObj = {};
                         var cells = $(this).closest("tr").find("td");
-                        cells.each(function () {
+                        cells.each(function() {
                             rowObj[$(this).attr("name")] = $(this).attr("data-value");
                         });
                         cachedRows[globalVars.tableID][rowid] = rowObj;
@@ -894,7 +856,7 @@
                 });
             }
         };
-        var checkParent = function (checkbox) {
+        var checkParent = function(checkbox) {
             var tree = checkbox.closest(".rt-childtree");
             var node = tree.children(".rt-node");
             var allSiblings = node.children(".rt-checkboxWrapper");
@@ -906,26 +868,26 @@
                 checkParent(parentCheckbox);
             }
         };
-        var checkNode = function () {
-            var childCheckbox = $(this).parent().find(".rt-checkboxWrapper"), event = null;
+        var checkNode = function() {
+            var childCheckbox = $(this).parent().find(".rt-checkboxWrapper"),
+                event = null;
             if (!$(this).hasClass("checked")) {
                 $(this).addClass("checked");
                 $(this).find(".rt-checkbox")[0].checked = true;
-                childCheckbox.each(function () {
+                childCheckbox.each(function() {
                     $(this).addClass("checked");
                     $(this).find(".rt-checkbox")[0].checked = true;
                 });
                 checkParent($(this));
                 event = $.Event("nodeOnCheck");
-            }
-            else {
+            } else {
                 $(this).removeClass("checked");
                 $(this).find(".rt-checkbox")[0].checked = false;
-                childCheckbox.each(function () {
+                childCheckbox.each(function() {
                     $(this).removeClass("checked");
                     $(this).find(".rt-checkbox")[0].checked = false;
                 });
-                var parentNodes = $(this).parents(".rt-node").each(function () {
+                var parentNodes = $(this).parents(".rt-node").each(function() {
                     var checkbox = $(this).children(".rt-checkboxWrapper");
                     checkbox.removeClass("checked");
                     checkbox.find(".rt-checkbox")[0].checked = false;
@@ -935,10 +897,10 @@
             $(this).trigger(event);
         };
         //导出为Excel表格函数
-        var exportExcel = function () {
+        var exportExcel = function() {
             window.open(serverURL + "/GenerateExcel.aspx" + getQuery() + "&ConfigFile=" + settings.configFile);
         };
-        var nodeOnClick = function () {
+        var nodeOnClick = function() {
             var elem = $(".rt-body").children(".rt-search-result");
             if (!elem.length) {
                 var event = $.Event("nodeOnClick");
@@ -949,16 +911,16 @@
         load();
     };
 
-    $.fn.rtGetCheckedRows = function () {
+    $.fn.rtGetCheckedRows = function() {
         var elemID = $(this).attr("id");
         return cachedRows[elemID];
     };
 
-    $.fn.rtGetAllRowStr = function () {
+    $.fn.rtGetAllRowStr = function() {
         var allRows = [];
-        $(this).find("tbody").children("tr").each(function () {
+        $(this).find("tbody").children("tr").each(function() {
             var row = {};
-            $(this).children("td").each(function () {
+            $(this).children("td").each(function() {
                 var col = $(this).attr("name");
                 if (col !== "rt-td-checkbox" && col !== "操作") {
                     row[col] = $(this).attr("data-value");
@@ -969,7 +931,7 @@
         return allRows;
     };
 
-    $.fn.rtAppendNewRow = function () {
+    $.fn.rtAppendNewRow = function() {
         var elemID = $(this).attr("id");
         $(this).find("tbody").append(nullRows[elemID]);
     };
