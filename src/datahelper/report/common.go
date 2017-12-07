@@ -231,7 +231,7 @@ func BuildTablePager(param *Param, bodybuf *bytes.Buffer, count int, style strin
 		bodybuf.WriteString("<span class=\"glyphicon glyphicon-step-forward rt-pager-lastPage rt-pager-hover-color\"></span>&nbsp;&nbsp;")
 		bodybuf.WriteString("<select class=\"rt-pager-rowList\">")
 		for _, v := range rowlist {
-			bodybuf.WriteString("<option class=\"rt-pager-hover-color\" value=\"")
+			bodybuf.WriteString("<option value=\"")
 			bodybuf.WriteString(v)
 			bodybuf.WriteString("\"")
 			if i, _ := function.StringToInt(v); i == param.Settings.Rows {
