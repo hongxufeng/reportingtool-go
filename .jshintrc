@@ -16,7 +16,11 @@
         "module": false,
         "require": false,
         "History": false,
-        "jQuery": false
+        "jQuery": false,
+        "Cookies": false,
+        "md5": false,
+        "alert": false,
+        "confirm": false
     },
     "es5": true,
     "browser": true,

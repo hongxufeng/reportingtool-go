@@ -1,19 +1,19 @@
 var BasePagesInit = function() {
-    var initPage = function(){
-        if(Cookies.get('avatar')==undefined){
-            if(confirm("您未进行登录，并不能获取数据呢！")){
-                window.location.href="pages_login.html"
-            }else {
-                return false
+    var initPage = function() {
+        if (Cookies.get('avatar') == undefined) {
+            if (confirm("您未进行登录，并不能获取数据哦！")) {
+                window.location.href = "pages_login.html";
+            } else {
+                return false;
             }
-        }else {
+        } else {
             // alert(decodeURI(Cookies.get("avatar")))
             $("[alt=\"Avatar\"]").attr("src", decodeURI(Cookies.get("avatar")))
         }
     };
 
     return {
-        init: function () {
+        init: function() {
             // Init
             initPage();
         }
@@ -21,4 +21,4 @@ var BasePagesInit = function() {
 }();
 
 // Initialize when page loads
-jQuery(function(){ BasePagesInit.init(); });
+jQuery(function() { BasePagesInit.init(); });
