@@ -531,6 +531,7 @@ var App = function() {
                     jQuery('#css-main')
                         .after('<link rel="stylesheet" id="css-theme" href="' + $theme + '">');
                 }
+                Cookies.set('theme', $theme, { expires: 90 });
             }
 
             $cssTheme = jQuery('#css-theme');
@@ -1029,7 +1030,7 @@ var App = function() {
      * App.initHelper('easy-pie-chart');
      *
      */
-    var pluginInit = function() {
+    var referenceInit = function() {
         var js = $('[src="assets/js/app.js"]');
         js.before("<script src='assets/js/core/bootstrap.min.js'></script>");
         js.before("<script src='assets/js/core/jquery.placeholder.min.js'></script>");
@@ -1038,10 +1039,22 @@ var App = function() {
         js.before("<script src='assets/js/core/js.cookie.min.js'></script>");
     };
 
+    var themeInit = function() {
+        var theme = Cookies.get('theme');
+        if (theme !== undefined) {
+            jQuery('[data-toggle="theme"][data-theme="' + theme + '"]')
+                .parent('li')
+                .addClass('active');
+            jQuery('#css-main')
+                .after('<link rel="stylesheet" id="css-theme" href="' + theme + '">');
+        }
+    };
+
     return {
         init: function() {
             // Init all vital functions
-            pluginInit();
+            referenceInit();
+            themeInit();
             uiInit();
             uiLayout();
             uiNav();
