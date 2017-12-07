@@ -111,11 +111,13 @@ func AppendWhere(req *service.HttpRequest, param *Param, buf *bytes.Buffer) {
 			buf.WriteString("=")
 			if ok == nil {
 				buf.WriteString(v)
-			} else {
-				buf.WriteString("\"")
-				buf.WriteString(v)
-				buf.WriteString("\"")
+				buf.WriteString(" or ")
+				buf.WriteString(colconfig.Tag)
+				buf.WriteString("=")
 			}
+			buf.WriteString("\"")
+			buf.WriteString(v)
+			buf.WriteString("\"")
 		}
 		buf.WriteString(")")
 		buf.WriteString(" and ")
