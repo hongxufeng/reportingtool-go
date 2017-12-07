@@ -471,3 +471,7 @@ div.tagsinput span.tag {
 .rt-glyphicon-color {
     color: #44b4a6;
 }
+
+.rt-pager-hover-color:hover {
+    background-color: #44b4a6;
+}

@@ -217,8 +217,8 @@ func BuildTablePager(param *Param, bodybuf *bytes.Buffer, count int, style strin
 
 	if style != model.Style_Tree {
 		bodybuf.WriteString("<div class=\"rt-pager-controls\">")
-		bodybuf.WriteString("&nbsp;<span class=\"glyphicon glyphicon-step-backward rt-pager-firstPage\"></span>")
-		bodybuf.WriteString("&nbsp;<span class=\"glyphicon glyphicon-backward rt-pager-prevPage\"></span>")
+		bodybuf.WriteString("&nbsp;<span class=\"glyphicon glyphicon-step-backward rt-pager-firstPage rt-pager-hover-color\"></span>")
+		bodybuf.WriteString("&nbsp;<span class=\"glyphicon glyphicon-backward rt-pager-prevPage rt-pager-hover-color\"></span>")
 		bodybuf.WriteString("&nbsp;<span class=\"pager-separator\"></span>&nbsp;")
 		bodybuf.WriteString("第&nbsp;<input type=\"text\" class=\"rt-pager-page\" value=\"")
 		bodybuf.WriteString(function.IntToString(param.Settings.Page))
@@ -227,11 +227,11 @@ func BuildTablePager(param *Param, bodybuf *bytes.Buffer, count int, style strin
 		bodybuf.WriteString(function.IntToString(totalpages))
 		bodybuf.WriteString("</span>&nbsp;页")
 		bodybuf.WriteString("&nbsp;<span class=\"pager-separator\"></span>&nbsp;")
-		bodybuf.WriteString("<span class=\"glyphicon glyphicon-forward rt-pager-nextPage\"></span>&nbsp;")
-		bodybuf.WriteString("<span class=\"glyphicon glyphicon-step-forward rt-pager-lastPage\"></span>&nbsp;&nbsp;")
+		bodybuf.WriteString("<span class=\"glyphicon glyphicon-forward rt-pager-nextPage rt-pager-hover-color\"></span>&nbsp;")
+		bodybuf.WriteString("<span class=\"glyphicon glyphicon-step-forward rt-pager-lastPage rt-pager-hover-color\"></span>&nbsp;&nbsp;")
 		bodybuf.WriteString("<select class=\"rt-pager-rowList\">")
 		for _, v := range rowlist {
-			bodybuf.WriteString("<option value=\"")
+			bodybuf.WriteString("<option class=\"rt-pager-hover-color\" value=\"")
 			bodybuf.WriteString(v)
 			bodybuf.WriteString("\"")
 			if i, _ := function.StringToInt(v); i == param.Settings.Rows {

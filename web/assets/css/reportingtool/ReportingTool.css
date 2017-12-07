@@ -302,10 +302,6 @@ td .glyphicon {
     cursor: pointer;
 }
 
-.rt-pager-controls>.glyphicon:hover {
-    background-color: #E5E5E5
-}
-
 .rt-pager-page {
     width: 32px;
     text-align: center;
@@ -321,10 +317,6 @@ td .glyphicon {
     padding: 5px;
 }
 
-.rt-pager-container .rt-pager-btn:hover {
-    background-color: #E5E5E5;
-}
-
 .pager-separator {
     border: 1px solid #D3D3D3;
     margin: 0px 4px;
@@ -332,6 +324,10 @@ td .glyphicon {
 
 .rt-pager-btn .glyphicon {
     padding-right: 4px;
+}
+
+.rt-pager-hover-color:hover {
+    background-color: lightskyblue;
 }
 
 .rt-pager-totalPages {

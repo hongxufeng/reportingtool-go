@@ -13,7 +13,7 @@
             &lt;span class="glyphicon glyphicon-trash" title="删除" onclick="deleteThis(this,'OBJ_ID')">&lt;/span>
         </buttons>
         <pagerbuttons>
-            &lt;span class="rt-pager-btn" onclick="create()">
+            &lt;span class="rt-pager-btn rt-pager-hover-color" onclick="create()">
             &lt;span class="glyphicon glyphicon-plus" title="新增问卷">&lt;/span>添加
             &lt;/span>
         </pagerbuttons>
