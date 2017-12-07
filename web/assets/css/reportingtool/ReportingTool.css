@@ -182,11 +182,11 @@ table [data-table] {
 }
 
 .rt-tr-onhover {
-    background-color: #E1F1FF
+    background-color: lightskyblue
 }
 
 .rt-tr-selected {
-    background-color: #E1F1FF
+    background-color: lightskyblue
 }
 
 [name=操作]>span {
@@ -330,6 +330,14 @@ td .glyphicon {
     padding-right: 4px;
 }
 
+.rt-pager-totalPages {
+    color: #5c90d2;
+}
+
+.rt-pager-totalRecords {
+    color: #5c90d2;
+}
+
 
 /*colPager*/
 
@@ -418,7 +426,7 @@ td .glyphicon {
 }
 
 .rt-selector-list-text:hover {
-    color: #00A0DC;
+    color: #5c90d2;
 }
 
 .rt-selector-btns {
@@ -447,6 +455,7 @@ td .glyphicon {
 
 .rt-selector-selectmore .glyphicon-chevron-down,
 .rt-search-showadv .glyphicon-chevron-down {
+    color: #5c90d2;
     transition: all 200ms ease;
     -webkit-transition: all 200ms ease;
     -moz-transition: all 200ms ease;
@@ -497,6 +506,7 @@ td .glyphicon {
     margin-left: 6px;
     font-size: 12px;
     cursor: pointer;
+    color: #5c90d2;
 }
 
 
@@ -640,32 +650,4 @@ td .glyphicon {
     margin-bottom: 24px;
     padding: 12px 22px 16px 22px;
     position: relative;
-}
-
-
-/*theme-dark*/
-
-.theme-dark .rt-search.rt-rect,
-.theme-dark .rt-rectheader,
-.theme-dark .rt-rectbody-block,
-.theme-dark .rt-search-txt.form-control,
-.theme-dark [type=text],
-.theme-dark select {
-    background: #202020;
-    background-color: rgba(0, 0, 0, 0.3);
-    border: 0px solid transparent;
-    box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;
-    -webkit-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;
-    -moz-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;
-}
-
-.theme-dark .rt-body,
-.theme-dark .rt-search,
-.theme-dark .rt-search-txt.form-control,
-.theme-dark [type=text] {
-    color: #C6C6C6;
-}
-
-.theme-dark .rt-rectbody-col[name=操作] {
-    background-color: #2F2F2F;
 }
