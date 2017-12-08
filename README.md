@@ -96,6 +96,8 @@ var serverURL="http://localhost:8080/ReportingTool"
 
 9.浏览，编辑页面，这些操作增删改查数据库也要统一自动化，这也是常操作项。
 
+10.发现隐患 SQL注入 查询输入框  如果输入穹" or 1 or nickname="穹  则全部数据被查出   要解决
+
 ## SHOW
 现阶段XML配置说明
 ```go
