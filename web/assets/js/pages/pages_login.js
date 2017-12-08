@@ -55,15 +55,15 @@ $.validator.setDefaults({
         var password = md5($("#login-password").val());
         var failureAnimation = function(msg) {
             if (msg != undefined) {
-                $("#tip").html(msg)
+                $("#tip").html(msg);
             }
-            var failureBlock = $(".alert-dismissable")
-            $(".login-title").css("display", "none")
-            failureBlock.css("display", "block")
+            var failureBlock = $(".alert-dismissable");
+            $(".login-title").css("display", "none");
+            failureBlock.css("display", "block");
             if (failureBlock.hasClass("shake")) {
-                failureBlock.removeClass("shake").addClass("wobble")
+                failureBlock.removeClass("shake").addClass("wobble");
             } else {
-                failureBlock.removeClass("wobble").addClass("shake")
+                failureBlock.removeClass("wobble").addClass("shake");
             }
         };
         var postData = {
@@ -87,7 +87,7 @@ $.validator.setDefaults({
                     }
                     //写cookie
                     Cookies.set('auth', data.res.userdata.auth, { expires: 90 });
-                    Cookies.set('avatar', data.res.userdata.avatar, { expires: 90 })
+                    Cookies.set('avatar', data.res.userdata.avatar, { expires: 90 });
                     window.location.href = "reportingtool.html";
                 } else {
                     failureAnimation(data.res.faildata.msg);
