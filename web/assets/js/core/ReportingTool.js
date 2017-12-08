@@ -175,7 +175,7 @@
                 success: function(data) {
                     if (data.status === "fail") {
                         alert(data.msg);
-                        return false;
+                        location.href = location.pathname;
                     }
                     var jsonObject = data.res;
                     if (settings.searchBar === true) {
@@ -306,7 +306,7 @@
                 // var jsonObject = JSON.parse(data);
                 if (data.status === "fail") {
                     alert(data.msg);
-                    return false;
+                    location.href = location.pathname;
                 }
                 var jsonObject = data.res;
                 if (settings.searchBar === true) {
@@ -362,7 +362,7 @@
                 // var jsonObject = JSON.parse(data);
                 if (data.status === "fail") {
                     alert(data.msg);
-                    return false;
+                    location.href = location.pathname;
                 }
                 var jsonObject = data.res;
                 _this.find(".rt-body").html(jsonObject.body);
@@ -421,7 +421,7 @@
                     // var jsonObject = JSON.parse(data);
                     if (data.status === "fail") {
                         alert(data.msg);
-                        return false;
+                        location.href = location.pathname;
                     }
                     var jsonObject = data.res;
                     childtree.append(jsonObject.body);
@@ -459,7 +459,7 @@
             }, function(data) {
                 if (data.status === "fail") {
                     alert(data.msg);
-                    return false;
+                    location.href = location.pathname;
                 }
                 var jsonObject = data.res;
                 // var jsonObject = JSON.parse(data);
@@ -477,7 +477,7 @@
                 // var jsonObject = JSON.parse(data);
                 if (data.status === "fail") {
                     alert(data.msg);
-                    return false;
+                    location.href = location.pathname;
                 }
                 var jsonObject = data.res;
                 for (var i = 0; i < jsonObject.length; i++) {

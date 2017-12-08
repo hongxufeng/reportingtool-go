@@ -85,7 +85,7 @@ func ReplacePlaceHolder(inStr string, cellValue string) string {
 	fmt.Println("outStr:", outStr)
 	return outStr
 }
-func AppendWhere(req *service.HttpRequest, param *Param, buf *bytes.Buffer) {
+func AppendWhere(req *service.HttpRequest, param *Param, buf *bytes.Buffer) error {
 	hasWhere := false
 	for _, colconfig := range param.ColConfigDict {
 		var value string
@@ -95,6 +95,9 @@ func AppendWhere(req *service.HttpRequest, param *Param, buf *bytes.Buffer) {
 			if len(value) == 0 {
 				continue
 			}
+		}
+		if strings.Index(value, "'") > -1 || strings.Index(value, "\"") > -1 || strings.Index(value, ";") > -1 {
+			return service.NewError(service.ERR_INVALID_PARAM, "查询框不接受特殊字符的输入啊！")
 		}
 		if hasWhere == false {
 			hasWhere = true
@@ -125,9 +128,14 @@ func AppendWhere(req *service.HttpRequest, param *Param, buf *bytes.Buffer) {
 	if hasWhere {
 		buf.Truncate(buf.Len() - 5)
 	}
+	return nil
 }
 
-func BuildQuerySQL(req *service.HttpRequest, param *Param) (string, error) {
+func BuildQuerySQL(req *service.HttpRequest, param *Param) (sql string, err error) {
+	if param.TableConfig.HasPower && param.Power >= param.TableConfig.Power {
+		err = service.NewError(service.ERR_POWER_DENIED, "您的用户权限不足啊！")
+		return
+	}
 	var buf bytes.Buffer
 	buf.WriteString("select ")
 	var size = len(param.ColConfigDict)
@@ -146,7 +154,10 @@ func BuildQuerySQL(req *service.HttpRequest, param *Param) (string, error) {
 	buf.WriteString(" from ")
 	buf.WriteString(param.TableConfig.Name)
 
-	AppendWhere(req, param, &buf)
+	err = AppendWhere(req, param, &buf)
+	if err != nil {
+		return
+	}
 	if param.Settings.Order != "" {
 		buf.WriteString(" order by ")
 		buf.WriteString(param.Settings.Order)
@@ -158,10 +169,8 @@ func BuildQuerySQL(req *service.HttpRequest, param *Param) (string, error) {
 	buf.WriteString(function.IntToString(param.Settings.Rows * (param.Settings.Page - 1)))
 	buf.WriteString(",")
 	buf.WriteString(function.IntToString(param.Settings.Rows*param.Settings.Page - 1))
-	if param.TableConfig.HasPower && param.Power >= param.TableConfig.Power {
-		return buf.String(), service.NewError(service.ERR_POWER_DENIED, "您的用户权限不足啊！")
-	}
-	return buf.String(), nil
+	sql = buf.String()
+	return
 }
 
 func GetSelectQuery(param *Param, fields string) (query string, err error) {
