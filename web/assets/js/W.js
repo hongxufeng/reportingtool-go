@@ -1031,7 +1031,7 @@ var App = function() {
      *
      */
     var referenceInit = function() {
-        var js = $('[src="assets/js/app.js"]');
+        var js = $('[src="assets/js/W.js"]');
         js.before("<script src='assets/js/core/bootstrap.min.js'></script>");
         js.before("<script src='assets/js/core/jquery.placeholder.min.js'></script>");
         js.before("<script src='assets/js/core/jquery.scrollLock.min.js'></script>");

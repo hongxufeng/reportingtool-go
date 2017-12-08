@@ -9,7 +9,7 @@
 
     <title>reportingtool</title>
 
-    <meta name="description" content="reportingtool">
+    <meta name="description" content="reportingtool_CRU">
     <meta name="author" content="W">
     <meta name="robots" content="noindex, nofollow">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0">
@@ -43,7 +43,7 @@
     <link rel="stylesheet" href="assets/css/reportingtool/ReportingTool.css">
 
     <!-- OneUI CSS framework -->
-    <link rel="stylesheet" id="css-main" href="assets/css/oneui.min.css">
+    <link rel="stylesheet" id="css-main" href="assets/css/W.css">
 
     <!-- You can include a specific file from css/themes/ folder to alter the default color theme of the template. eg: -->
     <!-- <link rel="stylesheet" id="css-theme" href="assets/css/themes/flat.min.css"> -->
@@ -135,27 +135,27 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a data-toggle="theme" data-theme="assets/css/themes/smooth.min.css" tabindex="-1" href="javascript:void(0)">
+                                    <a data-toggle="theme" data-theme="assets/css/themes/smooth.css" tabindex="-1" href="javascript:void(0)">
                                         <i class="fa fa-circle text-smooth pull-right"></i> <span class="font-w600">光滑</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a data-toggle="theme" data-theme="assets/css/themes/flat.min.css" tabindex="-1" href="javascript:void(0)">
+                                    <a data-toggle="theme" data-theme="assets/css/themes/flat.css" tabindex="-1" href="javascript:void(0)">
                                         <i class="fa fa-circle text-flat pull-right"></i> <span class="font-w600">扁平</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a data-toggle="theme" data-theme="assets/css/themes/amethyst.min.css" tabindex="-1" href="javascript:void(0)">
+                                    <a data-toggle="theme" data-theme="assets/css/themes/amethyst.css" tabindex="-1" href="javascript:void(0)">
                                         <i class="fa fa-circle text-amethyst pull-right"></i> <span class="font-w600">紫水晶</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a data-toggle="theme" data-theme="assets/css/themes/modern.min.css" tabindex="-1" href="javascript:void(0)">
+                                    <a data-toggle="theme" data-theme="assets/css/themes/modern.css" tabindex="-1" href="javascript:void(0)">
                                         <i class="fa fa-circle text-modern pull-right"></i> <span class="font-w600">现代化</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a data-toggle="theme" data-theme="assets/css/themes/city.min.css" tabindex="-1" href="javascript:void(0)">
+                                    <a data-toggle="theme" data-theme="assets/css/themes/city.css" tabindex="-1" href="javascript:void(0)">
                                         <i class="fa fa-circle text-city pull-right"></i> <span class="font-w600">都市化</span>
                                     </a>
                                 </li>
@@ -380,7 +380,25 @@
                                 <h3 class="block-title font-w400 text-primary">用户列表</h3>
                             </div>
                             <div id="table" class="block-content">
-
+                                <form class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Email&nbsp;&nbsp;<span class="rt-glyphicon-color">:</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control rt-form-control" placeholder="Email">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Password&nbsp;&nbsp;<span class="rt-glyphicon-color">:</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control rt-form-control" placeholder="Password">
+                                        </div>
+                                    </div>
+                                    <!-- <div class="form-group">
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            <button type="submit" class="btn btn-default">Sign in</button>
+                                        </div>
+                                    </div> -->
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -402,16 +420,16 @@
 
     <!-- OneUI Core JS: jQuery, Bootstrap, slimScroll, scrollLock, Appear, CountTo, Placeholder, Cookie and App.js -->
     <script src="assets/js/core/jQuery.min.js"></script>
-    <script src="assets/js/app.js"></script>
+    <script src="assets/js/W.js"></script>
     <script src="assets/js/core/Page.js"></script>
     <script src="assets/js/core/ReportingTool.js"></script>
 
     <script type="text/javascript">
         window.onload = function() {
-            $("#table").rt({
-                configFile: "test",
-                table: "用户表"
-            });
+            // $("#table").rt({
+            //     configFile: "test",
+            //     table: "用户表"
+            // });
         };
     </script>
     <!-- Page JS Plugins + Page JS Code -->
