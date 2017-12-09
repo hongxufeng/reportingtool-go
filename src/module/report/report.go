@@ -41,11 +41,11 @@ func (module *ReportModule) User_GetTable(req *service.HttpRequest, result map[s
 	if module.level >= service.DEV {
 		fmt.Println(settings)
 	}
-	param, err := report.New(req.Uid, settings)
+	param, err := report.New(req.Uid, settings.ConfigFile, settings.TableID)
 	if err != nil {
 		return
 	} else {
-		result["res"], err = param.GetTable(req)
+		result["res"], err = param.GetTable(req, &settings)
 	}
 	return
 }
@@ -58,5 +58,14 @@ func (module *ReportModule) User_LocateNode(req *service.HttpRequest, result map
 }
 
 func (module *ReportModule) User_GetPageCURD(req *service.HttpRequest, result map[string]interface{}) (err error) {
+	var settings model.CRUDSettings
+	err = req.GetParams("table", &settings.TableID)
+	if err != nil {
+		return
+	}
+	err = req.ParseEncodeUrl("configFile", &settings.ConfigFile, "cmd", &settings.Cmd)
+	if err != nil {
+		return
+	}
 	return
 }

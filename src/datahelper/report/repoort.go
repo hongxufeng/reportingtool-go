@@ -13,23 +13,22 @@ import (
 
 type Param struct {
 	TableConfig   model.TableConfig
-	Settings      model.Settings
 	Uid           uint32
 	Power         uint8 //用户判断得到的权限 暂时用0代表最高权限
 	ColConfigDict []model.ColumnConfig
 }
 
-func New(uid uint32, settings model.Settings) (param *Param, err error) {
+func New(uid uint32, configFile string, tableID string) (param *Param, err error) {
 	var ColConfigDict []model.ColumnConfig
 	doc := etree.NewDocument()
-	filename := "xml/" + settings.ConfigFile + ".xml"
+	filename := "xml/" + configFile + ".xml"
 	fmt.Println(filename)
 	err = doc.ReadFromFile(filename)
 	if err != nil {
 		return
 	}
 	tableconfig := model.TableConfig{}
-	if tableelement := doc.FindElements("./tables/table[@id='" + settings.TableID + "']"); len(tableelement) > 0 {
+	if tableelement := doc.FindElements("./tables/table[@id='" + tableID + "']"); len(tableelement) > 0 {
 		fmt.Println(len(tableelement))
 		table := tableelement[0]
 		defaultorder := table.SelectAttr("defaultorder")
@@ -62,7 +61,7 @@ func New(uid uint32, settings model.Settings) (param *Param, err error) {
 		err = service.NewError(service.ERR_XML_TABLE_LACK, "您配置的XML表格是不在的啊！")
 		return
 	}
-	path := "./tables/table[@id='" + settings.TableID + "']/*"
+	path := "./tables/table[@id='" + tableID + "']/*"
 	//fmt.Println(path)
 	for _, elemnt := range doc.FindElements(path) {
 		fmt.Printf("%s: %s\n", elemnt.Tag, elemnt.Text())
@@ -197,18 +196,18 @@ func New(uid uint32, settings model.Settings) (param *Param, err error) {
 	fmt.Println(tableconfig)
 	//根据uid判断权限
 	ud, err := db.GetUserInfo(uid)
-	param = &Param{tableconfig, settings, uid, ud.Power, ColConfigDict}
+	param = &Param{tableconfig, uid, ud.Power, ColConfigDict}
 	return
 }
 
-func (param *Param) GetTable(req *service.HttpRequest) (res map[string]interface{}, err error) {
+func (param *Param) GetTable(req *service.HttpRequest, settings *model.Settings) (res map[string]interface{}, err error) {
 	res = make(map[string]interface{}, 0)
 	count, err := GetTableCount(param, "*")
 	if err != nil {
 		return
 	}
 	fmt.Println(count)
-	query, err := BuildQuerySQL(req, param)
+	query, err := BuildQuerySQL(req, param, settings)
 	if err != nil {
 		return
 	}
@@ -224,11 +223,11 @@ func (param *Param) GetTable(req *service.HttpRequest) (res map[string]interface
 	columns, _ := result.Columns()
 	size := len(columns)
 	var searchbuf, bodybuf, selectorbuf, conditionbuf, rowbuf bytes.Buffer
-	err = GetTable(req, param, result, size, &bodybuf, &searchbuf, &rowbuf, count)
+	err = GetTable(req, param, settings, result, size, &bodybuf, &searchbuf, &rowbuf, count)
 	if err != nil {
 		return
 	}
-	if param.Settings.Style == model.Style_Table {
+	if settings.Style == model.Style_Table {
 		err = BuildSelectorBar(req, param, size, &selectorbuf, &conditionbuf)
 		if err != nil {
 			return

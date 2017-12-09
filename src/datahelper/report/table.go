@@ -13,24 +13,24 @@ import (
 	"utils/service"
 )
 
-func GetTable(req *service.HttpRequest, param *Param, rows *sql.Rows, size int, bodybuf *bytes.Buffer, searchbuf *bytes.Buffer, rowbuf *bytes.Buffer, count int) (err error) {
+func GetTable(req *service.HttpRequest, param *Param, settings *model.Settings, rows *sql.Rows, size int, bodybuf *bytes.Buffer, searchbuf *bytes.Buffer, rowbuf *bytes.Buffer, count int) (err error) {
 	bodybuf.WriteString("<table class=\"table table-condensed\">")
-	err = BuildTableHead(req, param, size, bodybuf, searchbuf)
+	err = BuildTableHead(req, param, settings, size, bodybuf, searchbuf)
 	if err != nil {
 		return
 	}
-	err = BuildTableBody(param, rows, size, bodybuf)
+	err = BuildTableBody(param, settings, rows, size, bodybuf)
 	if err != nil {
 		return
 	}
 
 	bodybuf.WriteString("</table>")
 
-	err = BuildTablePager(param, bodybuf, count, model.Style_Table)
+	err = BuildTablePager(param, settings, bodybuf, count, model.Style_Table)
 	if err != nil {
 		return
 	}
-	err = BuildNullRow(param, size, rowbuf)
+	err = BuildNullRow(param, settings, size, rowbuf)
 	if err != nil {
 		return
 	}
@@ -90,10 +90,10 @@ func BuildSearchingBlock(req *service.HttpRequest, columnconfig *model.ColumnCon
 	return
 }
 
-func BuildTableHead(req *service.HttpRequest, param *Param, size int, bodybuf *bytes.Buffer, searchbuf *bytes.Buffer) (err error) {
+func BuildTableHead(req *service.HttpRequest, param *Param, settings *model.Settings, size int, bodybuf *bytes.Buffer, searchbuf *bytes.Buffer) (err error) {
 	bodybuf.WriteString("<thead>")
 	bodybuf.WriteString("<tr>")
-	if param.Settings.HasCheckbox {
+	if settings.HasCheckbox {
 		bodybuf.WriteString("<th class=\"rt-th-checkbox\" name=\"rt-th-checkbox\">")
 		bodybuf.WriteString("<div class=\"rt-checkboxWrapper\">")
 		bodybuf.WriteString("<input type=\"checkbox\" class=\"rt-checkbox\"/>")
@@ -122,7 +122,7 @@ func BuildTableHead(req *service.HttpRequest, param *Param, size int, bodybuf *b
 		bodybuf.WriteString(param.ColConfigDict[i].Tag)
 		bodybuf.WriteString("\">")
 		bodybuf.WriteString(param.ColConfigDict[i].Text)
-		order := strings.Split(param.Settings.Order, " ")
+		order := strings.Split(settings.Order, " ")
 		if len(order) > 1 && order[0] == param.ColConfigDict[i].Tag {
 			bodybuf.WriteString("<span class=\"glyphicon glyphicon-")
 			if strings.ToLower(order[1]) == "asc" {
@@ -147,7 +147,7 @@ func BuildTableHead(req *service.HttpRequest, param *Param, size int, bodybuf *b
 	return
 }
 
-func BuildTableBody(param *Param, rows *sql.Rows, size int, bodybuf *bytes.Buffer) (err error) {
+func BuildTableBody(param *Param, settings *model.Settings, rows *sql.Rows, size int, bodybuf *bytes.Buffer) (err error) {
 	var checkvalue string
 	bodybuf.WriteString("<tbody>")
 
@@ -167,7 +167,7 @@ func BuildTableBody(param *Param, rows *sql.Rows, size int, bodybuf *bytes.Buffe
 	}
 	for rows.Next() {
 		bodybuf.WriteString("<tr>")
-		if param.Settings.HasCheckbox {
+		if settings.HasCheckbox {
 			bodybuf.WriteString("<td class=\"rt-td-checkbox\" name=\"rt-td-checkbox\" data-value=\"")
 			bodybuf.WriteString(checkvalue)
 			bodybuf.WriteString("\">")
@@ -230,11 +230,11 @@ func BuildTableBody(param *Param, rows *sql.Rows, size int, bodybuf *bytes.Buffe
 	return
 }
 
-func BuildNullRow(param *Param, size int, rowbuf *bytes.Buffer) (err error) {
+func BuildNullRow(param *Param, settings *model.Settings, size int, rowbuf *bytes.Buffer) (err error) {
 	var definitionData definition.Definition
 	define := reflect.ValueOf(&definitionData)
 	rowbuf.WriteString("<tr>")
-	if param.Settings.HasCheckbox {
+	if settings.HasCheckbox {
 		rowbuf.WriteString("<td class=\"rt-td-checkbox\" name=\"rt-td-checkbox\" data-value=\"\">")
 		rowbuf.WriteString("<div class=\"rt-checkboxWrapper\">")
 		rowbuf.WriteString("<input type=\"checkbox\"  class=\"rt-checkbox\" value=\"\" />")

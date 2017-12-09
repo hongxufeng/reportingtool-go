@@ -131,7 +131,7 @@ func AppendWhere(req *service.HttpRequest, param *Param, buf *bytes.Buffer) erro
 	return nil
 }
 
-func BuildQuerySQL(req *service.HttpRequest, param *Param) (sql string, err error) {
+func BuildQuerySQL(req *service.HttpRequest, param *Param, settings *model.Settings) (sql string, err error) {
 	if param.TableConfig.HasPower && param.Power >= param.TableConfig.Power {
 		err = service.NewError(service.ERR_POWER_DENIED, "您的用户权限不足啊！")
 		return
@@ -158,17 +158,17 @@ func BuildQuerySQL(req *service.HttpRequest, param *Param) (sql string, err erro
 	if err != nil {
 		return
 	}
-	if param.Settings.Order != "" {
+	if settings.Order != "" {
 		buf.WriteString(" order by ")
-		buf.WriteString(param.Settings.Order)
+		buf.WriteString(settings.Order)
 	} else if param.TableConfig.HasDefaultOrder {
 		buf.WriteString(" order by ")
 		buf.WriteString(param.TableConfig.DefaultOrder)
 	}
 	buf.WriteString(" limit ")
-	buf.WriteString(function.IntToString(param.Settings.Rows * (param.Settings.Page - 1)))
+	buf.WriteString(function.IntToString(settings.Rows * (settings.Page - 1)))
 	buf.WriteString(",")
-	buf.WriteString(function.IntToString(param.Settings.Rows*param.Settings.Page - 1))
+	buf.WriteString(function.IntToString(settings.Rows*settings.Page - 1))
 	sql = buf.String()
 	return
 }
@@ -199,19 +199,19 @@ func GetTableCount(param *Param, fields string) (count int, err error) {
 	return
 }
 
-func BuildTablePager(param *Param, bodybuf *bytes.Buffer, count int, style string) (err error) {
+func BuildTablePager(param *Param, settings *model.Settings, bodybuf *bytes.Buffer, count int, style string) (err error) {
 	var x int
-	if count%param.Settings.Rows == 0 {
+	if count%settings.Rows == 0 {
 		x = 0
 	} else {
 		x = 1
 	}
-	totalpages := count/param.Settings.Rows + x
-	rowlist := strings.Split(param.Settings.RowList, ",")
-	start := (param.Settings.Page-1)*param.Settings.Rows + 1
+	totalpages := count/settings.Rows + x
+	rowlist := strings.Split(settings.RowList, ",")
+	start := (settings.Page-1)*settings.Rows + 1
 	var end int
-	if (param.Settings.Page * param.Settings.Rows) <= count {
-		end = param.Settings.Page * param.Settings.Rows
+	if (settings.Page * settings.Rows) <= count {
+		end = settings.Page * settings.Rows
 	} else {
 		end = count
 	}
@@ -231,7 +231,7 @@ func BuildTablePager(param *Param, bodybuf *bytes.Buffer, count int, style strin
 		bodybuf.WriteString("&nbsp;<span class=\"glyphicon glyphicon-backward rt-pager-prevPage rt-pager-hover-color\"></span>")
 		bodybuf.WriteString("&nbsp;<span class=\"pager-separator\"></span>&nbsp;")
 		bodybuf.WriteString("第&nbsp;<input type=\"text\" class=\"rt-pager-page\" value=\"")
-		bodybuf.WriteString(function.IntToString(param.Settings.Page))
+		bodybuf.WriteString(function.IntToString(settings.Page))
 		bodybuf.WriteString("\"/>&nbsp;页，")
 		bodybuf.WriteString("共&nbsp;<span class=\"rt-pager-totalPages\">")
 		bodybuf.WriteString(function.IntToString(totalpages))
@@ -244,7 +244,7 @@ func BuildTablePager(param *Param, bodybuf *bytes.Buffer, count int, style strin
 			bodybuf.WriteString("<option value=\"")
 			bodybuf.WriteString(v)
 			bodybuf.WriteString("\"")
-			if i, _ := function.StringToInt(v); i == param.Settings.Rows {
+			if i, _ := function.StringToInt(v); i == settings.Rows {
 				bodybuf.WriteString(" selected")
 			}
 			bodybuf.WriteString(">")

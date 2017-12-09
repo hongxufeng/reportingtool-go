@@ -519,9 +519,8 @@
             return false;
         };
         var createOne = function() {
-            $.post(serverURL + "GetPageCRUD", {
+            $.post(serverURL + "GetPageCRUD" + "?table=" + globalVars.queryObj.table, {
                 cmd: "add",
-                table: globalVars.queryObj.table,
                 configFile: settings.configFile
             }, function(data) {
                 // var jsonObject = JSON.parse(data);
@@ -532,9 +531,8 @@
             });
         };
         var viewThis = function() {
-            $.post(serverURL + "GetPageCRUD", {
+            $.post(serverURL + "GetPageCRUD" + "?table=" + globalVars.queryObj.table, {
                 cmd: "view",
-                table: globalVars.queryObj.table,
                 configFile: settings.configFile
             }, function(data) {
                 // var jsonObject = JSON.parse(data);
@@ -545,9 +543,8 @@
             });
         };
         var editThis = function() {
-            $.post(serverURL + "GetPageCRUD", {
+            $.post(serverURL + "GetPageCRUD" + "?table=" + globalVars.queryObj.table, {
                 cmd: "edit",
-                table: globalVars.queryObj.table,
                 configFile: settings.configFile
             }, function(data) {
                 // var jsonObject = JSON.parse(data);
@@ -558,9 +555,8 @@
             });
         };
         var deleteThis = function() {
-            $.post(serverURL + "GetPageCRUD", {
+            $.post(serverURL + "GetPageCRUD" + "?table=" + globalVars.queryObj.table, {
                 cmd: "delete",
-                table: globalVars.queryObj.table,
                 configFile: settings.configFile
             }, function(data) {
                 // var jsonObject = JSON.parse(data);
