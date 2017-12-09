@@ -102,7 +102,7 @@ func BuildTableHead(req *service.HttpRequest, param *Param, size int, bodybuf *b
 	}
 	fmt.Println("size:", size)
 	for i := 0; i < size; i++ {
-		if param.ColConfigDict[i].Visibility == "none" {
+		if strings.Index(param.ColConfigDict[i].Visibility, "table-none") > -1 {
 			continue
 		}
 		err = BuildSearchingBlock(req, &param.ColConfigDict[i], searchbuf)
@@ -112,7 +112,7 @@ func BuildTableHead(req *service.HttpRequest, param *Param, size int, bodybuf *b
 		}
 		bodybuf.WriteString("<th ")
 		bodybuf.WriteString("class=\"")
-		if param.ColConfigDict[i].Visibility == "hidden" {
+		if strings.Index(param.ColConfigDict[i].Visibility, "table-hidden") > -1 {
 			bodybuf.WriteString("hiddenCol")
 		} else {
 			bodybuf.WriteString("rt-sort")
@@ -185,7 +185,7 @@ func BuildTableBody(param *Param, rows *sql.Rows, size int, bodybuf *bytes.Buffe
 		fmt.Println(s)
 		fmt.Println(function.PArrayToSArray(s))
 		for i := 0; i < size; i++ {
-			if param.ColConfigDict[i].Visibility == "none" {
+			if strings.Index(param.ColConfigDict[i].Visibility, "table-none") > -1 {
 				continue
 			}
 			if param.ColConfigDict[i].HasPower && param.Power >= param.ColConfigDict[i].Power {
@@ -194,7 +194,7 @@ func BuildTableBody(param *Param, rows *sql.Rows, size int, bodybuf *bytes.Buffe
 			bodybuf.WriteString("<td name=\"")
 			bodybuf.WriteString(param.ColConfigDict[i].Tag)
 			bodybuf.WriteString("\"")
-			if param.ColConfigDict[i].Visibility == "hidden" {
+			if strings.Index(param.ColConfigDict[i].Visibility, "table-hidden") > -1 {
 				bodybuf.WriteString(" class=\"hiddenCol\"")
 			}
 			cell := function.ToString(s[i])
@@ -242,13 +242,13 @@ func BuildNullRow(param *Param, size int, rowbuf *bytes.Buffer) (err error) {
 		rowbuf.WriteString("</td>")
 	}
 	for i := 0; i < size; i++ {
-		if param.ColConfigDict[i].Visibility == "none" {
+		if strings.Index(param.ColConfigDict[i].Visibility, "table-none") > -1 {
 			continue
 		}
 		rowbuf.WriteString("<td name=\"")
 		rowbuf.WriteString(param.ColConfigDict[i].Tag)
 		rowbuf.WriteString("\"")
-		if param.ColConfigDict[i].Visibility == "hidden" {
+		if strings.Index(param.ColConfigDict[i].Visibility, "table-hidden") > -1 {
 			rowbuf.WriteString(" class=\"hiddenCol\"")
 		}
 		cell := function.ToString(param.ColConfigDict[i].Text)

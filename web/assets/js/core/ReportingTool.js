@@ -50,6 +50,8 @@
             table: "",
         }, options);
 
+        this.addClass("rt-content");
+
         this.html("<ol class=\"rt-nav breadcrumb\"></ol>\
                       <div class=\"rt-condition\"></div>\
                       <div class=\"rt-selector\"></div>\
@@ -243,7 +245,8 @@
                     _this.on("click", ".rt-treeSearcher-btn", searchTree).on("click", ".rt-search-result .rt-node-cols", locateNode);
                     _this.on("click", ".rt-node-cols", nodeOnClick);
                     _this.on("click", ".rt-node>.rt-checkboxWrapper", checkNode);
-                    //_this.on("keyup", ".rt-search-txt", startSearching).on("change", ".rt-search-txt.date", startSearching);
+                    _this.on("click", ".rt-create", createOne).on("click", ".rt-view", viewThis).on("click", ".rt-edit", editThis).on("click", ".rt-delete", deleteThis)
+                        //_this.on("keyup", ".rt-search-txt", startSearching).on("change", ".rt-search-txt.date", startSearching);
                     $(".rt-search-txt.date").datepicker({
                         format: "yy/mm/dd",
                         weekStart: 1,
@@ -514,6 +517,58 @@
             }
             settings.searchComplete();
             return false;
+        };
+        var createOne = function() {
+            $.post(serverURL + "GetPageCRUD", {
+                cmd: "add",
+                table: globalVars.queryObj.table,
+                configFile: settings.configFile
+            }, function(data) {
+                // var jsonObject = JSON.parse(data);
+                if (data.status === "fail") {
+                    alert(data.msg);
+                    location.href = location.pathname;
+                }
+            });
+        };
+        var viewThis = function() {
+            $.post(serverURL + "GetPageCRUD", {
+                cmd: "view",
+                table: globalVars.queryObj.table,
+                configFile: settings.configFile
+            }, function(data) {
+                // var jsonObject = JSON.parse(data);
+                if (data.status === "fail") {
+                    alert(data.msg);
+                    location.href = location.pathname;
+                }
+            });
+        };
+        var editThis = function() {
+            $.post(serverURL + "GetPageCRUD", {
+                cmd: "edit",
+                table: globalVars.queryObj.table,
+                configFile: settings.configFile
+            }, function(data) {
+                // var jsonObject = JSON.parse(data);
+                if (data.status === "fail") {
+                    alert(data.msg);
+                    location.href = location.pathname;
+                }
+            });
+        };
+        var deleteThis = function() {
+            $.post(serverURL + "GetPageCRUD", {
+                cmd: "delete",
+                table: globalVars.queryObj.table,
+                configFile: settings.configFile
+            }, function(data) {
+                // var jsonObject = JSON.parse(data);
+                if (data.status === "fail") {
+                    alert(data.msg);
+                    location.href = location.pathname;
+                }
+            });
         };
         var startSearching = function() {
             setTimeout(search, 1);
