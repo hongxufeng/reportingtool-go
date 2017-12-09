@@ -190,6 +190,7 @@ func GetTableCount(param *Param, fields string) (count int, err error) {
 	if err != nil {
 		return
 	}
+	defer result.Close()
 	if result.Next() {
 		err = result.Scan(&count)
 	} else {
@@ -305,6 +306,7 @@ func BuildSelectorBar(req *service.HttpRequest, param *Param, size int, selector
 				if e != nil {
 					return e
 				}
+				defer result.Close()
 				for j := 0; result.Next(); j++ {
 					var value string
 					if e = result.Scan(&value); e != nil {

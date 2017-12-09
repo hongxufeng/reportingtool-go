@@ -46,3 +46,47 @@ func Init(config *config.Config) (err error) {
 	}
 	return
 }
+
+func Query(query string) (*sql.Rows, error) {
+	//还是不要设置redis
+	return MysqlMain.Query(query)
+}
+func FetchRows(query string, args ...interface{}) ([]map[string]string, error) {
+	rows, err := MysqlMain.Query(query, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	columns, err := rows.Columns()
+	if err != nil {
+		return nil, err
+	}
+
+	values := make([]sql.RawBytes, len(columns))
+	scanArgs := make([]interface{}, len(values))
+
+	ret := make([]map[string]string, 0)
+	for i := range values {
+		scanArgs[i] = &values[i]
+	}
+
+	for rows.Next() {
+		err = rows.Scan(scanArgs...)
+		if err != nil {
+			return nil, err
+		}
+		var value string
+		vmap := make(map[string]string, len(scanArgs))
+		for i, col := range values {
+			if col == nil {
+				value = "NULL"
+			} else {
+				value = string(col)
+			}
+			vmap[columns[i]] = value
+		}
+		ret = append(ret, vmap)
+	}
+	return ret, nil
+}

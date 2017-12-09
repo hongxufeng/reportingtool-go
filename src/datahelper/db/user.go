@@ -1,7 +1,6 @@
 package db
 
 import (
-	"database/sql"
 	"model"
 	"utils/function"
 
@@ -35,8 +34,8 @@ func CheckUserForbid(uid uint32) (forbid bool, err error) {
 }
 func GetUidbyName(name string) (uid uint32, err error) {
 	uid = 0
-	query := "SELECT uid FROM w_user_list WHERE username=?"
-	result, err := MysqlMain.Query(query, name)
+	queryStr := "SELECT uid FROM w_user_list WHERE username=?"
+	result, err := MysqlMain.Query(queryStr, name)
 	if err != nil {
 		return
 	}
@@ -45,9 +44,4 @@ func GetUidbyName(name string) (uid uint32, err error) {
 		err = result.Scan(&uid)
 	}
 	return
-}
-func Query(query string) (*sql.Rows, error) {
-	//还是不要设置redis
-	return MysqlMain.Query(query)
-
 }

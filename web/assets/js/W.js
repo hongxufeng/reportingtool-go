@@ -1026,9 +1026,6 @@ var App = function() {
     };
     /*
      * js引用加載
-     *
-     * App.initHelper('easy-pie-chart');
-     *
      */
     var referenceInit = function() {
         var js = $('[src="assets/js/W.js"]');

@@ -213,10 +213,14 @@ func (param *Param) GetTable(req *service.HttpRequest) (res map[string]interface
 		return
 	}
 	fmt.Println(query)
+	//这里查询后可获得一个map
+	// ret, err := db.FetchRows(query)
+	// fmt.Println(len(ret))
 	result, err := db.Query(query)
 	if err != nil {
 		return
 	}
+	defer result.Close()
 	columns, _ := result.Columns()
 	size := len(columns)
 	var searchbuf, bodybuf, selectorbuf, conditionbuf, rowbuf bytes.Buffer
