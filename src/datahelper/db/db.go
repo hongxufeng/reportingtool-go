@@ -51,12 +51,17 @@ func Query(query string) (*sql.Rows, error) {
 	//还是不要设置redis
 	return MysqlMain.Query(query)
 }
-func FetchRows(query string, args ...interface{}) ([]map[string]string, error) {
-	rows, err := MysqlMain.Query(query, args...)
+func FetchRows(sqlstr string, args ...interface{}) ([]map[string]string, error) {
+	stmtOut, err := MysqlMain.Prepare(sqlstr)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer stmtOut.Close()
+
+	rows, err := stmtOut.Query(args...)
+	if err != nil {
+		return nil, err
+	}
 
 	columns, err := rows.Columns()
 	if err != nil {
@@ -89,4 +94,34 @@ func FetchRows(query string, args ...interface{}) ([]map[string]string, error) {
 		ret = append(ret, vmap)
 	}
 	return ret, nil
+}
+
+//修改和删除
+func exec(sqlstr string, args ...interface{}) (int64, error) {
+	stmtIns, err := MysqlMain.Prepare(sqlstr)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmtIns.Close()
+
+	result, err := stmtIns.Exec(args...)
+	if err != nil {
+		panic(err.Error())
+	}
+	return result.RowsAffected()
+}
+
+//插入
+func insert(sqlstr string, args ...interface{}) (int64, error) {
+	stmtIns, err := MysqlMain.Prepare(sqlstr)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmtIns.Close()
+
+	result, err := stmtIns.Exec(args...)
+	if err != nil {
+		panic(err.Error())
+	}
+	return result.LastInsertId()
 }
