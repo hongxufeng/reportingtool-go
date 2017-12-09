@@ -8,12 +8,12 @@
         <power selector-func="GetDefinitionData" selector-func-agrs="0,管理员,1,Geust" >权限</power>
         <avatar>图片地址</avatar>
         <buttons>
-            &lt;span class="glyphicon glyphicon-folder-open" title="浏览" onclick="view(this,'OBJ_ID')">&lt;/span>
-            &lt;span class="glyphicon glyphicon-edit" title="编辑" onclick="edit(this,'OBJ_ID')">&lt;/span>
-            &lt;span class="glyphicon glyphicon-trash" title="删除" onclick="deleteThis(this,'OBJ_ID')">&lt;/span>
+            &lt;span class="glyphicon glyphicon-folder-open rt-view" title="浏览">&lt;/span>
+            &lt;span class="glyphicon glyphicon-edit rt-edit" title="编辑">&lt;/span>
+            &lt;span class="glyphicon glyphicon-trash rt-delete" title="删除">&lt;/span>
         </buttons>
         <pagerbuttons>
-            &lt;span class="rt-pager-btn rt-pager-hover-color" onclick="create()">
+            &lt;span class="rt-pager-btn rt-pager-hover-color rt-create">
             &lt;span class="glyphicon glyphicon-plus" title="新增问卷">&lt;/span>添加
             &lt;/span>
         </pagerbuttons>

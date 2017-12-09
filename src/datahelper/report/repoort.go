@@ -200,7 +200,7 @@ func New(uid uint32, configFile string, tableID string) (param *Param, err error
 	return
 }
 
-func (param *Param) GetTable(req *service.HttpRequest, settings *model.Settings) (res map[string]interface{}, err error) {
+func (param *Param) Table(req *service.HttpRequest, settings *model.Settings) (res map[string]interface{}, err error) {
 	res = make(map[string]interface{}, 0)
 	count, err := GetTableCount(param, "*")
 	if err != nil {
@@ -246,5 +246,16 @@ func (param *Param) SearchTree() (res map[string]interface{}, err error) {
 }
 
 func (param *Param) LocateNode() (res map[string]interface{}, err error) {
+	return
+}
+
+func (param *Param) CURD(req *service.HttpRequest, settings *model.CRUDSettings) (res map[string]interface{}, err error) {
+	res = make(map[string]interface{}, 0)
+	var bodybuf bytes.Buffer
+	err = GetCURD(req, param, settings, &bodybuf)
+	if err != nil {
+		return
+	}
+	res["body"] = bodybuf.String()
 	return
 }

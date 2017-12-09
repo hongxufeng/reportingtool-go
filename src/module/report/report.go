@@ -45,7 +45,7 @@ func (module *ReportModule) User_GetTable(req *service.HttpRequest, result map[s
 	if err != nil {
 		return
 	} else {
-		result["res"], err = param.GetTable(req, &settings)
+		result["res"], err = param.Table(req, &settings)
 	}
 	return
 }
@@ -67,5 +67,15 @@ func (module *ReportModule) User_GetPageCURD(req *service.HttpRequest, result ma
 	if err != nil {
 		return
 	}
+	if module.level >= service.DEV {
+		fmt.Println(settings)
+	}
+	param, err := report.New(req.Uid, settings.ConfigFile, settings.TableID)
+	if err != nil {
+		return
+	} else {
+		result["res"], err = param.CURD(req, &settings)
+	}
+	return
 	return
 }
