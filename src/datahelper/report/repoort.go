@@ -15,11 +15,13 @@ type Param struct {
 	TableConfig   model.TableConfig
 	Uid           uint32
 	Power         uint8 //用户判断得到的权限 暂时用0代表最高权限
+	colName       []string
 	ColConfigDict []model.ColumnConfig
 }
 
 func New(uid uint32, configFile string, tableID string) (param *Param, err error) {
 	var ColConfigDict []model.ColumnConfig
+	var ColName []string
 	doc := etree.NewDocument()
 	filename := "xml/" + configFile + ".xml"
 	fmt.Println(filename)
@@ -70,6 +72,9 @@ func New(uid uint32, configFile string, tableID string) (param *Param, err error
 	//fmt.Println(path)
 	for _, elemnt := range doc.FindElements(path) {
 		fmt.Printf("%s: %s\n", elemnt.Tag, elemnt.Text())
+		if elemnt.Tag == "buttons" || elemnt.Tag == "pagerbuttons" {
+			ColName = append(ColName, elemnt.Tag)
+		}
 		//赋值ColConfigDict
 		cc := model.ColumnConfig{}
 		cc.Tag = elemnt.Tag
@@ -201,7 +206,7 @@ func New(uid uint32, configFile string, tableID string) (param *Param, err error
 	fmt.Println(tableconfig)
 	//根据uid判断权限
 	ud, err := db.GetUserInfo(uid)
-	param = &Param{tableconfig, uid, ud.Power, ColConfigDict}
+	param = &Param{tableconfig, uid, ud.Power, ColName, ColConfigDict}
 	return
 }
 

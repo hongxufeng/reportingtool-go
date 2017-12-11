@@ -67,6 +67,12 @@ func (module *ReportModule) User_GetPageCURD(req *service.HttpRequest, result ma
 	if err != nil {
 		return
 	}
+	if settings.Cmd != model.Cmd_Create {
+		err = req.ParseEncodeUrl(true, "queryKey", &settings.QueryKey, "quertValue", &settings.QuertValue)
+		if err != nil {
+			return
+		}
+	}
 	if module.level >= service.DEV {
 		fmt.Println(settings)
 	}

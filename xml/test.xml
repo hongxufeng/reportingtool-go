@@ -3,14 +3,14 @@
     <table id="用户表"
            name="w_user_list" defaultorder="uid asc" btn-create-text="增&#160;&#160;&#160;&#160;&#160;&#160;加&#160;&#160;&#160;&#160;&#160;&#160;用&#160;&#160;&#160;&#160;&#160;&#160;户">
         <nickname search-type="true" >昵称</nickname>
-        <uid visibility="table-none" selector="true" selector-multi="true" selector-text="用户代号">用户ID</uid>
+        <uid visibility="table-hidden" selector="true" selector-multi="true" selector-text="用户代号">用户ID</uid>
         <username search-type="true" formatter-r="我即是$$::$$"  formatter="PutInText">用户名称</username>
         <power selector-func="GetDefinitionData" selector-func-agrs="0,管理员,1,Geust" >权限</power>
         <avatar>图片地址</avatar>
         <buttons>
-            &lt;span class="glyphicon glyphicon-folder-open rt-view" title="浏览">&lt;/span>
-            &lt;span class="glyphicon glyphicon-edit rt-edit" title="编辑">&lt;/span>
-            &lt;span class="glyphicon glyphicon-trash rt-delete" title="删除">&lt;/span>
+            &lt;span class="glyphicon glyphicon-folder-open rt-view" title="浏览" data-args="uid">&lt;/span>
+            &lt;span class="glyphicon glyphicon-edit rt-edit" title="编辑" data-args="uid">&lt;/span>
+            &lt;span class="glyphicon glyphicon-trash rt-delete" title="删除" data-args="uid">&lt;/span>
         </buttons>
         <pagerbuttons>
             &lt;span class="rt-pager-btn rt-pager-hover-color rt-create">

@@ -533,9 +533,14 @@
             });
         };
         var viewThis = function() {
+            var queryKey = $(this).data('args');
+            var queryValue = $(this).parent().siblings('[name=' + queryKey + ']').data('value');
+            // alert(queryValue);
             $.post(serverURL + "GetPageCURD" + "?table=" + globalVars.queryObj.table, {
                 cmd: "view",
-                configFile: settings.configFile
+                configFile: settings.configFile,
+                queryKey: queryKey,
+                queryValue: queryValue
             }, function(data) {
                 // var jsonObject = JSON.parse(data);
                 if (data.status === "fail") {

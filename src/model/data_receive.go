@@ -22,4 +22,6 @@ type CRUDSettings struct {
 	Cmd        string
 	ConfigFile string
 	TableID    string
+	QueryKey   string
+	QuertValue string
 }
