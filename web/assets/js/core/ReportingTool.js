@@ -520,7 +520,7 @@
         };
         var createOne = function() {
             $.post(serverURL + "GetPageCURD" + "?table=" + globalVars.queryObj.table, {
-                cmd: "add",
+                cmd: "create",
                 configFile: settings.configFile
             }, function(data) {
                 // var jsonObject = JSON.parse(data);

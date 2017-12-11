@@ -89,15 +89,12 @@ func AppendWhere(req *service.HttpRequest, param *Param, buf *bytes.Buffer) erro
 	hasWhere := false
 	for _, colconfig := range param.ColConfigDict {
 		var value string
-		_ = req.GetParams(colconfig.Tag, &value)
+		_ = req.GetParams(false, colconfig.Tag, &value)
 		if len(value) == 0 {
-			_ = req.GetParams(colconfig.Tag+"~~", &value)
+			_ = req.GetParams(false, colconfig.Tag+"~~", &value)
 			if len(value) == 0 {
 				continue
 			}
-		}
-		if strings.Index(value, "'") > -1 || strings.Index(value, "\"") > -1 || strings.Index(value, ";") > -1 {
-			return service.NewError(service.ERR_INVALID_PARAM, "查询框不接受特殊字符的输入啊！")
 		}
 		if hasWhere == false {
 			hasWhere = true
@@ -323,7 +320,7 @@ func BuildSelectorBar(req *service.HttpRequest, param *Param, size int, selector
 			}
 		}
 		var value string
-		e := req.GetParams(param.ColConfigDict[i].Tag, &value)
+		e := req.GetParams(false, param.ColConfigDict[i].Tag, &value)
 		if e == nil {
 			if value == "" {
 				continue

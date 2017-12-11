@@ -28,13 +28,13 @@ func (module *ReportModule) Init(conf *config.Config) error {
 
 func (module *ReportModule) User_GetTable(req *service.HttpRequest, result map[string]interface{}) (err error) {
 	var settings model.Settings
-	err = req.GetParams("table", &settings.TableID, "page", &settings.Page, "rows", &settings.Rows, "colpage", &settings.ColPage)
+	err = req.GetParams(false, "table", &settings.TableID, "page", &settings.Page, "rows", &settings.Rows, "colpage", &settings.ColPage)
 	if err != nil {
 		return
 	}
-	_ = req.GetParams("sort", &settings.Order)
+	_ = req.GetParams(true, "sort", &settings.Order)
 	fmt.Println(settings.TableID)
-	err = req.ParseEncodeUrl("configFile", &settings.ConfigFile, "hasCheckbox", &settings.HasCheckbox, "style", &settings.Style, "rowList", &settings.RowList)
+	err = req.ParseEncodeUrl(false, "configFile", &settings.ConfigFile, "hasCheckbox", &settings.HasCheckbox, "style", &settings.Style, "rowList", &settings.RowList)
 	if err != nil {
 		return
 	}
@@ -59,11 +59,11 @@ func (module *ReportModule) User_LocateNode(req *service.HttpRequest, result map
 
 func (module *ReportModule) User_GetPageCURD(req *service.HttpRequest, result map[string]interface{}) (err error) {
 	var settings model.CRUDSettings
-	err = req.GetParams("table", &settings.TableID)
+	err = req.GetParams(false, "table", &settings.TableID)
 	if err != nil {
 		return
 	}
-	err = req.ParseEncodeUrl("configFile", &settings.ConfigFile, "cmd", &settings.Cmd)
+	err = req.ParseEncodeUrl(false, "configFile", &settings.ConfigFile, "cmd", &settings.Cmd)
 	if err != nil {
 		return
 	}
@@ -76,6 +76,5 @@ func (module *ReportModule) User_GetPageCURD(req *service.HttpRequest, result ma
 	} else {
 		result["res"], err = param.CURD(req, &settings)
 	}
-	return
 	return
 }

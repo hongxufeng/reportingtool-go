@@ -160,7 +160,7 @@ func (hr *HttpRequest) ParseOpt(params ...interface{}) error {
 				case map[string]interface{}:
 					*ref = m
 				default:
-					e = errors.New(fmt.Sprintf("%v is not map[string]iterface{}", key, reflect.TypeOf(v)))
+					e = errors.New(fmt.Sprintf("%v is not map[string]iterface{}", key))
 				}
 			} else {
 				*ref = params[i+2].(map[string]interface{})
@@ -172,7 +172,7 @@ func (hr *HttpRequest) ParseOpt(params ...interface{}) error {
 				*ref = params[i+2]
 			}
 		default:
-			return errors.New(fmt.Sprintf("unknown type %v ", key, reflect.TypeOf(ref)))
+			return errors.New(fmt.Sprintf("unknown type %v ", reflect.TypeOf(ref)))
 		}
 		if e != nil {
 			return errors.New(fmt.Sprintf("parse [%v] error:%v", key, e.Error()))
@@ -280,7 +280,7 @@ func (hr *HttpRequest) PostFileInfo(param string) (bytes []byte, filename string
 	return
 }
 
-func (hr *HttpRequest) GetParams(params ...interface{}) error {
+func (hr *HttpRequest) GetParams(verify bool, params ...interface{}) error {
 	if len(params)%2 != 0 {
 		return errors.New("params count must be even")
 	}
@@ -288,6 +288,12 @@ func (hr *HttpRequest) GetParams(params ...interface{}) error {
 		key := function.ToString(params[i])
 		if v := hr.request.URL.Query().Get(key); v != "" {
 			var e error
+			if verify {
+				e = function.VerifyInjection(v)
+				if e != nil {
+					return e
+				}
+			}
 			switch ref := params[i+1].(type) {
 			case *string:
 				*ref = function.ToString(v)
@@ -338,7 +344,7 @@ func (hr *HttpRequest) GetParams(params ...interface{}) error {
 	return nil
 }
 
-func (hr *HttpRequest) GetParamOpt(params ...interface{}) error {
+func (hr *HttpRequest) GetParamOpt(verify bool, params ...interface{}) error {
 	if len(params)%3 != 0 {
 		return errors.New("params count invalid")
 	}
@@ -346,6 +352,12 @@ func (hr *HttpRequest) GetParamOpt(params ...interface{}) error {
 		key := function.ToString(params[i])
 		v := hr.request.URL.Query().Get(key)
 		var e error
+		if verify {
+			e = function.VerifyInjection(v)
+			if e != nil {
+				return e
+			}
+		}
 		switch ref := params[i+1].(type) {
 		case *string:
 			if v != "" {
@@ -442,7 +454,7 @@ func (hr *HttpRequest) GetParamOpt(params ...interface{}) error {
 		case *[]interface{}:
 			e = errors.New("do not support []iterface{}")
 		default:
-			return errors.New(fmt.Sprintf("unknown type %v ", key, reflect.TypeOf(ref)))
+			return errors.New(fmt.Sprintf("unknown type %v ", reflect.TypeOf(ref)))
 		}
 		if e != nil {
 			return errors.New(fmt.Sprintf("parse [%v] error:%v", key, e.Error()))
@@ -452,7 +464,7 @@ func (hr *HttpRequest) GetParamOpt(params ...interface{}) error {
 }
 
 //不带默认值的EncodeUrl解析
-func (hr *HttpRequest) ParseEncodeUrl(params ...interface{}) error {
+func (hr *HttpRequest) ParseEncodeUrl(verify bool, params ...interface{}) error {
 	if len(params)%2 != 0 {
 		return errors.New("params count must be odd")
 	}
@@ -461,6 +473,12 @@ func (hr *HttpRequest) ParseEncodeUrl(params ...interface{}) error {
 		if vs := hr.UrlEncodedBody[key]; len(vs) > 0 {
 			v := vs[0]
 			var e error
+			if verify {
+				e = function.VerifyInjection(v)
+				if e != nil {
+					return e
+				}
+			}
 			switch ref := params[i+1].(type) {
 			case *string:
 				*ref = function.ToString(v)

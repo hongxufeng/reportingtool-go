@@ -33,5 +33,16 @@ func BuildCURDBody(param *Param, settings *model.CRUDSettings, bodybuf *bytes.Bu
 		bodybuf.WriteString("</div>")
 		bodybuf.WriteString("</div>")
 	}
+	bodybuf.WriteString("<div class=\"form-group\">")
+	bodybuf.WriteString("<div class=\"col-sm-offset-3  col-sm-6\">")
+	if settings.Cmd == model.Cmd_Create {
+		bodybuf.WriteString("<input type=\"submit\" class=\"btn btn-primary form-control\" value=\"")
+		if param.TableConfig.HasBtnCreateText {
+			bodybuf.WriteString(param.TableConfig.BtnCreateText)
+		} else {
+			bodybuf.WriteString("新&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;增")
+		}
+		bodybuf.WriteString("\" />")
+	}
 	return
 }

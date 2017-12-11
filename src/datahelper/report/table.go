@@ -50,7 +50,7 @@ func BuildSearchingBlock(req *service.HttpRequest, columnconfig *model.ColumnCon
 	searchbuf.WriteString("：</span>")
 	if columnconfig.SearchType == "range" || columnconfig.SearchType == "date" {
 		var start, end string
-		_ = req.GetParams(columnconfig.Tag+">=", &start, columnconfig.Tag+"<+", &end)
+		_ = req.GetParams(false, columnconfig.Tag+">=", &start, columnconfig.Tag+"<+", &end)
 		searchbuf.WriteString("<input type=\"text\" class=\"rt-search-txt form-control ")
 		searchbuf.WriteString(columnconfig.SearchType)
 		searchbuf.WriteString("\" name=\"")
@@ -69,9 +69,9 @@ func BuildSearchingBlock(req *service.HttpRequest, columnconfig *model.ColumnCon
 	} else {
 		searchbuf.WriteString("<input type=\"text\" class=\"rt-search-txt form-control")
 		var value string
-		_ = req.GetParams(columnconfig.Tag, &value)
+		_ = req.GetParams(false, columnconfig.Tag, &value)
 		if len(value) == 0 {
-			_ = req.GetParams(columnconfig.Tag+"~~", &value)
+			_ = req.GetParams(false, columnconfig.Tag+"~~", &value)
 		}
 		searchbuf.WriteString("\" name=\"")
 		searchbuf.WriteString(columnconfig.Tag)

@@ -42,6 +42,11 @@ func New(uid uint32, configFile string, tableID string) (param *Param, err error
 		} else {
 			tableconfig.Name = name.Value
 		}
+		btncreatetext := table.SelectAttr("btn-create-text")
+		if btncreatetext != nil {
+			tableconfig.HasBtnCreateText = true
+			tableconfig.BtnCreateText = btncreatetext.Value
+		}
 		//adminname := table.SelectAttr("adminname")
 		//if adminname!=nil{
 		//	tableconfig.HasAdminName=true
