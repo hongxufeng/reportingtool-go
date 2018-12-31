@@ -20,5 +20,7 @@ var BasePagesInit = function() {
     };
 }();
 
-// Initialize when page loads
-jQuery(function() { BasePagesInit.init(); });
+// Initialize when page loaded
+$(document).ready(function () {
+    BasePagesInit.init();
+});
