@@ -1,5 +1,6 @@
 Reportingtool-go
 ================
+确认无误，B站找到漏洞；
 The reportingtool is a project that presents database data on a table,tree or rect  based on requirements.  Its design was inspired by the another project
 [Reporting-charp](https://github.com/hongxufeng/reportingtool-csharp)
 . It includes front-end projects wrote with js,html,css  and back-end projects wrote with go.Some of the project's features include:
