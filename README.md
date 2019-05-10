@@ -1,6 +1,5 @@
 Reportingtool-go
 ================
-确认无误，B站找到漏洞；
 The reportingtool is a project that presents database data on a table,tree or rect  based on requirements.  Its design was inspired by the another project
 [Reporting-charp](https://github.com/hongxufeng/reportingtool-csharp)
 . It includes front-end projects wrote with js,html,css  and back-end projects wrote with go.Some of the project's features include:
@@ -97,7 +96,7 @@ var serverURL="http://localhost:8080/ReportingTool"
 
 9.浏览，编辑页面，这些操作增删改查数据库也要统一自动化，这也是常操作项。
 
-10.发现隐患 SQL注入 查询输入框  如果输入穹" or 1 or nickname="穹  则全部数据被查出(同理，注入删表语句，网站就宕了)   要解决
+10.发现隐患 SQL注入 查询输入框  如果输入穹" or 1 or nickname="穹  则全部数据被查出(同理，注入删表语句，网站就宕了)   要解决   B站也存在次隐患  见工程 [The-bug-of-bilibili](https://github.com/hongxufeng/The-bug-of-bilibili)
 
 ## SHOW
 现阶段XML配置说明
